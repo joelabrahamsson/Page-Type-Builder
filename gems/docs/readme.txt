@@ -1,0 +1,1 @@
+This release only contains the core assembly. For PageTypeBuilder.Activation.StructureMap.dll and other future other packages see pagetypebuilder.codeplex.com.

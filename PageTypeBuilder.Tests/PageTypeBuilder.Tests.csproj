@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{338A60B0-B052-4554-9764-69B7B15915F7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PageTypeBuilder.Tests</RootNamespace>
+    <AssemblyName>PageTypeBuilder.Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>PageTypeBuilder.Tests.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EPiServer, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPiServer.BaseLibrary, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.BaseLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit, Version=1.4.9.1416, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions, Version=1.4.9.1416, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\xunit.extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractTestPageType.cs" />
+    <Compile Include="Activation\PageTypePropertiesProxyGenerationHookTests.cs" />
+    <Compile Include="Activation\TypedPageActivatorTests.cs" />
+    <Compile Include="Configuration\PageTypeBuilderConfigurationTests.cs" />
+    <Compile Include="CustomPageTypeAttribute.cs" />
+    <Compile Include="Discovery\TabLocatorTests.cs" />
+    <Compile Include="Discovery\PageTypeDefinitionLocatorTests.cs" />
+    <Compile Include="Discovery\PageTypePropertyDefinitionTests.cs" />
+    <Compile Include="PageTypeWithCustomAttribute.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\SerializeValuesTests.cs" />
+    <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidatorTests.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\UpdateTabDefinitionsTests.cs" />
+    <Compile Include="Synchronization\TabDefinitionUpdaterTests\ConstructorTests.cs" />
+    <Compile Include="Synchronization\TabDefinitionUpdaterTests\TabDefinitionShouldBeUpdatedTests.cs" />
+    <Compile Include="Synchronization\TabDefinitionUpdaterTests\TabDefinitionUpdaterTestsUtility.cs" />
+    <Compile Include="Synchronization\TabDefinitionUpdaterTests\UpdateTabDefinitionTests.cs" />
+    <Compile Include="Synchronization\Validation\PageTypeDefinitionValidatorTests.cs" />
+    <Compile Include="TestPageTypesWithInterfaces.cs" />
+    <Compile Include="TestTab.cs" />
+    <Compile Include="Synchronization\PageTypePropertyDefinitionExtensionsTests.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\CreateNewPageDefitionTests.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\GetExistingPageDefitionTests.cs" />
+    <Compile Include="Synchronization\PageDefinitionTypeMapperTests.cs" />
+    <Compile Include="Discovery\PageTypePropertyLocatorTests.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\ConstructorTests.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\PageTypePropertyUpdaterTestsUtility.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\UpdatePageDefinitionTests.cs" />
+    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\UpdatePageTypePropertyDefinitionsTests.cs" />
+    <Compile Include="PageTypeResolverTests.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\AddPageTypesToResolverTests.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\CreateNonExistingPageTypes.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\UpdatePageTypePropertyDefinitionsTests.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\UpdatePageTypesTests.cs" />
+    <Compile Include="Synchronization\PageTypeUpdaterTests\CreateNewPageTypeTests.cs" />
+    <Compile Include="Synchronization\PageTypeUpdaterTests\GetExistingPageTypeTests.cs" />
+    <Compile Include="Synchronization\PageTypeUpdaterTests\PageTypeUpdaterTests.cs" />
+    <Compile Include="Discovery\PageTypeDefinitionTests.cs" />
+    <Compile Include="Synchronization\PageTypeUpdaterTests\PageTypeUpdaterTestsUtility.cs" />
+    <Compile Include="Synchronization\PageTypeUpdaterTests\UpdatePageTypeMethodTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\ConstructorTests.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\SynchronizePageTypesTests.cs" />
+    <Compile Include="Synchronization\TabDefinitionUpdaterTests\UpdateTabDefinitionsTests.cs" />
+    <Compile Include="TestPageType.cs" />
+    <Compile Include="TestTabAbstract.cs" />
+    <Compile Include="TestValueUtility.cs" />
+    <Compile Include="PageDataExtensionMethodsTests.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronizerTests\ValidatePageTypeDefinitionsTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PageTypeBuilder\PageTypeBuilder.csproj">
+      <Project>{E6723D8E-6D57-4388-B746-0E887E6B4B1C}</Project>
+      <Name>PageTypeBuilder</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="PageTypeBuilder.Tests.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
