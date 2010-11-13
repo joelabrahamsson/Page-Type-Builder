@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public class PageDefinitionTypeFactory
+    public class PageDefinitionTypeFactory : IPageDefinitionTypeFactory
     {
         public virtual PageDefinitionType GetPageDefinitionType(int id)
         {

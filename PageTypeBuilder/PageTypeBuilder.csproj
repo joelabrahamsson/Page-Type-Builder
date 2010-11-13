@@ -96,6 +96,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\IPageDefinitionTypeFactory.cs" />
     <Compile Include="Abstractions\IPageTypeFactory.cs" />
     <Compile Include="Abstractions\PageDefinitionFactory.cs" />
     <Compile Include="Abstractions\PageDefinitionTypeFactory.cs" />

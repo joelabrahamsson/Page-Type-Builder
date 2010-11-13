@@ -24,7 +24,7 @@ namespace PageTypeBuilder.Synchronization
             PageTypeBuilderConfiguration configuration, 
             IPageTypeFactory pageTypeFactory,
             PageDefinitionFactory pageDefinitionFactory,
-            PageDefinitionTypeFactory pageDefinitionTypeFactory,
+            IPageDefinitionTypeFactory pageDefinitionTypeFactory,
             TabFactory tabFactory,
             PageTypeValueExtractor pageTypeValueExtractor,
             PageTypeResolver pageTypeResolver)

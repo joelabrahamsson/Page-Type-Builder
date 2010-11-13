@@ -20,7 +20,7 @@ namespace PageTypeBuilder.Synchronization
             : this(pageDefinitionFactory, new PageDefinitionTypeFactory(), new TabFactory()) { }
 
         public PageTypePropertyUpdater(PageDefinitionFactory pageDefinitionFactory, 
-            PageDefinitionTypeFactory pageDefinitionTypeFactory, TabFactory tabFactory)
+            IPageDefinitionTypeFactory pageDefinitionTypeFactory, TabFactory tabFactory)
         {
             PageDefinitionFactory = pageDefinitionFactory;
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;
@@ -154,7 +154,7 @@ namespace PageTypeBuilder.Synchronization
 
         internal PageDefinitionFactory PageDefinitionFactory { get; set; }
 
-        internal PageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
+        internal IPageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
 
         internal PageDefinitionTypeMapper PageDefinitionTypeMapper { get; set; }
     }

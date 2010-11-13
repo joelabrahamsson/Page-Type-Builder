@@ -13,12 +13,12 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageDefinitionTypeMapper
     {
-        public PageDefinitionTypeMapper(PageDefinitionTypeFactory pageDefinitionTypeFactory)
+        public PageDefinitionTypeMapper(IPageDefinitionTypeFactory pageDefinitionTypeFactory)
         {
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;
         }
 
-        private PageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
+        private IPageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
 
         protected internal virtual PageDefinitionType GetPageDefinitionType(PageTypePropertyDefinition definition)
         {
