@@ -26,7 +26,7 @@ namespace PageTypeBuilder.Synchronization
             : this(pageTypeDefinitions, pageTypeFactory, new PageTypeValueExtractor()) { }
 
         public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions, 
-            PageTypeFactory pageTypeFactory, 
+            IPageTypeFactory pageTypeFactory, 
             PageTypeValueExtractor pageTypeValueExtractor)
         {
             _pageTypeDefinitions = pageTypeDefinitions;
@@ -257,7 +257,7 @@ namespace PageTypeBuilder.Synchronization
             pageType.AllowedPageTypes = availablePageTypeIDs;
         }
 
-        public PageTypeFactory PageTypeFactory { get; set; }
+        public IPageTypeFactory PageTypeFactory { get; set; }
 
         internal string DefaultFilename { get; set; }
     }

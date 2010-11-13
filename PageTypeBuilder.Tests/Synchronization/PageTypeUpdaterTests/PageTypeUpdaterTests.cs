@@ -29,7 +29,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             PageTypeFactory setPageTypeFactory = new PageTypeFactory();
             pageTypeUpdater.PageTypeFactory = setPageTypeFactory;
 
-            Assert.Equal<PageTypeFactory>(setPageTypeFactory, pageTypeUpdater.PageTypeFactory);
+            Assert.Equal<IPageTypeFactory>(setPageTypeFactory, pageTypeUpdater.PageTypeFactory);
         }
 
         [Fact]

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
@@ -10,17 +8,16 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
-using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Synchronization;
 using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs
 {
-    public class WhenANewPropertyWithPageTypePropertyAttributeHasBeenAddedToAPageTypeClass : FunctionalSpecFixture
+    public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class : FunctionalSpecFixture
     {
         static PageTypeSynchronizer synchronizer;
-        static Mock<PageTypeFactory> fakePageTypeFactory;
+        static IPageTypeFactory pageTypeFactory = new InMemoryPageTypeFactory();
         static Mock<PageDefinitionFactory> fakePageDefinitionFactory;
         static string propertyName = "PropertyName";
 
@@ -41,10 +38,6 @@ namespace PageTypeBuilder.Specs
                                     var assemblyLocator = new InMemoryAssemblyLocator();
                                     assemblyLocator.Add(typeBuilder.Assembly);
 
-                                    fakePageTypeFactory = new Mock<PageTypeFactory>();
-                                    
-                                    fakePageTypeFactory.Setup(f => f.Load("MyPageTypeClass")).Returns(new PageType());
-
                                     fakePageDefinitionFactory = new Mock<PageDefinitionFactory>();
 
                                     Mock<PageDefinitionTypeFactory> fakePageDefinitionTypeFactory = new Mock<PageDefinitionTypeFactory>();
@@ -57,8 +50,8 @@ namespace PageTypeBuilder.Specs
 
                                     synchronizer = new PageTypeSynchronizer(
                                         new PageTypeDefinitionLocator(assemblyLocator), 
-                                        new PageTypeBuilderConfiguration(), 
-                                        fakePageTypeFactory.Object, 
+                                        new PageTypeBuilderConfiguration(),
+                                        pageTypeFactory, 
                                         fakePageDefinitionFactory.Object,
                                         fakePageDefinitionTypeFactory.Object,
                                         tabFactory.Object,
