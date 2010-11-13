@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using EPiServer.Core;
@@ -15,15 +16,26 @@ using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs
 {
-    public class when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class
+    public class when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class : FunctionalSpecFixture
     {
         static PageTypeSynchronizer synchronizer;
         static Mock<PageTypeFactory> fakePageTypeFactory;
         static Mock<PageDefinitionFactory> fakePageDefinitionFactory;
+        static string propertyName = "PropertyName";
 
         Establish context = () =>
                                 {
-                                    TypeBuilder typeBuilder = CreatePageTypeClass();
+                                    TypeBuilder typeBuilder = CreateTypedPageDataDescendant(type =>
+                                        {
+                                            type.Name = "MyPageTypeClass";
+                                            type.Attributes.Add(new PageTypeAttribute { Description = "Testing123" });
+                                            type.Properties.Add(new PropertySpecification
+                                                                    {
+                                                                        Name = propertyName,
+                                                                        Type = typeof(string),
+                                                                        Attributes = new List<Attribute> { new PageTypePropertyAttribute() }
+                                                                    });
+                                        });
 
                                     Mock<IAssemblyLocator> assemblyLocator = new Mock<IAssemblyLocator>();
                                     assemblyLocator.Setup(l => l.GetAssemblies()).Returns(new List<Assembly> {typeBuilder.Assembly});
@@ -51,7 +63,9 @@ namespace PageTypeBuilder.Specs
                                         tabFactory.Object,
                                         new Mock<PageTypeValueExtractor>().Object,
                                         new Mock<PageTypeResolver>().Object);
-                                    
+
+                                    var attribute = (PageTypeAttribute) typeBuilder.GetCustomAttributes(true)[0];
+                                    attribute.Description.ShouldEqual("Testing123");
                                 };
 
         Because synchronization = 
@@ -60,29 +74,24 @@ namespace PageTypeBuilder.Specs
         It should_create_a_new_page_definition =
             () => fakePageDefinitionFactory.Verify(f => f.Save(Moq.It.IsAny<PageDefinition>()));
 
-        private static TypeBuilder CreatePageTypeClass()
+        It should_create_a_page_definition_with_a_name_equal_to_the_propertys_name =
+            () => fakePageDefinitionFactory.Verify(f => f.Save(Moq.It.Is<PageDefinition>(def => def.Name == propertyName)));
+
+    }
+
+    public abstract class FunctionalSpecFixture
+    {
+        public static TypeBuilder CreateTypedPageDataDescendant(Action<TypeSpecification> typeSpecificationExpression)
         {
             //Create an assembly
             ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly");
 
             //Create a new page type class within the module
             TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
-                {
-                    type.Name = "MyPageTypeClass";
-                    type.ParentType = typeof (TypedPageData);
-                });
-
-
-            typeBuilder.AddAttribute(attribute => attribute.Type = typeof(PageTypeAttribute));
-
-            PropertyBuilder propertyBuilder = typeBuilder.AddStringProperty(property => property.Name = "Property");            
-            propertyBuilder.AddPageTypePropertyAttribute();
-
-            typeBuilder.CreateType();
-
-            PageTypeAttribute attribute2 = typeBuilder.GetCustomAttributes(true)[0] as PageTypeAttribute;
-            if (attribute2 != null)
-                attribute2.Description = "Testing";
+            {
+                typeSpecificationExpression(type);
+                type.ParentType = typeof(TypedPageData);
+            });
 
             return typeBuilder;
         }
@@ -95,7 +104,7 @@ namespace PageTypeBuilder.Specs
             return CreateModule(assembly =>
             {
                 assembly.Name = assemblyName;
-                assembly.AttributeSpecification.Add(new AttributeSpecification { Type = typeof(PageTypePropertyAttribute) });
+                assembly.AttributeSpecification.Add(new PageTypePropertyAttribute());
             });
         }
 
@@ -111,7 +120,7 @@ namespace PageTypeBuilder.Specs
 
             foreach (var assemblyAttribute in assemblySpec.AttributeSpecification)
             {
-                AddAttribute(assemblyBuilder, assemblyAttribute.Type);
+                AddAttribute(assemblyBuilder, assemblyAttribute.GetType());
             }
             
             return assemblyBuilder.DefineDynamicModule(assemblySpec.Name, assemblySpec.Name + ".dll");
@@ -131,70 +140,114 @@ namespace PageTypeBuilder.Specs
         {
             TypeSpecification typeSpec = new TypeSpecification();
             typeSpecificationExpression(typeSpec);
-            return moduleBuilder.DefineType(
+            var typeBuilder = moduleBuilder.DefineType(
                 typeSpec.Name,
                 typeSpec.TypeAttributes,
                 typeSpec.ParentType);
+
+            foreach (var attributeTemplate in typeSpec.Attributes)
+            {
+                typeBuilder.AddAttribute(attributeTemplate);
+            }
+
+            foreach (var propertySpecification in typeSpec.Properties)
+            {
+                PropertyBuilder property = typeBuilder.AddProperty(propertySpecification);
+                foreach (var attributeTemplate in propertySpecification.Attributes)
+                {
+                    property.AddAttribute(attributeTemplate);
+                }
+            }
+
+            typeBuilder.CreateType();
+
+            return typeBuilder;
         }
 
         public static void AddAttribute(
             this TypeBuilder typeBuilder, 
-            Action<AttributeSpecification> attributeSpecificationExpression)
+            Attribute attributeTemplate)
         {
-            var attributeSpec = new AttributeSpecification();
-            attributeSpecificationExpression(attributeSpec);
+            CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeTemplate);
 
-            ConstructorInfo constructor = attributeSpec.Type.GetConstructor(new Type[] { });
-            CustomAttributeBuilder customAttributeBuilder = new CustomAttributeBuilder(constructor, new object[] { });
-            
             typeBuilder.SetCustomAttribute(customAttributeBuilder);
+        }
+
+        private static CustomAttributeBuilder CreateAttributeWithValuesFromTemplate(Attribute attributeTemplate)
+        {
+            ConstructorInfo constructor = attributeTemplate.GetType().GetConstructor(new Type[] { });
+            var properties = attributeTemplate.GetType().GetProperties().Where(prop => prop.CanWrite).ToArray();
+            object[] propertyValues = new object[properties.Length];
+            for (int i = 0; i < properties.Length; i++)
+            {
+                propertyValues[i] = attributeTemplate.GetType().InvokeMember(properties[i].Name, BindingFlags.GetProperty, null,
+                                                                             attributeTemplate, new object[0]);
+            }
+
+            var propertiesWithValues = new List<PropertyInfo>();
+            var nonNullPropertyValues = new List<Object>();
+            for(int i = 0; i < properties.Length; i++)
+            {
+                if(propertyValues[i] == null)
+                    continue;
+                
+                propertiesWithValues.Add(properties[i]);
+                nonNullPropertyValues.Add(propertyValues[i]);
+            }
+
+            return new CustomAttributeBuilder(constructor, new object[] { }, propertiesWithValues.ToArray(), nonNullPropertyValues.ToArray());
         }
 
         public static PropertyBuilder AddProperty(
             this TypeBuilder typeBuilder, 
-            Action<PropertySpecification> propertySpecificationExpression)
+            PropertySpecification propertySpec)
+            //Action<PropertySpecification> propertySpecificationExpression)
         {
-            var propertySpec = new PropertySpecification();
-            propertySpecificationExpression(propertySpec);
 
             return typeBuilder.DefineProperty(
                 propertySpec.Name, PropertyAttributes.HasDefault, propertySpec.Type, null);
         }
 
-        public static PropertyBuilder AddStringProperty(
-            this TypeBuilder typeBuilder, 
-            Action<PropertySpecification> propertySpecificationExpression)
+        //public static PropertyBuilder AddStringProperty(
+        //    this TypeBuilder typeBuilder, 
+        //    Action<PropertySpecification> propertySpecificationExpression)
+        //{
+        //    return AddProperty(typeBuilder, property =>
+        //        {
+        //            property.Type = typeof (String);
+        //            propertySpecificationExpression(property);
+        //        });
+        //}
+
+        public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder, Attribute templateAttribute)
         {
-            return AddProperty(typeBuilder, property =>
-                {
-                    property.Type = typeof (String);
-                    propertySpecificationExpression(property);
-                });
+            propertyBuilder.AddAttribute(templateAttribute);
         }
 
-        public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder)
+        public static void AddAttribute(this PropertyBuilder propertyBuilder, Attribute attributeTemplate)
         {
-            propertyBuilder.AddAttribute(attribute => attribute.Type = typeof (PageTypePropertyAttribute));
-        }
-
-        public static void AddAttribute(this PropertyBuilder propertyBuilder, Action<AttributeSpecification> attributeSpecificationExpression)
-        {
-            var attributeSpec = new AttributeSpecification();
-            attributeSpecificationExpression(attributeSpec);
-
-            ConstructorInfo attributeCtor = attributeSpec.Type.GetConstructor(new Type[] { });
-            CustomAttributeBuilder pageTypePropertyAttributeBuilder = new CustomAttributeBuilder(attributeCtor, new object[] { });
-            propertyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
+            CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeTemplate);
+            propertyBuilder.SetCustomAttribute(customAttributeBuilder);
         }
     }
 
     public class TypeSpecification
     {
+        public TypeSpecification()
+        {
+            Attributes = new List<Attribute>();
+            Properties = new List<PropertySpecification>();
+        }
+
         public string Name { get; set; }
 
         public TypeAttributes TypeAttributes { get; set; }
 
         public Type ParentType { get; set; }
+
+        public List<Attribute> Attributes { get; set; }
+
+        public List<PropertySpecification> Properties { get; set; }
     }
 
     public class AttributeSpecification
@@ -206,18 +259,25 @@ namespace PageTypeBuilder.Specs
     {
         public AssemblySpecification()
         {
-            AttributeSpecification = new List<AttributeSpecification>();
+            AttributeSpecification = new List<Attribute>();
         }
 
         public string Name { get; set; }
 
-        public List<AttributeSpecification> AttributeSpecification { get; set; }
+        public List<Attribute> AttributeSpecification { get; set; }
     }
 
     public class PropertySpecification
     {
+        public PropertySpecification()
+        {
+            Attributes = new List<Attribute>();
+        }
+
         public string Name { get; set; }
 
         public Type Type { get; set; }
+
+        public List<Attribute> Attributes { get; set; }
     }
 }
