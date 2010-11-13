@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
@@ -25,7 +24,7 @@ namespace PageTypeBuilder.Synchronization
             IPageTypeFactory pageTypeFactory,
             IPageDefinitionFactory pageDefinitionFactory,
             IPageDefinitionTypeFactory pageDefinitionTypeFactory,
-            TabFactory tabFactory,
+            ITabFactory tabFactory,
             PageTypeValueExtractor pageTypeValueExtractor,
             PageTypeResolver pageTypeResolver)
         {

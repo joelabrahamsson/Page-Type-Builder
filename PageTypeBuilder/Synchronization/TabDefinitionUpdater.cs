@@ -54,6 +54,6 @@ namespace PageTypeBuilder.Synchronization
             return false;
         }
 
-        public TabFactory TabFactory { get; set; }
+        public ITabFactory TabFactory { get; set; }
     }
 }

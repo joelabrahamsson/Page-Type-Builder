@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageTypePropertyUpdater
     {
-        private TabFactory _tabFactory;
+        private ITabFactory _tabFactory;
 
         public PageTypePropertyUpdater()
             : this(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()) { }
@@ -20,7 +20,7 @@ namespace PageTypeBuilder.Synchronization
             : this(pageDefinitionFactory, new PageDefinitionTypeFactory(), new TabFactory()) { }
 
         public PageTypePropertyUpdater(IPageDefinitionFactory pageDefinitionFactory, 
-            IPageDefinitionTypeFactory pageDefinitionTypeFactory, TabFactory tabFactory)
+            IPageDefinitionTypeFactory pageDefinitionTypeFactory, ITabFactory tabFactory)
         {
             PageDefinitionFactory = pageDefinitionFactory;
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;
