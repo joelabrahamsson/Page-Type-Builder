@@ -62,33 +62,162 @@ namespace PageTypeBuilder.Specs
 
         private static TypeBuilder CreatePageTypeClass()
         {
-            AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
-            AssemblyBuilder assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    assemblyName,
-                    AssemblyBuilderAccess.RunAndSave);
+            //Create an assembly
+            ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly");
 
-            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName.Name, assemblyName.Name + ".dll");
-
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(
-                "MyPageTypeClass",
-                TypeAttributes.Public, typeof(TypedPageData));
+            //Create a new page type class within the module
+            TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
+                {
+                    type.Name = "MyPageTypeClass";
+                    type.ParentType = typeof (TypedPageData);
+                });
 
 
-            ConstructorInfo constructor = typeof(PageTypeAttribute).GetConstructor(new Type[] { });
-            CustomAttributeBuilder customAttributeBuilder = new CustomAttributeBuilder(constructor, new object[] { });
-            typeBuilder.SetCustomAttribute(customAttributeBuilder);
+            typeBuilder.AddAttribute(attribute => attribute.Type = typeof(PageTypeAttribute));
 
-            PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(
-                                        "Property", PropertyAttributes.HasDefault, typeof(string), null);
-            ConstructorInfo pageTypePropertyAttributeCtor = typeof(PageTypePropertyAttribute).GetConstructor(new Type[] { });
-            CustomAttributeBuilder pageTypePropertyAttributeBuilder = new CustomAttributeBuilder(pageTypePropertyAttributeCtor, new object[] { });
-            propertyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
+            PropertyBuilder propertyBuilder = typeBuilder.AddStringProperty(property => property.Name = "Property");            
+            propertyBuilder.AddPageTypePropertyAttribute();
 
             typeBuilder.CreateType();
 
-            assemblyBuilder.SetCustomAttribute(customAttributeBuilder);
+            PageTypeAttribute attribute2 = typeBuilder.GetCustomAttributes(true)[0] as PageTypeAttribute;
+            if (attribute2 != null)
+                attribute2.Description = "Testing";
+
             return typeBuilder;
         }
+    }
+
+    public static class ReflectionExtensions
+    {
+        public static ModuleBuilder CreateModuleWithReferenceToPageTypeBuilder(string assemblyName)
+        {
+            return CreateModule(assembly =>
+            {
+                assembly.Name = assemblyName;
+                assembly.AttributeSpecification.Add(new AttributeSpecification { Type = typeof(PageTypePropertyAttribute) });
+            });
+        }
+
+        public static ModuleBuilder CreateModule(Action<AssemblySpecification> assemblySpecificationExpression)
+        {
+            var assemblySpec = new AssemblySpecification();
+            assemblySpecificationExpression(assemblySpec);
+
+            AssemblyBuilder assemblyBuilder =
+                AppDomain.CurrentDomain.DefineDynamicAssembly(
+                    new AssemblyName(assemblySpec.Name),
+                    AssemblyBuilderAccess.RunAndSave);
+
+            foreach (var assemblyAttribute in assemblySpec.AttributeSpecification)
+            {
+                AddAttribute(assemblyBuilder, assemblyAttribute.Type);
+            }
+            
+            return assemblyBuilder.DefineDynamicModule(assemblySpec.Name, assemblySpec.Name + ".dll");
+        }
+
+        private static void AddAttribute(AssemblyBuilder assemblyBuilder, Type attributeType)
+        {
+            ConstructorInfo pageTypePropertyAttributeCtor = attributeType.GetConstructor(new Type[] { });
+            CustomAttributeBuilder pageTypePropertyAttributeBuilder = 
+                new CustomAttributeBuilder(pageTypePropertyAttributeCtor, new object[] { });
+            assemblyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
+        }
+
+        public static TypeBuilder CreateClass(
+            this ModuleBuilder moduleBuilder, 
+            Action<TypeSpecification> typeSpecificationExpression)
+        {
+            TypeSpecification typeSpec = new TypeSpecification();
+            typeSpecificationExpression(typeSpec);
+            return moduleBuilder.DefineType(
+                typeSpec.Name,
+                typeSpec.TypeAttributes,
+                typeSpec.ParentType);
+        }
+
+        public static void AddAttribute(
+            this TypeBuilder typeBuilder, 
+            Action<AttributeSpecification> attributeSpecificationExpression)
+        {
+            var attributeSpec = new AttributeSpecification();
+            attributeSpecificationExpression(attributeSpec);
+
+            ConstructorInfo constructor = attributeSpec.Type.GetConstructor(new Type[] { });
+            CustomAttributeBuilder customAttributeBuilder = new CustomAttributeBuilder(constructor, new object[] { });
+            
+            typeBuilder.SetCustomAttribute(customAttributeBuilder);
+        }
+
+        public static PropertyBuilder AddProperty(
+            this TypeBuilder typeBuilder, 
+            Action<PropertySpecification> propertySpecificationExpression)
+        {
+            var propertySpec = new PropertySpecification();
+            propertySpecificationExpression(propertySpec);
+
+            return typeBuilder.DefineProperty(
+                propertySpec.Name, PropertyAttributes.HasDefault, propertySpec.Type, null);
+        }
+
+        public static PropertyBuilder AddStringProperty(
+            this TypeBuilder typeBuilder, 
+            Action<PropertySpecification> propertySpecificationExpression)
+        {
+            return AddProperty(typeBuilder, property =>
+                {
+                    property.Type = typeof (String);
+                    propertySpecificationExpression(property);
+                });
+        }
+
+        public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder)
+        {
+            propertyBuilder.AddAttribute(attribute => attribute.Type = typeof (PageTypePropertyAttribute));
+        }
+
+        public static void AddAttribute(this PropertyBuilder propertyBuilder, Action<AttributeSpecification> attributeSpecificationExpression)
+        {
+            var attributeSpec = new AttributeSpecification();
+            attributeSpecificationExpression(attributeSpec);
+
+            ConstructorInfo attributeCtor = attributeSpec.Type.GetConstructor(new Type[] { });
+            CustomAttributeBuilder pageTypePropertyAttributeBuilder = new CustomAttributeBuilder(attributeCtor, new object[] { });
+            propertyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
+        }
+    }
+
+    public class TypeSpecification
+    {
+        public string Name { get; set; }
+
+        public TypeAttributes TypeAttributes { get; set; }
+
+        public Type ParentType { get; set; }
+    }
+
+    public class AttributeSpecification
+    {
+        public Type Type { get; set; }
+    }
+
+    public class AssemblySpecification
+    {
+        public AssemblySpecification()
+        {
+            AttributeSpecification = new List<AttributeSpecification>();
+        }
+
+        public string Name { get; set; }
+
+        public List<AttributeSpecification> AttributeSpecification { get; set; }
+    }
+
+    public class PropertySpecification
+    {
+        public string Name { get; set; }
+
+        public Type Type { get; set; }
     }
 }
