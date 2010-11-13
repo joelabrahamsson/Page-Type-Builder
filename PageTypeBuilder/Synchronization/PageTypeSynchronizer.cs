@@ -23,7 +23,7 @@ namespace PageTypeBuilder.Synchronization
         public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
             IPageTypeFactory pageTypeFactory,
-            PageDefinitionFactory pageDefinitionFactory,
+            IPageDefinitionFactory pageDefinitionFactory,
             IPageDefinitionTypeFactory pageDefinitionTypeFactory,
             TabFactory tabFactory,
             PageTypeValueExtractor pageTypeValueExtractor,
