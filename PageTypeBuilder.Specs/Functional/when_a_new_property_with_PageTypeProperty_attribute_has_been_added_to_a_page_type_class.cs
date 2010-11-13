@@ -40,11 +40,6 @@ namespace PageTypeBuilder.Specs
 
                                     fakePageDefinitionFactory = new Mock<PageDefinitionFactory>();
 
-                                    Mock<PageDefinitionTypeFactory> fakePageDefinitionTypeFactory = new Mock<PageDefinitionTypeFactory>();
-                                    fakePageDefinitionTypeFactory.Setup(
-                                        f => f.GetPageDefinitionType(Moq.It.IsAny<string>(), Moq.It.IsAny<string>())).
-                                        Returns(new PageDefinitionType(1, PropertyDataType.String, ""));
-
                                     Mock<TabFactory> tabFactory = new Mock<TabFactory>();
                                     tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection { new TabDefinition()});
 
@@ -53,7 +48,7 @@ namespace PageTypeBuilder.Specs
                                         new PageTypeBuilderConfiguration(),
                                         pageTypeFactory, 
                                         fakePageDefinitionFactory.Object,
-                                        fakePageDefinitionTypeFactory.Object,
+                                        new InMemoryPageDefinitionTypeFactory(),
                                         tabFactory.Object,
                                         new Mock<PageTypeValueExtractor>().Object,
                                         new Mock<PageTypeResolver>().Object);

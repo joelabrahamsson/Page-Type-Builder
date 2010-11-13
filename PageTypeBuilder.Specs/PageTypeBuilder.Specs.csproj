@@ -78,6 +78,7 @@
     <Compile Include="Helpers\AssemblySpecification.cs" />
     <Compile Include="Helpers\FunctionalSpecFixture.cs" />
     <Compile Include="Helpers\InMemoryAssemblyLocator.cs" />
+    <Compile Include="Helpers\InMemoryPageDefinitionTypeFactory.cs" />
     <Compile Include="Helpers\InMemoryPageTypeFactory.cs" />
     <Compile Include="Helpers\PropertySpecification.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
