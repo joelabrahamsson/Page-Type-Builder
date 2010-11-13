@@ -3,7 +3,6 @@ using EPiServer.Filters;
 
 namespace PageTypeBuilder
 {
-    [Serializable]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class PageTypeAttribute : Attribute 
     {

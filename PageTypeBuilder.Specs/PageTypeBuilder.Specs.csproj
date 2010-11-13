@@ -73,8 +73,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class.cs" />
-    <Compile Include="when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added.cs" />
+    <Compile Include="Functional\when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class.cs" />
+    <Compile Include="Functional\when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added.cs" />
+    <Compile Include="Helpers\AssemblySpecification.cs" />
+    <Compile Include="Helpers\FunctionalSpecFixture.cs" />
+    <Compile Include="Helpers\PropertySpecification.cs" />
+    <Compile Include="Helpers\ReflectionExtensions.cs" />
+    <Compile Include="Helpers\TypeSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +92,7 @@
       <Name>PageTypeBuilder</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Functional\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
