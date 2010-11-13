@@ -38,8 +38,8 @@ namespace PageTypeBuilder.Specs
                                                                     });
                                         });
 
-                                    Mock<IAssemblyLocator> assemblyLocator = new Mock<IAssemblyLocator>();
-                                    assemblyLocator.Setup(l => l.GetAssemblies()).Returns(new List<Assembly> {typeBuilder.Assembly});
+                                    var assemblyLocator = new InMemoryAssemblyLocator();
+                                    assemblyLocator.Add(typeBuilder.Assembly);
 
                                     fakePageTypeFactory = new Mock<PageTypeFactory>();
                                     
@@ -56,7 +56,7 @@ namespace PageTypeBuilder.Specs
                                     tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection { new TabDefinition()});
 
                                     synchronizer = new PageTypeSynchronizer(
-                                        new PageTypeDefinitionLocator(assemblyLocator.Object), 
+                                        new PageTypeDefinitionLocator(assemblyLocator), 
                                         new PageTypeBuilderConfiguration(), 
                                         fakePageTypeFactory.Object, 
                                         fakePageDefinitionFactory.Object,

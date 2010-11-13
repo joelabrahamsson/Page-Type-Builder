@@ -27,15 +27,15 @@ namespace PageTypeBuilder.Specs.Functional
                                         type.Attributes.Add(new PageTypeAttribute { Description = "Testing123" });
                                     });
 
-                                    Mock<IAssemblyLocator> assemblyLocator = new Mock<IAssemblyLocator>();
-                                    assemblyLocator.Setup(l => l.GetAssemblies()).Returns(new List<Assembly> {typeBuilder.Assembly});
+                                    var assemblyLocator = new InMemoryAssemblyLocator();
+                                    assemblyLocator.Add(typeBuilder.Assembly);
 
                                     fakePageTypeFactory = new Mock<PageTypeFactory>();
                                     
                                     fakePageTypeFactory.Setup(f => f.Load("MyPageTypeClass")).Returns(new PageType());
 
                                     synchronizer = new PageTypeSynchronizer(
-                                        new PageTypeDefinitionLocator(assemblyLocator.Object), 
+                                        new PageTypeDefinitionLocator(assemblyLocator), 
                                         new PageTypeBuilderConfiguration(), 
                                         fakePageTypeFactory.Object, 
                                         new Mock<PageDefinitionFactory>().Object,

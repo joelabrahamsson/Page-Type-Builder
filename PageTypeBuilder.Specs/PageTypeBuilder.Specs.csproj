@@ -77,6 +77,7 @@
     <Compile Include="Functional\when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added.cs" />
     <Compile Include="Helpers\AssemblySpecification.cs" />
     <Compile Include="Helpers\FunctionalSpecFixture.cs" />
+    <Compile Include="Helpers\InMemoryAssemblyLocator.cs" />
     <Compile Include="Helpers\PropertySpecification.cs" />
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeSpecification.cs" />
