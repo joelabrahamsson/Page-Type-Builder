@@ -52,7 +52,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return new PageTypeUpdater(null);
+            return new PageTypeUpdater(null, new PageTypeFactory());
         }
 
         [Fact]

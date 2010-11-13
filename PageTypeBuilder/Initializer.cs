@@ -1,6 +1,7 @@
 ﻿using EPiServer;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
@@ -13,7 +14,15 @@ namespace PageTypeBuilder
     {
         public void Initialize(InitializationEngine context)
         {
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), Configuration);
+            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
+                new PageTypeDefinitionLocator(), 
+                Configuration, 
+                new PageTypeFactory(), 
+                new PageDefinitionFactory(), 
+                new PageDefinitionTypeFactory(),
+                new TabFactory(), 
+                new PageTypeValueExtractor(),
+                PageTypeResolver.Instance);
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

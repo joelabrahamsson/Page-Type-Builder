@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\PageDefinitionFactory.cs" />
     <Compile Include="Abstractions\PageDefinitionTypeFactory.cs" />
+    <Compile Include="Abstractions\PageTypeValueExtractor.cs" />
     <Compile Include="Abstractions\TabFactory.cs" />
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\TabLocator.cs" />

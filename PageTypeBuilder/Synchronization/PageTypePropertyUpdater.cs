@@ -11,12 +11,22 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageTypePropertyUpdater
     {
+        private TabFactory _tabFactory;
+
         public PageTypePropertyUpdater()
+            : this(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()) { }
+
+        public PageTypePropertyUpdater(PageDefinitionFactory pageDefinitionFactory)
+            : this(pageDefinitionFactory, new PageDefinitionTypeFactory(), new TabFactory()) { }
+
+        public PageTypePropertyUpdater(PageDefinitionFactory pageDefinitionFactory, 
+            PageDefinitionTypeFactory pageDefinitionTypeFactory, TabFactory tabFactory)
         {
-            PageDefinitionFactory = new PageDefinitionFactory();
-            PageDefinitionTypeFactory = new PageDefinitionTypeFactory();
+            PageDefinitionFactory = pageDefinitionFactory;
+            PageDefinitionTypeFactory = pageDefinitionTypeFactory;
             PageTypePropertyDefinitionLocator = new PageTypePropertyDefinitionLocator();
             PageDefinitionTypeMapper = new PageDefinitionTypeMapper(PageDefinitionTypeFactory);
+            _tabFactory = tabFactory;
         }
 
         protected internal virtual void UpdatePageTypePropertyDefinitions(PageType pageType, PageTypeDefinition pageTypeDefinition)
@@ -121,7 +131,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdatePageDefinitionTab(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
         {
-            TabDefinition tab = TabDefinition.List().First();
+            TabDefinition tab = _tabFactory.List().First();
             if (propertyAttribute.Tab != null)
             {
                 Tab definedTab = (Tab) Activator.CreateInstance(propertyAttribute.Tab);

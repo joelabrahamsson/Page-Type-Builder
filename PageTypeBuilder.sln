@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageTypeBuilder.Activation.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageTypeBuilder.Activation.StructureMap.Tests", "PageTypeBuilder.Activation.StructureMap.Tests\PageTypeBuilder.Activation.StructureMap.Tests.csproj", "{143E85AC-B3EB-4B32-BFFD-AECFA601EA76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageTypeBuilder.Specs", "PageTypeBuilder.Specs\PageTypeBuilder.Specs.csproj", "{6C759161-194C-41FF-8071-4526D7067E2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{143E85AC-B3EB-4B32-BFFD-AECFA601EA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{143E85AC-B3EB-4B32-BFFD-AECFA601EA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{143E85AC-B3EB-4B32-BFFD-AECFA601EA76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C759161-194C-41FF-8071-4526D7067E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C759161-194C-41FF-8071-4526D7067E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C759161-194C-41FF-8071-4526D7067E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C759161-194C-41FF-8071-4526D7067E2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

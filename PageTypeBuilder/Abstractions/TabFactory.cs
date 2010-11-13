@@ -13,5 +13,10 @@ namespace PageTypeBuilder.Abstractions
         {
             tabDefinition.Save();
         }
+
+        public virtual TabDefinitionCollection List()
+        {
+            return TabDefinition.List();
+        }
     }
 }

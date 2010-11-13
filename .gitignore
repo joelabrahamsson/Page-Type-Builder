@@ -1,0 +1,10 @@
+*.suo
+*.user
+bin
+obj
+_ReSharper*
+*.csproj.user
+*.resharper.user
+*.suo
+*.cache
+http%3a%2f%2fmirrors.dotsrc.org%2fcygwin%2f

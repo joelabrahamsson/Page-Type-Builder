@@ -5,19 +5,32 @@ using System.Linq;
 
 namespace PageTypeBuilder.Reflection
 {
+    public interface IAssemblyLocator
+    {
+        IEnumerable<Assembly> GetAssemblies();
+    }
+
+    public class AppDomainAssemblyLocator : IAssemblyLocator
+    {
+        public IEnumerable<Assembly> GetAssemblies()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies();
+        }
+    }
+
     internal class AttributedTypesUtility
     {
-        internal static List<Type> GetTypesWithAttribute(Type attributeType)
+        internal static List<Type> GetTypesWithAttribute(IAssemblyLocator assemblyLocator,  Type attributeType)
         {
             string attributeAssemblyName = attributeType.Assembly.GetName().Name;
 
             List<Type> typesWithAttribute = new List<Type>();
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            IEnumerable<Assembly> assemblies = assemblyLocator.GetAssemblies();
             
             foreach (Assembly assembly in assemblies)
             {
                 AssemblyName[] referencedAssemblies = assembly.GetReferencedAssemblies();
-                if(referencedAssemblies.Count(a => a.Name == attributeAssemblyName) == 0)
+                if (referencedAssemblies.Count(a => a.Name == attributeAssemblyName) == 0)
                     continue;
 
                 List<Type> typesWithAttributeInAssembly = GetTypesWithAttributeInAssembly(assembly, attributeType);

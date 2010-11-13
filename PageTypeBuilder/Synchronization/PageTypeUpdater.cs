@@ -16,12 +16,23 @@ namespace PageTypeBuilder.Synchronization
         internal const bool DefaultDefaultVisibleInMenu = true;
 
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
+        private PageTypeValueExtractor _pageTypeValueExtractor;
 
         public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
+            : this(pageTypeDefinitions, new PageTypeFactory(), new PageTypeValueExtractor()) {}
+
+        public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions, 
+            PageTypeFactory pageTypeFactory)
+            : this(pageTypeDefinitions, pageTypeFactory, new PageTypeValueExtractor()) { }
+
+        public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions, 
+            PageTypeFactory pageTypeFactory, 
+            PageTypeValueExtractor pageTypeValueExtractor)
         {
             _pageTypeDefinitions = pageTypeDefinitions;
-            PageTypeFactory = new PageTypeFactory();
+            PageTypeFactory = pageTypeFactory;
             DefaultFilename = DefaultPageTypeFilename;
+            _pageTypeValueExtractor = pageTypeValueExtractor;
         }
 
         public virtual PageType GetExistingPageType(PageTypeDefinition definition)
@@ -106,7 +117,7 @@ namespace PageTypeBuilder.Synchronization
 
             builder.Append(pageType.Name);
             builder.Append("|");
-            builder.Append(pageType.FileName);
+            builder.Append(_pageTypeValueExtractor.GetFileName(pageType));
             builder.Append("|");
             builder.Append(pageType.SortOrder);
             builder.Append("|");
@@ -128,7 +139,7 @@ namespace PageTypeBuilder.Synchronization
             builder.Append("|");
             builder.Append(pageType.DefaultVisibleInMenu);
             builder.Append("|");
-            builder.Append(pageType.DefaultFrameID);
+            builder.Append(_pageTypeValueExtractor.GetDefaultFrameId(pageType));
             builder.Append("|");
             foreach (int pageTypeID in pageType.AllowedPageTypes.OrderBy(id => id))
             {

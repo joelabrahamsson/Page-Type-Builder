@@ -8,10 +8,19 @@ namespace PageTypeBuilder.Discovery
     public class PageTypeDefinitionLocator
     {
         private List<PageTypeDefinition> _pageTypeDefinitions;
+        private IAssemblyLocator _assemblyLocator;
+
+        public PageTypeDefinitionLocator(IAssemblyLocator assemblyLocator)
+        {
+            _assemblyLocator = assemblyLocator;
+        }
+
+        public PageTypeDefinitionLocator()
+            : this(new AppDomainAssemblyLocator()) {}
 
         public virtual List<PageTypeDefinition> GetPageTypeDefinitions()
         {
-            List<Type> pageTypes = AttributedTypesUtility.GetTypesWithAttribute(typeof(PageTypeAttribute));
+            List<Type> pageTypes = AttributedTypesUtility.GetTypesWithAttribute(_assemblyLocator, typeof(PageTypeAttribute));
             pageTypes = pageTypes.Where(type => !type.IsAbstract).ToList();
 
             List<PageTypeDefinition> pageTypeDefinitions = new List<PageTypeDefinition>();
@@ -31,4 +40,6 @@ namespace PageTypeBuilder.Discovery
             return _pageTypeDefinitions;
         }
     }
+
+    
 }

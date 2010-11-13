@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
@@ -12,7 +13,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         [Fact]
         public void GivenPageType_UpdatePageTypes_CallsPageTypeUpdaterUpdatePageType()
         {
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
+            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration(), new PageTypeFactory());
             MockRepository fakes = new MockRepository();
             PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new List<PageTypeDefinition>());
             PageTypeDefinition definition = new PageTypeDefinition();   
