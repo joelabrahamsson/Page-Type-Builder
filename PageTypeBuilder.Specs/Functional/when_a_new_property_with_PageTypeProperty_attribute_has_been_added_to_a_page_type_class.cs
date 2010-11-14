@@ -20,9 +20,13 @@ namespace PageTypeBuilder.Specs
         static IPageTypeFactory pageTypeFactory = new InMemoryPageTypeFactory();
         static Mock<PageDefinitionFactory> fakePageDefinitionFactory;
         static string propertyName = "PropertyName";
+        static PageTypePropertyAttribute pageTypePropertyAttribute;
 
         Establish context = () =>
                                 {
+                                    pageTypePropertyAttribute = new PageTypePropertyAttribute();
+                                    pageTypePropertyAttribute.EditCaption = "Property's Edit Caption";
+
                                     TypeBuilder typeBuilder = CreateTypedPageDataDescendant(type =>
                                         {
                                             type.Name = "MyPageTypeClass";
@@ -31,7 +35,7 @@ namespace PageTypeBuilder.Specs
                                                                     {
                                                                         Name = propertyName,
                                                                         Type = typeof(string),
-                                                                        Attributes = new List<Attribute> { new PageTypePropertyAttribute() }
+                                                                        Attributes = new List<Attribute> { pageTypePropertyAttribute }
                                                                     });
                                         });
 
@@ -52,9 +56,6 @@ namespace PageTypeBuilder.Specs
                                         tabFactory.Object,
                                         new Mock<PageTypeValueExtractor>().Object,
                                         new Mock<PageTypeResolver>().Object);
-
-                                    var attribute = (PageTypeAttribute) typeBuilder.GetCustomAttributes(true)[0];
-                                    attribute.Description.ShouldEqual("Testing123");
                                 };
 
         Because synchronization = 

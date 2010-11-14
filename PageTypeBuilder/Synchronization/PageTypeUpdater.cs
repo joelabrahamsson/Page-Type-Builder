@@ -107,7 +107,7 @@ namespace PageTypeBuilder.Synchronization
             UpdateAvailablePageTypes(pageType, attribute.AvailablePageTypes);
             
             string newValuesString = SerializeValues(pageType);
-            if(newValuesString != oldValueString)
+            if (newValuesString != oldValueString)
                 PageTypeFactory.Save(pageType);
         }
 

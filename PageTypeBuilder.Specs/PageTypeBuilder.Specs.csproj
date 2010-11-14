@@ -37,6 +37,9 @@
     <AssemblyOriginatorKeyFile>PageTypeBuilder.Specs.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.1.1.0.118\lib\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EPiServer, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.dll</HintPath>

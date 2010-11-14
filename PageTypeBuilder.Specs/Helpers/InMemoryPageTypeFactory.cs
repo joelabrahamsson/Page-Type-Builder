@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 
@@ -13,13 +14,23 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public InMemoryPageTypeFactory()
         {
+            Mapper.Configuration.CreateMap<PageType, PageType>()
+                .ForMember(x => x.FileName, m => m.Ignore())
+                .ForMember(x => x.DefaultFrameID, m => m.Ignore())
+                .ForMember(x => x.ACL, m => m.Ignore());
             nextId = 1;
             pageTypes = new List<PageType>();
         }
 
         public PageType Load(string name)
         {
-            return pageTypes.FirstOrDefault(pageType => pageType.Name == name);
+            var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.Name == name);
+            if(pageTypeRecord == default(PageType))
+                return pageTypeRecord;
+
+            var pageTypeToReturn = new PageType();
+            Mapper.Map(pageTypeRecord, pageTypeToReturn);
+            return pageTypeToReturn;
         }
 
         public PageType Load(Guid guid)
@@ -38,7 +49,16 @@ namespace PageTypeBuilder.Specs.Helpers
             {
                 pageTypeToSave.ID = nextId;
                 nextId = nextId++;
-                pageTypes.Add(pageTypeToSave);
+                var pageTypeRecord = new PageType();
+                
+                Mapper.Map(pageTypeToSave, pageTypeRecord);
+
+                pageTypes.Add(pageTypeRecord);
+            }
+            else
+            {
+                var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.ID == pageTypeToSave.ID);
+                Mapper.Map(pageTypeToSave, pageTypeRecord);
             }
         }
     }
