@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
@@ -18,7 +19,7 @@ namespace PageTypeBuilder.Specs
     {
         static PageTypeSynchronizer synchronizer;
         static IPageTypeFactory pageTypeFactory = new InMemoryPageTypeFactory();
-        static Mock<PageDefinitionFactory> fakePageDefinitionFactory;
+        static InMemoryPageDefinitionFactory pageDefinitionFactory = new InMemoryPageDefinitionFactory();
         static string propertyName = "PropertyName";
         static PageTypePropertyAttribute pageTypePropertyAttribute;
 
@@ -27,22 +28,21 @@ namespace PageTypeBuilder.Specs
                                     pageTypePropertyAttribute = new PageTypePropertyAttribute();
                                     pageTypePropertyAttribute.EditCaption = "Property's Edit Caption";
 
-                                    TypeBuilder typeBuilder = CreateTypedPageDataDescendant(type =>
+                                    var pageTypeClass = CreateTypedPageDataDescendant(type =>
                                         {
                                             type.Name = "MyPageTypeClass";
                                             type.Attributes.Add(new PageTypeAttribute { Description = "Testing123" });
-                                            type.Properties.Add(new PropertySpecification
-                                                                    {
-                                                                        Name = propertyName,
-                                                                        Type = typeof(string),
-                                                                        Attributes = new List<Attribute> { pageTypePropertyAttribute }
-                                                                    });
+                                            type.AddProperty(prop =>
+                                                {
+                                                    prop.Name = propertyName;
+                                                    prop.Type = typeof (string);
+                                                    prop.Attributes = new List<Attribute>
+                                                                        {pageTypePropertyAttribute};
+                                                });
                                         });
 
                                     var assemblyLocator = new InMemoryAssemblyLocator();
-                                    assemblyLocator.Add(typeBuilder.Assembly);
-
-                                    fakePageDefinitionFactory = new Mock<PageDefinitionFactory>();
+                                    assemblyLocator.Add(pageTypeClass.Assembly);
 
                                     Mock<TabFactory> tabFactory = new Mock<TabFactory>();
                                     tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection { new TabDefinition()});
@@ -50,8 +50,8 @@ namespace PageTypeBuilder.Specs
                                     synchronizer = new PageTypeSynchronizer(
                                         new PageTypeDefinitionLocator(assemblyLocator), 
                                         new PageTypeBuilderConfiguration(),
-                                        pageTypeFactory, 
-                                        fakePageDefinitionFactory.Object,
+                                        pageTypeFactory,
+                                        pageDefinitionFactory,
                                         new InMemoryPageDefinitionTypeFactory(),
                                         tabFactory.Object,
                                         new Mock<PageTypeValueExtractor>().Object,
@@ -62,10 +62,10 @@ namespace PageTypeBuilder.Specs
             () => synchronizer.SynchronizePageTypes();
 
         It should_create_a_new_page_definition =
-            () => fakePageDefinitionFactory.Verify(f => f.Save(Moq.It.IsAny<PageDefinition>()));
+            () => pageDefinitionFactory.List().ShouldNotBeEmpty();
 
         It should_create_a_page_definition_with_a_name_equal_to_the_propertys_name =
-            () => fakePageDefinitionFactory.Verify(f => f.Save(Moq.It.Is<PageDefinition>(def => def.Name == propertyName)));
+            () => pageDefinitionFactory.List().First().Name.ShouldEqual(propertyName);
 
     }
 }

@@ -35,12 +35,24 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public PageType Load(Guid guid)
         {
-            return pageTypes.FirstOrDefault(pageType => pageType.GUID == guid);
+            var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.GUID == guid);
+            if (pageTypeRecord == default(PageType))
+                return pageTypeRecord;
+
+            var pageTypeToReturn = new PageType();
+            Mapper.Map(pageTypeRecord, pageTypeToReturn);
+            return pageTypeToReturn;
         }
 
         public PageType Load(int id)
         {
-            return pageTypes.FirstOrDefault(pageType => pageType.ID == id);
+            var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.ID == id);
+            if (pageTypeRecord == default(PageType))
+                return pageTypeRecord;
+
+            var pageTypeToReturn = new PageType();
+            Mapper.Map(pageTypeRecord, pageTypeToReturn);
+            return pageTypeToReturn;
         }
 
         public void Save(PageType pageTypeToSave)

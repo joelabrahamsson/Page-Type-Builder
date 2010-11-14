@@ -126,5 +126,12 @@ namespace PageTypeBuilder.Specs.Helpers
             CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeTemplate);
             propertyBuilder.SetCustomAttribute(customAttributeBuilder);
         }
+
+        public static void AddProperty(this TypeSpecification typeSpec, Action<PropertySpecification> propertySpecExpression)
+        {
+            var property = new PropertySpecification();
+            propertySpecExpression(property);
+            typeSpec.Properties.Add(property);
+        }
     }
 }
