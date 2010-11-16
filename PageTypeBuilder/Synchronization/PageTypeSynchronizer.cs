@@ -14,17 +14,16 @@ namespace PageTypeBuilder.Synchronization
         private PageTypeBuilderConfiguration _configuration;
 
         public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
-            : this(pageTypeDefinitionLocator, configuration, new PageTypeFactory(), new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory(), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
+            : this(pageTypeDefinitionLocator, configuration, new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
 
         public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration, PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitionLocator, configuration, pageTypeFactory, new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory(), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
+            : this(pageTypeDefinitionLocator, configuration, pageTypeFactory, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
 
         public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
             IPageTypeFactory pageTypeFactory,
-            IPageDefinitionFactory pageDefinitionFactory,
-            IPageDefinitionTypeFactory pageDefinitionTypeFactory,
-            ITabFactory tabFactory,
+            PageTypePropertyUpdater pageTypePropertyUpdater,
+            PageTypeDefinitionValidator pageTypeDefinitionValidator,
             PageTypeValueExtractor pageTypeValueExtractor,
             PageTypeResolver pageTypeResolver)
         {
@@ -34,8 +33,8 @@ namespace PageTypeBuilder.Synchronization
             TabDefinitionUpdater = new TabDefinitionUpdater();
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeUpdater = new PageTypeUpdater(_pageTypeDefinitions, pageTypeFactory, pageTypeValueExtractor);
-            PageTypePropertyUpdater = new PageTypePropertyUpdater(pageDefinitionFactory, pageDefinitionTypeFactory, tabFactory);
-            PageTypeDefinitionValidator = new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory));
+            PageTypePropertyUpdater = pageTypePropertyUpdater;
+            PageTypeDefinitionValidator = pageTypeDefinitionValidator;
         }
 
         internal void SynchronizePageTypes()

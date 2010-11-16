@@ -5,6 +5,7 @@ using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.Validation;
 using InitializationModule=EPiServer.Web.InitializationModule;
 
 namespace PageTypeBuilder
@@ -18,9 +19,8 @@ namespace PageTypeBuilder
                 new PageTypeDefinitionLocator(), 
                 Configuration, 
                 new PageTypeFactory(), 
-                new PageDefinitionFactory(), 
-                new PageDefinitionTypeFactory(),
-                new TabFactory(), 
+                new PageTypePropertyUpdater(new PageDefinitionFactory()),
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
                 new PageTypeValueExtractor(),
                 PageTypeResolver.Instance);
             synchronizer.SynchronizePageTypes();

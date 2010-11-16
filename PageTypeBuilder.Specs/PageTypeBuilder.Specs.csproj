@@ -66,6 +66,10 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.3.1.416.3\lib\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap, Version=2.6.1.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -81,6 +85,7 @@
     <Compile Include="Helpers\AssemblySpecification.cs" />
     <Compile Include="Helpers\FunctionalSpecFixture.cs" />
     <Compile Include="Helpers\InMemoryAssemblyLocator.cs" />
+    <Compile Include="Helpers\InMemoryComponentsRegistry.cs" />
     <Compile Include="Helpers\InMemoryPageDefinitionFactory.cs" />
     <Compile Include="Helpers\InMemoryPageDefinitionTypeFactory.cs" />
     <Compile Include="Helpers\InMemoryPageTypeFactory.cs" />

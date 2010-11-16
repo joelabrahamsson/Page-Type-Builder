@@ -9,7 +9,7 @@ namespace PageTypeBuilder.Specs.Helpers
 {
     public class InMemoryPageDefinitionFactory : IPageDefinitionFactory
     {
-        private int nextId;
+        private int nextId = 1;
         private List<PageDefinition> pageDefinitions;
 
         public InMemoryPageDefinitionFactory()
@@ -25,10 +25,9 @@ namespace PageTypeBuilder.Specs.Helpers
                 throw new DataAbstractionException("Cannot save a type without name and caption");
             }
 
-            if(pageDefinition.ID >= 0)
+            if(pageDefinition.ID <= 0)
             {
-                pageDefinition.ID = nextId;
-                nextId++;
+                pageDefinition.ID = nextId++;
                 var pageDefinitionRecord = new PageDefinition();
                 Mapper.Map(pageDefinition, pageDefinitionRecord);
                 pageDefinitions.Add(pageDefinitionRecord);

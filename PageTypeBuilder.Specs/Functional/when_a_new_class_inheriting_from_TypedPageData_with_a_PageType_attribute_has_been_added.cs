@@ -7,6 +7,7 @@ using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.Validation;
 using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs.Functional
@@ -35,14 +36,13 @@ namespace PageTypeBuilder.Specs.Functional
                 assemblyLocator.Add(typeBuilder.Assembly);
 
                 synchronizer = new PageTypeSynchronizer(
-                    new PageTypeDefinitionLocator(assemblyLocator), 
+                    new PageTypeDefinitionLocator(assemblyLocator),
                     new PageTypeBuilderConfiguration(),
-                    pageTypeFactory, 
-                    new Mock<PageDefinitionFactory>().Object,
-                    new Mock<PageDefinitionTypeFactory>().Object,
-                    new Mock<TabFactory>().Object,
+                    pageTypeFactory,
+                    new PageTypePropertyUpdater(new InMemoryPageDefinitionFactory(), new InMemoryPageDefinitionTypeFactory(), new Mock<TabFactory>().Object),
+                    new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new InMemoryPageDefinitionTypeFactory())),
                     new Mock<PageTypeValueExtractor>().Object,
-                    new Mock<PageTypeResolver>().Object);             
+                    new Mock<PageTypeResolver>().Object);        
             };
 
         Because synchronization = 
