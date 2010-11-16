@@ -9,6 +9,7 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
@@ -49,22 +50,25 @@ namespace PageTypeBuilder.Specs
 
                 Mock<TabFactory> tabFactory = new Mock<TabFactory>();
                 tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection { new TabDefinition()});
-                //Container container = new Container(new InMemoryComponentsRegistry());
-                //container.Configure(config =>
-                //                        {
-                //                            config.For<PageTypeResolver>().Use(new Mock<PageTypeResolver>().Object);
-                //                            config.For<ITabFactory>().Use(tabFactory.Object);
-                //                        });
-                //pageDefinitionFactory = (InMemoryPageDefinitionFactory)container.GetInstance<IPageDefinitionFactory>();
-                //synchronizer = container.GetInstance<PageTypeSynchronizer>();
-                synchronizer = new PageTypeSynchronizer(
-                    new PageTypeDefinitionLocator(assemblyLocator),
-                    new PageTypeBuilderConfiguration(),
-                    new InMemoryPageTypeFactory(),
-                    new PageTypePropertyUpdater(pageDefinitionFactory, new InMemoryPageDefinitionTypeFactory(), tabFactory.Object),
-                    new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new InMemoryPageDefinitionTypeFactory())), 
-                    new Mock<PageTypeValueExtractor>().Object,
-                    new Mock<PageTypeResolver>().Object);
+                Container container = new Container(new InMemoryComponentsRegistry());
+                container.Configure(config =>
+                                        {
+                                            config.For<PageTypeResolver>().Use(new Mock<PageTypeResolver>().Object);
+                                            config.For<ITabFactory>().Use(tabFactory.Object);
+                                            config.For<IAssemblyLocator>().Use(assemblyLocator);
+                                            config.For<PageTypeValueExtractor>().Use(
+                                                new Mock<PageTypeValueExtractor>().Object);
+                                        });
+                pageDefinitionFactory = (InMemoryPageDefinitionFactory)container.GetInstance<IPageDefinitionFactory>();
+                synchronizer = container.GetInstance<PageTypeSynchronizer>();
+                //synchronizer = new PageTypeSynchronizer(
+                //    new PageTypeDefinitionLocator(assemblyLocator),
+                //    new PageTypeBuilderConfiguration(),
+                //    new InMemoryPageTypeFactory(),
+                //    new PageTypePropertyUpdater(pageDefinitionFactory, new InMemoryPageDefinitionTypeFactory(), tabFactory.Object),
+                //    new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new InMemoryPageDefinitionTypeFactory())), 
+                //    new Mock<PageTypeValueExtractor>().Object,
+                //    new Mock<PageTypeResolver>().Object);
             };
 
         Because synchronization = 
