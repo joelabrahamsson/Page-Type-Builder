@@ -22,10 +22,7 @@ namespace PageTypeBuilder.Specs.Helpers
             var assemblySpec = new AssemblySpecification();
             assemblySpecificationExpression(assemblySpec);
 
-            AssemblyBuilder assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    new AssemblyName(assemblySpec.Name),
-                    AssemblyBuilderAccess.RunAndSave);
+            AssemblyBuilder assemblyBuilder = CreateAssembly(assemblySpec);
 
             foreach (var assemblyAttribute in assemblySpec.AttributeSpecification)
             {
@@ -33,6 +30,13 @@ namespace PageTypeBuilder.Specs.Helpers
             }
 
             return assemblyBuilder.DefineDynamicModule(assemblySpec.Name, assemblySpec.Name + ".dll");
+        }
+
+        private static AssemblyBuilder CreateAssembly(AssemblySpecification assemblySpec)
+        {
+            return AppDomain.CurrentDomain.DefineDynamicAssembly(
+                new AssemblyName(assemblySpec.Name),
+                AssemblyBuilderAccess.RunAndSave);
         }
 
         private static void AddAttribute(AssemblyBuilder assemblyBuilder, Type attributeType)
@@ -49,17 +53,36 @@ namespace PageTypeBuilder.Specs.Helpers
         {
             TypeSpecification typeSpec = new TypeSpecification();
             typeSpecificationExpression(typeSpec);
-            var typeBuilder = moduleBuilder.DefineType(
+            TypeBuilder typeBuilder = moduleBuilder.CreateTypeFromSpecification(typeSpec);
+
+            AddTypeAttributes(typeBuilder, typeSpec.Attributes);
+
+            AddProperties(typeBuilder, typeSpec.Properties);
+
+            typeBuilder.CreateType();
+
+            return typeBuilder;
+        }
+
+        private static TypeBuilder CreateTypeFromSpecification(this ModuleBuilder moduleBuilder, TypeSpecification typeSpec)
+        {
+            return moduleBuilder.DefineType(
                 typeSpec.Name,
                 typeSpec.TypeAttributes,
                 typeSpec.ParentType);
+        }
 
-            foreach (var attributeTemplate in typeSpec.Attributes)
+        private static void AddTypeAttributes(TypeBuilder typeBuilder, IEnumerable<Attribute> attributes)
+        {
+            foreach (var attributeTemplate in attributes)
             {
                 typeBuilder.AddAttribute(attributeTemplate);
             }
+        }
 
-            foreach (var propertySpecification in typeSpec.Properties)
+        private static void AddProperties(TypeBuilder typeBuilder, IEnumerable<PropertySpecification> properties)
+        {
+            foreach (var propertySpecification in properties)
             {
                 PropertyBuilder property = typeBuilder.AddProperty(propertySpecification);
                 foreach (var attributeTemplate in propertySpecification.Attributes)
@@ -67,10 +90,6 @@ namespace PageTypeBuilder.Specs.Helpers
                     property.AddAttribute(attributeTemplate);
                 }
             }
-
-            typeBuilder.CreateType();
-
-            return typeBuilder;
         }
 
         public static void AddAttribute(
@@ -100,7 +119,8 @@ namespace PageTypeBuilder.Specs.Helpers
             }
 
             ConstructorInfo constructor = attributeTemplate.GetType().GetConstructor(new Type[] { });
-            return new CustomAttributeBuilder(constructor, new object[] { }, propertiesWithValues.ToArray(), nonNullPropertyValues.ToArray());
+            return new CustomAttributeBuilder(constructor, new object[] { }, 
+                propertiesWithValues.ToArray(), nonNullPropertyValues.ToArray());
         }
 
         private static PropertyInfo[] GetWritableProperties(Attribute attributeTemplate)
@@ -113,8 +133,9 @@ namespace PageTypeBuilder.Specs.Helpers
             object[] propertyValues = new object[properties.Length];
             for (int i = 0; i < properties.Length; i++)
             {
-                propertyValues[i] = attributeTemplate.GetType().InvokeMember(properties[i].Name, BindingFlags.GetProperty, null,
-                                                                             attributeTemplate, new object[0]);
+                propertyValues[i] = attributeTemplate.GetType()
+                    .InvokeMember(properties[i].Name, BindingFlags.GetProperty, null,
+                        attributeTemplate, new object[0]);
             }
             return propertyValues;
         }
