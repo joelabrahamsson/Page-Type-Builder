@@ -13,13 +13,13 @@ namespace PageTypeBuilder.Synchronization
         private List<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
 
-        public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
+        public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
             : this(pageTypeDefinitionLocator, configuration, new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
 
-        public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration, PageTypeFactory pageTypeFactory)
+        public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration, PageTypeFactory pageTypeFactory)
             : this(pageTypeDefinitionLocator, configuration, pageTypeFactory, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
 
-        public PageTypeSynchronizer(PageTypeDefinitionLocator pageTypeDefinitionLocator, 
+        public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
             IPageTypeFactory pageTypeFactory,
             PageTypePropertyUpdater pageTypePropertyUpdater,

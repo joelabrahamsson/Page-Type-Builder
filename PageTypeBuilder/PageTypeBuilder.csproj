@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\IPageDefinitionFactory.cs" />
     <Compile Include="Abstractions\IPageDefinitionTypeFactory.cs" />
+    <Compile Include="Discovery\IPageTypeDefinitionLocator.cs" />
     <Compile Include="Abstractions\IPageTypeFactory.cs" />
     <Compile Include="Abstractions\ITabFactory.cs" />
     <Compile Include="Abstractions\PageDefinitionFactory.cs" />

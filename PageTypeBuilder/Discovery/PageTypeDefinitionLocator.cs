@@ -5,7 +5,7 @@ using PageTypeBuilder.Reflection;
 
 namespace PageTypeBuilder.Discovery
 {
-    public class PageTypeDefinitionLocator
+    public class PageTypeDefinitionLocator : IPageTypeDefinitionLocator
     {
         private List<PageTypeDefinition> _pageTypeDefinitions;
         private IAssemblyLocator _assemblyLocator;
