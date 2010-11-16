@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PageTypeBuilder.Abstractions;
 using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -17,6 +18,14 @@ namespace PageTypeBuilder.Specs.Helpers
                          scanner.AssemblyContainingType<InMemoryPageTypeFactory>();
                          scanner.Convention<InMemoryConvention>();
                      });
+
+            For<PageTypeResolver>().Use(new PageTypeResolver());
+
+            Scan(scanner =>
+            {
+                scanner.AssemblyContainingType<IPageTypeFactory>();
+                scanner.WithDefaultConventions();
+            });
         }
     }
 

@@ -48,13 +48,9 @@ namespace PageTypeBuilder.Specs
                 var assemblyLocator = new InMemoryAssemblyLocator();
                 assemblyLocator.Add(pageTypeClass.Assembly);
 
-                Mock<TabFactory> tabFactory = new Mock<TabFactory>();
-                tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection { new TabDefinition()});
                 Container container = new Container(new InMemoryComponentsRegistry());
                 container.Configure(config =>
                                         {
-                                            config.For<PageTypeResolver>().Use(new Mock<PageTypeResolver>().Object);
-                                            config.For<ITabFactory>().Use(tabFactory.Object);
                                             config.For<IAssemblyLocator>().Use(assemblyLocator);
                                             config.For<PageTypeValueExtractor>().Use(
                                                 new Mock<PageTypeValueExtractor>().Object);
