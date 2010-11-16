@@ -84,14 +84,9 @@ namespace PageTypeBuilder.Specs.Helpers
 
         private static CustomAttributeBuilder CreateAttributeWithValuesFromTemplate(Attribute attributeTemplate)
         {
-            ConstructorInfo constructor = attributeTemplate.GetType().GetConstructor(new Type[] { });
-            var properties = attributeTemplate.GetType().GetProperties().Where(prop => prop.CanWrite).ToArray();
-            object[] propertyValues = new object[properties.Length];
-            for (int i = 0; i < properties.Length; i++)
-            {
-                propertyValues[i] = attributeTemplate.GetType().InvokeMember(properties[i].Name, BindingFlags.GetProperty, null,
-                                                                             attributeTemplate, new object[0]);
-            }
+            var properties = GetWritableProperties(attributeTemplate);
+
+            object[] propertyValues = GetPropertyValues(attributeTemplate, properties);
 
             var propertiesWithValues = new List<PropertyInfo>();
             var nonNullPropertyValues = new List<Object>();
@@ -104,7 +99,24 @@ namespace PageTypeBuilder.Specs.Helpers
                 nonNullPropertyValues.Add(propertyValues[i]);
             }
 
+            ConstructorInfo constructor = attributeTemplate.GetType().GetConstructor(new Type[] { });
             return new CustomAttributeBuilder(constructor, new object[] { }, propertiesWithValues.ToArray(), nonNullPropertyValues.ToArray());
+        }
+
+        private static PropertyInfo[] GetWritableProperties(Attribute attributeTemplate)
+        {
+            return attributeTemplate.GetType().GetProperties().Where(prop => prop.CanWrite).ToArray();
+        }
+
+        private static object[] GetPropertyValues(Attribute attributeTemplate, PropertyInfo[] properties)
+        {
+            object[] propertyValues = new object[properties.Length];
+            for (int i = 0; i < properties.Length; i++)
+            {
+                propertyValues[i] = attributeTemplate.GetType().InvokeMember(properties[i].Name, BindingFlags.GetProperty, null,
+                                                                             attributeTemplate, new object[0]);
+            }
+            return propertyValues;
         }
 
         public static PropertyBuilder AddProperty(
