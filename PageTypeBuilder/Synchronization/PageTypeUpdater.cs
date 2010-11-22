@@ -37,7 +37,7 @@ namespace PageTypeBuilder.Synchronization
             _pageTypeLocator = new PageTypeLocator(pageTypeFactory);
         }
 
-        public virtual PageType GetExistingPageType(PageTypeDefinition definition)
+        protected internal virtual PageType GetExistingPageType(PageTypeDefinition definition)
         {
             return _pageTypeLocator.GetExistingPageType(definition);
         }

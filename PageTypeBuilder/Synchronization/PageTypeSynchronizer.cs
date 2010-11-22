@@ -10,14 +10,15 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageTypeSynchronizer
     {
+        private IPageTypeLocator _pageTypeLocator;
         private List<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
-            : this(pageTypeDefinitionLocator, configuration, new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
+            : this(pageTypeDefinitionLocator, configuration, new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory())) { }
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration, PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitionLocator, configuration, pageTypeFactory, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance) { }
+            : this(pageTypeDefinitionLocator, configuration, pageTypeFactory, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance, new PageTypeLocator(pageTypeFactory)) { }
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
@@ -25,7 +26,8 @@ namespace PageTypeBuilder.Synchronization
             PageTypePropertyUpdater pageTypePropertyUpdater,
             PageTypeDefinitionValidator pageTypeDefinitionValidator,
             IPageTypeValueExtractor pageTypeValueExtractor,
-            PageTypeResolver pageTypeResolver)
+            PageTypeResolver pageTypeResolver,
+            IPageTypeLocator pageTypeLocator)
         {
             _configuration = configuration;
             PageTypeResolver = pageTypeResolver;
@@ -35,6 +37,7 @@ namespace PageTypeBuilder.Synchronization
             PageTypeUpdater = new PageTypeUpdater(_pageTypeDefinitions, pageTypeFactory, pageTypeValueExtractor);
             PageTypePropertyUpdater = pageTypePropertyUpdater;
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
+            _pageTypeLocator = pageTypeLocator;
         }
 
         internal void SynchronizePageTypes()
@@ -86,14 +89,14 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual IEnumerable<PageTypeDefinition> GetNonExistingPageTypes(List<PageTypeDefinition> pageTypeDefinitions)
         {
-            return pageTypeDefinitions.Where(definition => PageTypeUpdater.GetExistingPageType(definition) == null);
+            return pageTypeDefinitions.Where(definition => _pageTypeLocator.GetExistingPageType(definition) == null);
         }
 
         protected internal virtual void AddPageTypesToResolver(List<PageTypeDefinition> pageTypeDefinitions)
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                PageType pageType = PageTypeUpdater.GetExistingPageType(definition);
+                PageType pageType = _pageTypeLocator.GetExistingPageType(definition);
                 PageTypeResolver.AddPageType(pageType.ID, definition.Type);
             }
         }
@@ -110,7 +113,7 @@ namespace PageTypeBuilder.Synchronization
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                PageType pageType = PageTypeUpdater.GetExistingPageType(definition);
+                PageType pageType = _pageTypeLocator.GetExistingPageType(definition);
                 PageTypePropertyUpdater.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }

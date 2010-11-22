@@ -22,7 +22,8 @@ namespace PageTypeBuilder
                 new PageTypePropertyUpdater(new PageDefinitionFactory()),
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
                 new PageTypeValueExtractor(),
-                PageTypeResolver.Instance);
+                PageTypeResolver.Instance,
+                new PageTypeLocator(new PageTypeFactory()));
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
+using PageTypeBuilder.Synchronization.Validation;
 using Rhino.Mocks;
 using Xunit;
 using PageTypeBuilder.Discovery;
@@ -14,9 +16,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         [Fact]
         public void GivenPageTypeDefinition_AddPageTypesToResolver_AddsToResolver()
         {
-            PageTypeResolver resolver = new PageTypeResolver();
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
-            synchronizer.PageTypeResolver = resolver;
+            
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition>();
             PageTypeDefinition definition = new PageTypeDefinition
                                                 {
@@ -27,10 +27,20 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             PageType pageType = new PageType();
             pageType.ID = 1;
             MockRepository fakes = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new List<PageTypeDefinition>());
-            pageTypeUpdater.Stub(updater => updater.GetExistingPageType(definition)).Return(pageType);
-            pageTypeUpdater.Replay();
-            synchronizer.PageTypeUpdater = pageTypeUpdater;
+            IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();
+            pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(pageType);
+            pageTypeLocator.Replay();
+            PageTypeResolver resolver = new PageTypeResolver();
+            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
+                new PageTypeDefinitionLocator(), 
+                new PageTypeBuilderConfiguration(),
+                new PageTypeFactory(),
+                new PageTypePropertyUpdater(),
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
+                new PageTypeValueExtractor(),
+                new PageTypeResolver(),
+                pageTypeLocator);
+            synchronizer.PageTypeResolver = resolver;
 
             synchronizer.AddPageTypesToResolver(definitions);
 

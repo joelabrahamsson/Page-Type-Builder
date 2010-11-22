@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.Validation;
 using Rhino.Mocks;
 using Xunit;
 
@@ -13,15 +15,17 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         [Fact]
         public void GivenExistingPageTypeFound_CreateNonExistingPageTypes_PageTypeUpdaterCreateNewPageTypeNotCalled()
         {
-            PageTypeSynchronizer synchronizer = CreateSynchronizer();
+            
             MockRepository fakes = new MockRepository();
             PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new List<PageTypeDefinition>());
             PageTypeDefinition definition = new PageTypeDefinition();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition>();
             definitions.Add(definition);
-            pageTypeUpdater.Stub(updater => updater.GetExistingPageType(definition)).Return(new PageType());
             pageTypeUpdater.Replay();
-            synchronizer.PageTypeUpdater = pageTypeUpdater;
+            IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();
+            pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(new PageType());
+            pageTypeLocator.Replay();
+            PageTypeSynchronizer synchronizer = CreateSynchronizer(pageTypeLocator);
 
             synchronizer.CreateNonExistingPageTypes(definitions);
 
@@ -33,18 +37,25 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
         }
 
+        private PageTypeSynchronizer CreateSynchronizer(IPageTypeLocator pageTypeLocator)
+        {
+            return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration(), new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), new PageTypeResolver(), pageTypeLocator);
+        }
+
         [Fact]
         public void GivenExistingPageTypeNotFound_CreateNonExistingPageTypes_PageTypeUpdaterCreateNewPageTypeCalled()
         {
-            PageTypeSynchronizer synchronizer = CreateSynchronizer();
             MockRepository fakes = new MockRepository();
             PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new List<PageTypeDefinition>());
             PageTypeDefinition definition = new PageTypeDefinition();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition>();
             definitions.Add(definition);
-            pageTypeUpdater.Stub(updater => updater.GetExistingPageType(definition)).Return(null);
             pageTypeUpdater.Stub(updater => updater.CreateNewPageType(definition)).Return(new PageType());
             pageTypeUpdater.Replay();
+            IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();
+            pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(null);
+            pageTypeLocator.Replay();
+            PageTypeSynchronizer synchronizer = CreateSynchronizer(pageTypeLocator);
             synchronizer.PageTypeUpdater = pageTypeUpdater;
 
             synchronizer.CreateNonExistingPageTypes(definitions);
