@@ -34,12 +34,11 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 new PageTypeDefinitionLocator(), 
                 new PageTypeBuilderConfiguration(),
-                new PageTypeFactory(),
                 new PageTypePropertyUpdater(),
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
-                new PageTypeValueExtractor(),
                 new PageTypeResolver(),
-                pageTypeLocator);
+                pageTypeLocator,
+                new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()));
             synchronizer.PageTypeResolver = resolver;
 
             synchronizer.AddPageTypesToResolver(definitions);

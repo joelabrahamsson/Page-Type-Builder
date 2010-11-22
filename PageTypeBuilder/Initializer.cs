@@ -15,15 +15,22 @@ namespace PageTypeBuilder
     {
         public void Initialize(InitializationEngine context)
         {
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
-                new PageTypeDefinitionLocator(), 
-                Configuration, 
+            var pageTypeLocator = new PageTypeLocator(new PageTypeFactory());
+            var pageTypeDefinitionLocator = new PageTypeDefinitionLocator();
+            var pageTypeUpdater = new PageTypeUpdater(
+                pageTypeDefinitionLocator,
                 new PageTypeFactory(), 
+                new PageTypeValueExtractor(),
+                pageTypeLocator);
+
+            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
+                pageTypeDefinitionLocator, 
+                Configuration,
                 new PageTypePropertyUpdater(new PageDefinitionFactory()),
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
-                new PageTypeValueExtractor(),
                 PageTypeResolver.Instance,
-                new PageTypeLocator(new PageTypeFactory()));
+                pageTypeLocator,
+                pageTypeUpdater);
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         [Fact]
         public void GivenPageType_UpdatePageTypes_CallsPageTypeUpdaterUpdatePageType()
         {
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration(), new PageTypeFactory());
+            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
             MockRepository fakes = new MockRepository();
             PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
             PageTypeDefinition definition = new PageTypeDefinition();   

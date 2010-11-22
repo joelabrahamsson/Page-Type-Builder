@@ -40,7 +40,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
 
         private PageTypeSynchronizer CreateSynchronizer(IPageTypeLocator pageTypeLocator)
         {
-            return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration(), new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), new PageTypeResolver(), pageTypeLocator);
+            return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeResolver(), pageTypeLocator, new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()));
         }
 
         [Fact]

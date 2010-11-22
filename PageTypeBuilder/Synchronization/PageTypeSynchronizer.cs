@@ -15,26 +15,22 @@ namespace PageTypeBuilder.Synchronization
         private PageTypeBuilderConfiguration _configuration;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
-            : this(pageTypeDefinitionLocator, configuration, new PageTypeFactory(), new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory())) { }
-
-        public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration, PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitionLocator, configuration, pageTypeFactory, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), new PageTypeValueExtractor(), PageTypeResolver.Instance, new PageTypeLocator(pageTypeFactory)) { }
+            : this(pageTypeDefinitionLocator, configuration, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory()), new PageTypeUpdater(pageTypeDefinitionLocator, new PageTypeFactory())) { }
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
-            IPageTypeFactory pageTypeFactory,
             PageTypePropertyUpdater pageTypePropertyUpdater,
             PageTypeDefinitionValidator pageTypeDefinitionValidator,
-            IPageTypeValueExtractor pageTypeValueExtractor,
             PageTypeResolver pageTypeResolver,
-            IPageTypeLocator pageTypeLocator)
+            IPageTypeLocator pageTypeLocator,
+            PageTypeUpdater pageTypeUpdater)
         {
             _configuration = configuration;
             PageTypeResolver = pageTypeResolver;
             TabLocator = new TabLocator();
             TabDefinitionUpdater = new TabDefinitionUpdater();
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
-            PageTypeUpdater = new PageTypeUpdater(pageTypeDefinitionLocator, pageTypeFactory, pageTypeValueExtractor, pageTypeLocator);
+            PageTypeUpdater = pageTypeUpdater;
             PageTypePropertyUpdater = pageTypePropertyUpdater;
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
             _pageTypeLocator = pageTypeLocator;
