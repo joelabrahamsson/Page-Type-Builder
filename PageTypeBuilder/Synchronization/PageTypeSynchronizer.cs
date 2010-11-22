@@ -34,7 +34,7 @@ namespace PageTypeBuilder.Synchronization
             TabLocator = new TabLocator();
             TabDefinitionUpdater = new TabDefinitionUpdater();
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
-            PageTypeUpdater = new PageTypeUpdater(_pageTypeDefinitions, pageTypeFactory, pageTypeValueExtractor);
+            PageTypeUpdater = new PageTypeUpdater(pageTypeDefinitionLocator, pageTypeFactory, pageTypeValueExtractor, pageTypeLocator);
             PageTypePropertyUpdater = pageTypePropertyUpdater;
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
             _pageTypeLocator = pageTypeLocator;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EPiServer.DataAbstraction;
+using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
@@ -18,7 +19,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             PageTypeDefinition definition = new PageTypeDefinition();
             
             MockRepository fakes = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new List<PageTypeDefinition>());
+            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
             PageType pageType = new PageType();
             PageTypePropertyUpdater pageTypePropertyUpdater = fakes.Stub<PageTypePropertyUpdater>();
             pageTypePropertyUpdater.Stub(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));

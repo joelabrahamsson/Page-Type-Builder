@@ -19,22 +19,20 @@ namespace PageTypeBuilder.Synchronization
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
 
-        public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
-            : this(pageTypeDefinitions, new PageTypeFactory(), new PageTypeValueExtractor()) {}
-
-        public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions, 
+        public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitions, pageTypeFactory, new PageTypeValueExtractor()) { }
+            : this(pageTypeDefinitionLocator, pageTypeFactory, new PageTypeValueExtractor(), new PageTypeLocator(pageTypeFactory)) { }
 
-        public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions, 
+        public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeFactory pageTypeFactory, 
-            IPageTypeValueExtractor pageTypeValueExtractor)
+            IPageTypeValueExtractor pageTypeValueExtractor,
+            IPageTypeLocator pageTypeLocator)
         {
-            _pageTypeDefinitions = pageTypeDefinitions;
+            _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeFactory = pageTypeFactory;
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
-            _pageTypeLocator = new PageTypeLocator(pageTypeFactory);
+            _pageTypeLocator = pageTypeLocator;
         }
 
         protected internal virtual PageType GetExistingPageType(PageTypeDefinition definition)

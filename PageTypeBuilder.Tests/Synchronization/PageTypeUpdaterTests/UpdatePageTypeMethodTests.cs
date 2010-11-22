@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
 using EPiServer.Filters;
+using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
@@ -52,7 +53,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return new PageTypeUpdater(null, new PageTypeFactory());
+            return new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, new PageTypeFactory());
         }
 
         [Fact]
@@ -456,7 +457,9 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
                 Attribute = new PageTypeAttribute()
             };
             definitions.Add(definitionToReturn);
-            PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(definitions);
+            var pageTypeDefinitionLocator = new Mock<IPageTypeDefinitionLocator>();
+            pageTypeDefinitionLocator.Setup(locator => locator.GetPageTypeDefinitions()).Returns(definitions);
+            PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(pageTypeDefinitionLocator.Object, new PageTypeFactory());
             PageType allowedPageType = new PageType();
             allowedPageType.ID = 1;
             pageTypeUpdater.Stub(updater => updater.GetExistingPageType(definitionToReturn)).Return(allowedPageType);
@@ -494,7 +497,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         private PageTypeUpdater CreateFakePageTypeUpdaterWithUpdatePageTypeMethodHelperStubs()
         {
             MockRepository mocks = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(new List<PageTypeDefinition>());
+            PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
             PageTypeFactory pageTypeFactory = mocks.Stub<PageTypeFactory>();
             pageTypeFactory.Stub(factory => factory.Save(Arg<PageType>.Is.Anything));
             pageTypeFactory.Replay();

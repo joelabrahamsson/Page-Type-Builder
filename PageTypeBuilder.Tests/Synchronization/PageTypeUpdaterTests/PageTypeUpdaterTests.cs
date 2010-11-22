@@ -1,5 +1,7 @@
 ﻿using System;
+using Moq;
 using PageTypeBuilder.Abstractions;
+using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using Xunit;
 
@@ -18,7 +20,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return new PageTypeUpdater(null, new PageTypeFactory());
+            return new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, new PageTypeFactory());
         }
 
         [Fact]
