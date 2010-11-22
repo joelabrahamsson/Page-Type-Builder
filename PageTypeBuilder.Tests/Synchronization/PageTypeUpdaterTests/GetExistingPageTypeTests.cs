@@ -26,8 +26,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeGuid)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
-            pageTypeUpdater.PageTypeFactory = fakePageTypeFactory;
+            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(null, fakePageTypeFactory);
 
             PageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
@@ -55,8 +54,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeDefinition.Attribute.Name)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
-            pageTypeUpdater.PageTypeFactory = fakePageTypeFactory;
+            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(null, fakePageTypeFactory);
 
             PageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
@@ -74,8 +72,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeDefinition.Type.Name)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
-            pageTypeUpdater.PageTypeFactory = fakePageTypeFactory;
+            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(null, fakePageTypeFactory);
 
             PageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 

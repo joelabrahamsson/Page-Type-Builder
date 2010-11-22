@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Moq;
 using PageTypeBuilder.Abstractions;
 using StructureMap;
 using StructureMap.Configuration.DSL;
@@ -20,6 +18,8 @@ namespace PageTypeBuilder.Specs.Helpers
                      });
 
             For<PageTypeResolver>().Use(new PageTypeResolver());
+
+            For<IPageTypeValueExtractor>().Use(new Mock<PageTypeValueExtractor>().Object);
 
             Scan(scanner =>
             {

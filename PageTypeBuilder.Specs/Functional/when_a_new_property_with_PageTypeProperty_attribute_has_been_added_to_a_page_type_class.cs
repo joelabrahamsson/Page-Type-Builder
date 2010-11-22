@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
-using EPiServer.Core;
-using EPiServer.DataAbstraction;
 using Machine.Specifications;
 using Moq;
 using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Configuration;
-using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Synchronization.Validation;
 using StructureMap;
 using It = Machine.Specifications.It;
 
@@ -52,19 +46,9 @@ namespace PageTypeBuilder.Specs
                 container.Configure(config =>
                                         {
                                             config.For<IAssemblyLocator>().Use(assemblyLocator);
-                                            config.For<IPageTypeValueExtractor>().Use(
-                                                new Mock<PageTypeValueExtractor>().Object);
                                         });
                 pageDefinitionFactory = (InMemoryPageDefinitionFactory)container.GetInstance<IPageDefinitionFactory>();
                 synchronizer = container.GetInstance<PageTypeSynchronizer>();
-                //synchronizer = new PageTypeSynchronizer(
-                //    new PageTypeDefinitionLocator(assemblyLocator),
-                //    new PageTypeBuilderConfiguration(),
-                //    new InMemoryPageTypeFactory(),
-                //    new PageTypePropertyUpdater(pageDefinitionFactory, new InMemoryPageDefinitionTypeFactory(), tabFactory.Object),
-                //    new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new InMemoryPageDefinitionTypeFactory())), 
-                //    new Mock<PageTypeValueExtractor>().Object,
-                //    new Mock<PageTypeResolver>().Object);
             };
 
         Because synchronization = 

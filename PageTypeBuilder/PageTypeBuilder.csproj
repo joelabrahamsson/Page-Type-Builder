@@ -119,7 +119,9 @@
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Reflection\TypeExtensions.cs" />
     <Compile Include="Discovery\PageTypeDefinitionLocator.cs" />
+    <Compile Include="Synchronization\IPageTypeLocator.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapper.cs" />
+    <Compile Include="Synchronization\PageTypeLocator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionValidator.cs.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensions.cs" />

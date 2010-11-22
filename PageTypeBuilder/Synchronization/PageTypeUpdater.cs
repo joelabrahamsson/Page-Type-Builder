@@ -15,6 +15,7 @@ namespace PageTypeBuilder.Synchronization
         internal const int DefaultDefaultPageTypePeerOrder = -1;
         internal const bool DefaultDefaultVisibleInMenu = true;
 
+        private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
 
@@ -33,29 +34,12 @@ namespace PageTypeBuilder.Synchronization
             PageTypeFactory = pageTypeFactory;
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
+            _pageTypeLocator = new PageTypeLocator(pageTypeFactory);
         }
 
         public virtual PageType GetExistingPageType(PageTypeDefinition definition)
         {
-            PageType existingPageType = null;
-            Type type = definition.Type;
-            PageTypeAttribute attribute = definition.Attribute;
-            if (attribute.Guid.HasValue)
-            {
-                existingPageType = PageTypeFactory.Load(attribute.Guid.Value);
-            }
-
-            if (existingPageType == null && attribute.Name != null)
-            {
-                existingPageType = PageTypeFactory.Load(attribute.Name);
-            }
-
-            if(existingPageType == null)
-            {
-                existingPageType = PageTypeFactory.Load(type.Name);
-            }
-
-            return existingPageType;
+            return _pageTypeLocator.GetExistingPageType(definition);
         }
 
         protected internal virtual PageType CreateNewPageType(PageTypeDefinition definition)

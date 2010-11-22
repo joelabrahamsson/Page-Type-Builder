@@ -2,12 +2,9 @@
 using Machine.Specifications;
 using Moq;
 using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Configuration;
-using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Synchronization.Validation;
 using StructureMap;
 using It = Machine.Specifications.It;
 
@@ -40,20 +37,9 @@ namespace PageTypeBuilder.Specs.Functional
                 container.Configure(config =>
                 {
                     config.For<IAssemblyLocator>().Use(assemblyLocator);
-                    config.For<IPageTypeValueExtractor>().Use(
-                        new Mock<PageTypeValueExtractor>().Object);
                 });
                 pageTypeFactory = (InMemoryPageTypeFactory)container.GetInstance<IPageTypeFactory>();
-                synchronizer = container.GetInstance<PageTypeSynchronizer>();
-
-                //synchronizer = new PageTypeSynchronizer(
-                //    new PageTypeDefinitionLocator(assemblyLocator),
-                //    new PageTypeBuilderConfiguration(),
-                //    pageTypeFactory,
-                //    new PageTypePropertyUpdater(new InMemoryPageDefinitionFactory(), new InMemoryPageDefinitionTypeFactory(), new Mock<TabFactory>().Object),
-                //    new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new InMemoryPageDefinitionTypeFactory())),
-                //    new Mock<PageTypeValueExtractor>().Object,
-                //    new Mock<PageTypeResolver>().Object);        
+                synchronizer = container.GetInstance<PageTypeSynchronizer>();        
             };
 
         Because synchronization = 
