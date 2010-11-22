@@ -52,7 +52,7 @@ namespace PageTypeBuilder.Specs
                 container.Configure(config =>
                                         {
                                             config.For<IAssemblyLocator>().Use(assemblyLocator);
-                                            config.For<PageTypeValueExtractor>().Use(
+                                            config.For<IPageTypeValueExtractor>().Use(
                                                 new Mock<PageTypeValueExtractor>().Object);
                                         });
                 pageDefinitionFactory = (InMemoryPageDefinitionFactory)container.GetInstance<IPageDefinitionFactory>();

@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public class PageTypeValueExtractor
+    public class PageTypeValueExtractor : IPageTypeValueExtractor
     {
         public virtual int GetDefaultFrameId(PageType pageType)
         {

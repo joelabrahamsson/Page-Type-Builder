@@ -16,7 +16,7 @@ namespace PageTypeBuilder.Synchronization
         internal const bool DefaultDefaultVisibleInMenu = true;
 
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
-        private PageTypeValueExtractor _pageTypeValueExtractor;
+        private IPageTypeValueExtractor _pageTypeValueExtractor;
 
         public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
             : this(pageTypeDefinitions, new PageTypeFactory(), new PageTypeValueExtractor()) {}
@@ -27,7 +27,7 @@ namespace PageTypeBuilder.Synchronization
 
         public PageTypeUpdater(IEnumerable<PageTypeDefinition> pageTypeDefinitions, 
             IPageTypeFactory pageTypeFactory, 
-            PageTypeValueExtractor pageTypeValueExtractor)
+            IPageTypeValueExtractor pageTypeValueExtractor)
         {
             _pageTypeDefinitions = pageTypeDefinitions;
             PageTypeFactory = pageTypeFactory;

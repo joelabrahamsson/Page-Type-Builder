@@ -24,7 +24,7 @@ namespace PageTypeBuilder.Synchronization
             IPageTypeFactory pageTypeFactory,
             PageTypePropertyUpdater pageTypePropertyUpdater,
             PageTypeDefinitionValidator pageTypeDefinitionValidator,
-            PageTypeValueExtractor pageTypeValueExtractor,
+            IPageTypeValueExtractor pageTypeValueExtractor,
             PageTypeResolver pageTypeResolver)
         {
             _configuration = configuration;

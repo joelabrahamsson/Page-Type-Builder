@@ -38,7 +38,6 @@ namespace PageTypeBuilder.Specs.Helpers
             Type interfaceType = type.GetInterface(type.Name.Replace("InMemory", "I"));
             if(interfaceType != null)
                 registry.For(interfaceType).LifecycleIs(InstanceScope.Singleton).Use(type);
-                //registry.AddType(interfaceType, type);
         }
     }
 }

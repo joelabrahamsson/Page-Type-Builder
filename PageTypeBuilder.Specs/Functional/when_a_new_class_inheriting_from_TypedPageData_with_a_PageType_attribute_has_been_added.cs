@@ -40,7 +40,7 @@ namespace PageTypeBuilder.Specs.Functional
                 container.Configure(config =>
                 {
                     config.For<IAssemblyLocator>().Use(assemblyLocator);
-                    config.For<PageTypeValueExtractor>().Use(
+                    config.For<IPageTypeValueExtractor>().Use(
                         new Mock<PageTypeValueExtractor>().Object);
                 });
                 pageTypeFactory = (InMemoryPageTypeFactory)container.GetInstance<IPageTypeFactory>();
