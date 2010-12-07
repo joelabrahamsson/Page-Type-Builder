@@ -96,6 +96,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="Abstractions\IPageDefinitionFactory.cs" />
     <Compile Include="Abstractions\IPageDefinitionTypeFactory.cs" />
     <Compile Include="Abstractions\IPageTypeValueExtractor.cs" />
