@@ -9,7 +9,7 @@ namespace PageTypeBuilder.Discovery
 {
     public class PageTypePropertyDefinitionLocator
     {
-        public virtual List<PageTypePropertyDefinition> GetPageTypePropertyDefinitions(PageType pageType, Type pageTypeType)
+        public virtual IEnumerable<PageTypePropertyDefinition> GetPageTypePropertyDefinitions(PageType pageType, Type pageTypeType)
         {
             var properties = pageTypeType.GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using EPiServer.DataAbstraction;
@@ -27,9 +28,9 @@ namespace PageTypeBuilder.Tests.Discovery
             PageType pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
 
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
 
-            Assert.Equal<int>(1, propertyDefinitions.Count);
+            Assert.Equal<int>(1, propertyDefinitions.Count());
         }
 
         [Fact]
@@ -38,8 +39,8 @@ namespace PageTypeBuilder.Tests.Discovery
             var type = typeof(TestPageTypeWithInterface);
             var pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<int>(1, propertyDefinitions.Count);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            Assert.Equal<int>(1, propertyDefinitions.Count());
         }
 
         [Fact]
@@ -48,8 +49,8 @@ namespace PageTypeBuilder.Tests.Discovery
             var type = typeof(TestPageTypeWithInterface);
             var pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<string>(TestEditCaptions.FromInterfaceA, propertyDefinitions[0].PageTypePropertyAttribute.EditCaption);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            Assert.Equal<string>(TestEditCaptions.FromInterfaceA, propertyDefinitions.ElementAt(0).PageTypePropertyAttribute.EditCaption);
         }
 
         [Fact]
@@ -58,8 +59,8 @@ namespace PageTypeBuilder.Tests.Discovery
             var type = typeof(TestPageTypeWithInterfaceWhichAlsoDefinesProperty);
             var pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<int>(1, propertyDefinitions.Count);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            Assert.Equal<int>(1, propertyDefinitions.Count());
         }
 
         [Fact]
@@ -68,8 +69,8 @@ namespace PageTypeBuilder.Tests.Discovery
             var type = typeof(TestPageTypeWithInterfaceWhichAlsoDefinesProperty);
             var pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions[0].PageTypePropertyAttribute.EditCaption);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions.First().PageTypePropertyAttribute.EditCaption);
         }
 
         [Fact]
@@ -78,8 +79,8 @@ namespace PageTypeBuilder.Tests.Discovery
             var type = typeof(TestPageTypeWithClashingInterfacesWhichAlsoDefinesProperty);
             var pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<int>(1, propertyDefinitions.Count);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            Assert.Equal<int>(1, propertyDefinitions.Count());
         }
 
         [Fact]
@@ -88,8 +89,8 @@ namespace PageTypeBuilder.Tests.Discovery
             var type = typeof(TestPageTypeWithClashingInterfacesWhichAlsoDefinesProperty);
             var pageType = new PageType();
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            List<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions[0].PageTypePropertyAttribute.EditCaption);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
+            Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions.First().PageTypePropertyAttribute.EditCaption);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace PageTypeBuilder.Discovery
 {
     public interface IPageTypeDefinitionLocator
     {
-        List<PageTypeDefinition> GetPageTypeDefinitions();
+        IEnumerable<PageTypeDefinition> GetPageTypeDefinitions();
     }
 }

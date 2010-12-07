@@ -12,9 +12,9 @@ namespace PageTypeBuilder.Tests.Discovery
         {
             PageTypeDefinitionLocator definitionLocator = new PageTypeDefinitionLocator();
 
-            List<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
+            IEnumerable<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
 
-            Assert.Equal<int>(6, definitions.Count);
+            Assert.Equal<int>(6, definitions.Count());
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace PageTypeBuilder.Tests.Discovery
         {
             PageTypeDefinitionLocator definitionLocator = new PageTypeDefinitionLocator();
 
-            List<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
+            IEnumerable<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
 
             Assert.Equal<int>(1, definitions.Where(definition => definition.Attribute != null &&  definition.Attribute.GetType() == typeof(CustomPageTypeAttribute)).Count());
         }

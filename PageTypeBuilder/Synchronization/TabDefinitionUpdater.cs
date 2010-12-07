@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Synchronization
             TabFactory = new TabFactory();
         }
 
-        public virtual void UpdateTabDefinitions(List<Tab> tabs)
+        public virtual void UpdateTabDefinitions(IEnumerable<Tab> tabs)
         {
             foreach (Tab tab in tabs)
             {

@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Discovery
         public PageTypeDefinitionLocator()
             : this(new AppDomainAssemblyLocator()) {}
 
-        public virtual List<PageTypeDefinition> GetPageTypeDefinitions()
+        public virtual IEnumerable<PageTypeDefinition> GetPageTypeDefinitions()
         {
             List<Type> pageTypes = AttributedTypesUtility.GetTypesWithAttribute(_assemblyLocator, typeof(PageTypeAttribute));
             pageTypes = pageTypes.Where(type => !type.IsAbstract).ToList();

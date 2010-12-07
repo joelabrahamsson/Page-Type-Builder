@@ -17,7 +17,7 @@ namespace PageTypeBuilder.Synchronization.Validation
             PropertiesValidator = new PageTypeDefinitionPropertiesValidator(pageDefinitionTypeMapper);
         }
 
-        public virtual void ValidatePageTypeDefinitions(List<PageTypeDefinition> pageTypeDefinitions)
+        public virtual void ValidatePageTypeDefinitions(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             ValidatePageTypesHaveGuidOrUniqueName(pageTypeDefinitions);
             
@@ -27,7 +27,7 @@ namespace PageTypeBuilder.Synchronization.Validation
             }
         }
 
-        protected internal virtual void ValidatePageTypesHaveGuidOrUniqueName(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual void ValidatePageTypesHaveGuidOrUniqueName(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             IEnumerable<IGrouping<string, PageTypeDefinition>> definitionsWithNoGuidAndSameName
                 = pageTypeDefinitions

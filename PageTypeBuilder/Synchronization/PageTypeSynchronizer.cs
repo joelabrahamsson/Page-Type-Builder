@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Synchronization
     public class PageTypeSynchronizer
     {
         private IPageTypeLocator _pageTypeLocator;
-        private List<PageTypeDefinition> _pageTypeDefinitions;
+        private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
@@ -41,7 +41,7 @@ namespace PageTypeBuilder.Synchronization
             if (!_configuration.DisablePageTypeUpdation)
                 UpdateTabDefinitions();
 
-            List<PageTypeDefinition> pageTypeDefinitions = _pageTypeDefinitions;
+            IEnumerable<PageTypeDefinition> pageTypeDefinitions = _pageTypeDefinitions;
 
             ValidatePageTypeDefinitions(pageTypeDefinitions);
 
@@ -65,16 +65,16 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateTabDefinitions()
         {
-            List<Tab> definedTabs = TabLocator.GetDefinedTabs();
+            IEnumerable<Tab> definedTabs = TabLocator.GetDefinedTabs();
             TabDefinitionUpdater.UpdateTabDefinitions(definedTabs);
         }
 
-        protected internal virtual void ValidatePageTypeDefinitions(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual void ValidatePageTypeDefinitions(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             PageTypeDefinitionValidator.ValidatePageTypeDefinitions(pageTypeDefinitions);
         }
 
-        protected internal virtual void CreateNonExistingPageTypes(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual void CreateNonExistingPageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
             foreach (PageTypeDefinition definition in nonExistingPageTypes)
@@ -83,12 +83,12 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        protected internal virtual IEnumerable<PageTypeDefinition> GetNonExistingPageTypes(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual IEnumerable<PageTypeDefinition> GetNonExistingPageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             return pageTypeDefinitions.Where(definition => _pageTypeLocator.GetExistingPageType(definition) == null);
         }
 
-        protected internal virtual void AddPageTypesToResolver(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual void AddPageTypesToResolver(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
@@ -97,7 +97,7 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        protected internal virtual void UpdatePageTypes(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual void UpdatePageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
@@ -105,7 +105,7 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        protected internal virtual void UpdatePageTypePropertyDefinitions(List<PageTypeDefinition> pageTypeDefinitions)
+        protected internal virtual void UpdatePageTypePropertyDefinitions(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {

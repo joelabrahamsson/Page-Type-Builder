@@ -8,10 +8,10 @@ namespace PageTypeBuilder.Discovery
 {
     public class TabLocator
     {
-        public virtual List<Tab> GetDefinedTabs()
+        public virtual IEnumerable<Tab> GetDefinedTabs()
         {
             List<Tab> definedTabs = new List<Tab>();
-            List<Type> tabTypes = GetTabTypesInApplicationDomain();
+            IEnumerable<Type> tabTypes = GetTabTypesInApplicationDomain();
 
             foreach (Type tabType in tabTypes)
             {
@@ -21,7 +21,7 @@ namespace PageTypeBuilder.Discovery
             return definedTabs;
         }
 
-        private List<Type> GetTabTypesInApplicationDomain()
+        private IEnumerable<Type> GetTabTypesInApplicationDomain()
         {
             string tabTypeAssemblyName = typeof(Tab).Assembly.GetName().Name;
             List<Type> tabTypes = new List<Type>();

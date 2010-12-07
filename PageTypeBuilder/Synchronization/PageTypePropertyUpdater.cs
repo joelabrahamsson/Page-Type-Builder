@@ -31,7 +31,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdatePageTypePropertyDefinitions(PageType pageType, PageTypeDefinition pageTypeDefinition)
         {
-            List<PageTypePropertyDefinition> definitions = 
+            IEnumerable<PageTypePropertyDefinition> definitions = 
                 PageTypePropertyDefinitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeDefinition.Type);
             
             foreach (PageTypePropertyDefinition propertyDefinition in definitions)
