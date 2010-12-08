@@ -20,24 +20,18 @@ namespace PageTypeBuilder.Specs.Functional
         Establish context = () =>
             {
                 pageTypeAttribute = new PageTypeAttribute
-                    {
-                        Description = "A description of the page type"
-                    };
-
-                TypeBuilder typeBuilder = CreateTypedPageDataDescendant(type =>
-                    {
-                        type.Name = className;
-                        type.Attributes.Add(pageTypeAttribute);
-                    });
-
-                var assemblyLocator = new InMemoryAssemblyLocator();
-                assemblyLocator.Add(typeBuilder.Assembly);
-
-                Container container = new Container(new InMemoryComponentsRegistry());
-                container.Configure(config =>
                 {
-                    config.For<IAssemblyLocator>().Use(assemblyLocator);
+                    Description = "A description of the page type"
+                };
+
+                TypeBuilder typeBuilder = CreateTypeThatInheritsFromTypedPageData(type =>
+                {
+                    type.Name = className;
+                    type.Attributes.Add(pageTypeAttribute);
                 });
+
+                Container container = CreateContainerWithInMemoryImplementations();
+                ((InMemoryAssemblyLocator)container.GetInstance<IAssemblyLocator>()).Add(typeBuilder.Assembly);
                 pageTypeFactory = (InMemoryPageTypeFactory)container.GetInstance<IPageTypeFactory>();
                 synchronizer = container.GetInstance<PageTypeSynchronizer>();        
             };

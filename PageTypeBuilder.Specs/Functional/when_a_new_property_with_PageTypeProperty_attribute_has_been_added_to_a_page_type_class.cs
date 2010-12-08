@@ -26,7 +26,7 @@ namespace PageTypeBuilder.Specs
                 propertyAttribute.HelpText = "Property's help text";
                 propertyAttribute.EditCaption = "Property's edit caption";
 
-                var pageTypeClass = CreateTypedPageDataDescendant(type =>
+                var pageTypeClass = CreateTypeThatInheritsFromTypedPageData(type =>
                     {
                         type.Name = "MyPageTypeClass";
                         type.Attributes.Add(new PageTypeAttribute());
@@ -39,14 +39,8 @@ namespace PageTypeBuilder.Specs
                             });
                     });
 
-                var assemblyLocator = new InMemoryAssemblyLocator();
-                assemblyLocator.Add(pageTypeClass.Assembly);
-
-                Container container = new Container(new InMemoryComponentsRegistry());
-                container.Configure(config =>
-                                        {
-                                            config.For<IAssemblyLocator>().Use(assemblyLocator);
-                                        });
+                Container container = CreateContainerWithInMemoryImplementations();
+                ((InMemoryAssemblyLocator)container.GetInstance<IAssemblyLocator>()).Add(pageTypeClass.Assembly);
                 pageDefinitionFactory = (InMemoryPageDefinitionFactory)container.GetInstance<IPageDefinitionFactory>();
                 synchronizer = container.GetInstance<PageTypeSynchronizer>();
             };
