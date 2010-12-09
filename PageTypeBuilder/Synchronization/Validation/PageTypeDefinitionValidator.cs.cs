@@ -98,7 +98,7 @@ namespace PageTypeBuilder.Synchronization.Validation
                     throw new PageTypeBuilderException(string.Format(CultureInfo.InvariantCulture, "The page type {0}'s AvailablePageType attribute contains the type {1} several times.", 
                         definition.Type.FullName, availablePageType.FullName));
 
-                if (allPageTypeDefinitions.Count(d => d.Type == availablePageType) == 0)
+                if (allPageTypeDefinitions.Count(d => d.Type.GUID == availablePageType.GUID) == 0)
                     throw new PageTypeBuilderException(string.Format(CultureInfo.InvariantCulture, "The page type {0} has the type {1} specified in it's AvailablePageType attribute "
                         + "which is not a defined page type", definition.Type.FullName, availablePageType.FullName));
             }

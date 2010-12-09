@@ -60,7 +60,7 @@ namespace PageTypeBuilder.Specs.Helpers
             if (pageTypeToSave.IsNew)
             {
                 pageTypeToSave.ID = nextId;
-                nextId = nextId++;
+                nextId++;
                 var pageTypeRecord = new PageType();
                 
                 Mapper.Map(pageTypeToSave, pageTypeRecord);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Reflection.Emit;
 using PageTypeBuilder.Reflection;
 using StructureMap;
@@ -7,6 +8,17 @@ namespace PageTypeBuilder.Specs.Helpers
 {
     public abstract class FunctionalSpecFixture
     {
+        public static TypeBuilder CreateTypeThatInheritsFromTypedPageData(ModuleBuilder moduleBuilder, Action<TypeSpecification> typeSpecificationExpression)
+        {
+            TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
+            {
+                typeSpecificationExpression(type);
+                type.ParentType = typeof(TypedPageData);
+            });
+
+            return typeBuilder;
+        }
+
         public static TypeBuilder CreateTypeThatInheritsFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
             ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly");

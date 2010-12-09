@@ -21,5 +21,7 @@ namespace PageTypeBuilder.Specs.Helpers
         public List<Attribute> Attributes { get; set; }
 
         public List<PropertySpecification> Properties { get; set; }
+
+        public Action<Attribute, Type> BeforeAttributeIsAddedToType { get; set; }
     }
 }

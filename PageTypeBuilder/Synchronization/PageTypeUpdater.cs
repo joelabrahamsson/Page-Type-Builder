@@ -232,7 +232,7 @@ namespace PageTypeBuilder.Synchronization
             {
                 Type availablePageTypeType = availablePageTypes[i];
                 PageTypeDefinition availablePageTypeDefinition = _pageTypeDefinitions.First(
-                    definitions => definitions.Type == availablePageTypeType);
+                    definitions => definitions.Type.GUID == availablePageTypeType.GUID);
                 PageType availablePageType = GetExistingPageType(availablePageTypeDefinition);
                 availablePageTypeIDs[i] = availablePageType.ID;
             }

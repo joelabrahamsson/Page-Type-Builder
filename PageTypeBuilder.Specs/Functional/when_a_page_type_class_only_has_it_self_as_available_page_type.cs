@@ -11,24 +11,27 @@ using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs.Functional
 {
-    public class when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added : FunctionalSpecFixture
+    public class when_a_page_type_class_only_has_it_self_as_available_page_type : FunctionalSpecFixture
     {
         static PageTypeSynchronizer synchronizer;
         static InMemoryPageTypeFactory pageTypeFactory = new InMemoryPageTypeFactory();
         static string className = "MyPageTypeClass";
-        static PageTypeAttribute pageTypeAttribute;
 
         Establish context = () =>
             {
-                pageTypeAttribute = new PageTypeAttribute
-                {
-                    Description = "A description of the page type"
-                };
-
                 TypeBuilder typeBuilder = CreateTypeThatInheritsFromTypedPageData(type =>
                 {
-                    type.Name = className;
-                    type.Attributes.Add(pageTypeAttribute);
+                    type.Name = "MyPageTypeClass";
+                    type.BeforeAttributeIsAddedToType = (attribute, t) =>
+                    {
+                        if (!(attribute is PageTypeAttribute))
+                            return;
+
+                        ((PageTypeAttribute)attribute).AvailablePageTypes = new[] { t };
+
+
+                    };
+                    type.Attributes.Add(new PageTypeAttribute());
                 });
 
                 Container container = CreateContainerWithInMemoryImplementations();
@@ -40,10 +43,7 @@ namespace PageTypeBuilder.Specs.Functional
         Because synchronization = 
             () => synchronizer.SynchronizePageTypes();
 
-        It should_create_a_new_page_type_with_the_name_of_the_class =
-            () => pageTypeFactory.Load(className).ShouldNotBeNull();
-
-        It should_create_a_new_page_type_with_the_description_entered_in_the_PageType_attribute =
-            () => pageTypeFactory.Load(className).Description.ShouldEqual(pageTypeAttribute.Description);
+        It should_ensure_that_the_corresponding_page_type_only_has_itself_in_its_AllowedPageTypes_property =
+            () => pageTypeFactory.Load(className).AllowedPageTypes.ShouldContainOnly(pageTypeFactory.Load(className).ID);
     }
 }

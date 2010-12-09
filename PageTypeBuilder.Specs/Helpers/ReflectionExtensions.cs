@@ -55,7 +55,7 @@ namespace PageTypeBuilder.Specs.Helpers
             typeSpecificationExpression(typeSpec);
             TypeBuilder typeBuilder = moduleBuilder.CreateTypeFromSpecification(typeSpec);
 
-            AddTypeAttributes(typeBuilder, typeSpec.Attributes);
+            AddTypeAttributes(typeBuilder, typeSpec);
 
             AddProperties(typeBuilder, typeSpec.Properties);
 
@@ -72,10 +72,12 @@ namespace PageTypeBuilder.Specs.Helpers
                 typeSpec.ParentType);
         }
 
-        private static void AddTypeAttributes(TypeBuilder typeBuilder, IEnumerable<Attribute> attributes)
+        private static void AddTypeAttributes(TypeBuilder typeBuilder, TypeSpecification typeSpec)
         {
-            foreach (var attributeTemplate in attributes)
+            foreach (var attributeTemplate in typeSpec.Attributes)
             {
+                if (typeSpec.BeforeAttributeIsAddedToType != null)
+                    typeSpec.BeforeAttributeIsAddedToType(attributeTemplate, typeBuilder);
                 typeBuilder.AddAttribute(attributeTemplate);
             }
         }
