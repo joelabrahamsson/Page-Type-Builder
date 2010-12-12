@@ -73,5 +73,10 @@ namespace PageTypeBuilder.Specs.Helpers
                 Mapper.Map(pageTypeToSave, pageTypeRecord);
             }
         }
+
+        public IEnumerable<PageType> List()
+        {
+            return pageTypes;
+        }
     }
 }

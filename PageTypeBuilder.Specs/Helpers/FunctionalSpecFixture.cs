@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Reflection;
 using System.Reflection.Emit;
-using PageTypeBuilder.Reflection;
-using StructureMap;
 
 namespace PageTypeBuilder.Specs.Helpers
 {
     public abstract class FunctionalSpecFixture
     {
-        public static TypeBuilder CreateTypeThatInheritsFromTypedPageData(ModuleBuilder moduleBuilder, Action<TypeSpecification> typeSpecificationExpression)
+        public static TypeBuilder CreateTypeInheritingFromTypedPageData(ModuleBuilder moduleBuilder, Action<TypeSpecification> typeSpecificationExpression)
         {
             TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
             {
+                type.Name = "DefaultPageTypeClassName";
                 typeSpecificationExpression(type);
                 type.ParentType = typeof(TypedPageData);
             });
@@ -19,23 +17,11 @@ namespace PageTypeBuilder.Specs.Helpers
             return typeBuilder;
         }
 
-        public static TypeBuilder CreateTypeThatInheritsFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
+        public static TypeBuilder CreateTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
             ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly");
 
-            TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
-            {
-                typeSpecificationExpression(type);
-                type.ParentType = typeof(TypedPageData);
-            });
-
-            return typeBuilder;
-        }
-
-        public static Container CreateContainerWithInMemoryImplementations()
-        {
-            Container container = new Container(new InMemoryComponentsRegistry());
-            return container;
+            return CreateTypeInheritingFromTypedPageData(moduleBuilder, typeSpecificationExpression);
         }
     }
 }

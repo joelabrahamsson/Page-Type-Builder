@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
-using Moq;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Synchronization;
-using StructureMap;
 using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs
 {
-    public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class : FunctionalSpecFixture
+    public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class
     {
-        static PageTypeSynchronizer synchronizer;
-        private static InMemoryPageDefinitionFactory pageDefinitionFactory = new InMemoryPageDefinitionFactory();
+        static InMemoryContext environmentContext = new InMemoryContext();
         static string propertyName = "PropertyName";
         static PageTypePropertyAttribute propertyAttribute;
 
@@ -25,40 +19,41 @@ namespace PageTypeBuilder.Specs
                 propertyAttribute.EditCaption = "Property's Edit Caption";
                 propertyAttribute.HelpText = "Property's help text";
                 propertyAttribute.EditCaption = "Property's edit caption";
+                propertyAttribute.SortOrder = 123;
 
-                var pageTypeClass = CreateTypeThatInheritsFromTypedPageData(type =>
+                environmentContext.AddTypeInheritingFromTypedPageData(type =>
                     {
-                        type.Name = "MyPageTypeClass";
                         type.Attributes.Add(new PageTypeAttribute());
                         type.AddProperty(prop =>
                             {
                                 prop.Name = propertyName;
                                 prop.Type = typeof (string);
-                                prop.Attributes = new List<Attribute>
-                                                    {propertyAttribute};
+                                prop.Attributes = new List<Attribute> {propertyAttribute};
                             });
                     });
-
-                Container container = CreateContainerWithInMemoryImplementations();
-                ((InMemoryAssemblyLocator)container.GetInstance<IAssemblyLocator>()).Add(pageTypeClass.Assembly);
-                pageDefinitionFactory = (InMemoryPageDefinitionFactory)container.GetInstance<IPageDefinitionFactory>();
-                synchronizer = container.GetInstance<PageTypeSynchronizer>();
             };
 
-        Because synchronization = 
-            () => synchronizer.SynchronizePageTypes();
+        Because of =
+            () => environmentContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_new_page_definition =
-            () => pageDefinitionFactory.List().ShouldNotBeEmpty();
+            () => environmentContext.PageDefinitionFactory.List().ShouldNotBeEmpty();
+
+        It should_create_a_page_definition_whose_PageTypeID_is_equal_to_the_page_types_ID =
+            () => environmentContext.PageDefinitionFactory.List().First().PageTypeID
+                .ShouldEqual(environmentContext.PageTypeFactory.List().First().ID);
 
         It should_create_a_page_definition_with_a_name_equal_to_the_propertys_name =
-            () => pageDefinitionFactory.List().First().Name.ShouldEqual(propertyName);
+            () => environmentContext.PageDefinitionFactory.List().First().Name.ShouldEqual(propertyName);
 
         It should_create_a_page_definition_with_a_help_text_equal_to_the_attributes =
-            () => pageDefinitionFactory.List().First().HelpText.ShouldEqual(propertyAttribute.HelpText);
+            () => environmentContext.PageDefinitionFactory.List().First().HelpText.ShouldEqual(propertyAttribute.HelpText);
 
         It should_create_a_page_definition_with_an_edit_caption_equal_to_the_attributes =
-            () => pageDefinitionFactory.List().First().EditCaption.ShouldEqual(propertyAttribute.EditCaption);
+            () => environmentContext.PageDefinitionFactory.List().First().EditCaption.ShouldEqual(propertyAttribute.EditCaption);
+
+        It should_create_a_page_definition_with_FieldOrder_equal_to_the_attributes_SortOrder =
+            () => environmentContext.PageDefinitionFactory.List().First().FieldOrder.ShouldEqual(propertyAttribute.SortOrder);
 
     }
 }

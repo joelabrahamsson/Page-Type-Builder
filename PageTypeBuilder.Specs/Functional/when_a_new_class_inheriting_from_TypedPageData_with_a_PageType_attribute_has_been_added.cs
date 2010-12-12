@@ -1,20 +1,12 @@
-﻿using System;
-using System.Reflection.Emit;
-using Machine.Specifications;
-using Moq;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Reflection;
+﻿using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Synchronization;
-using StructureMap;
 using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs.Functional
 {
-    public class when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added : FunctionalSpecFixture
+    public class when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added
     {
-        static PageTypeSynchronizer synchronizer;
-        static InMemoryPageTypeFactory pageTypeFactory = new InMemoryPageTypeFactory();
+        static InMemoryContext environmentContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
         static PageTypeAttribute pageTypeAttribute;
 
@@ -25,25 +17,20 @@ namespace PageTypeBuilder.Specs.Functional
                     Description = "A description of the page type"
                 };
 
-                TypeBuilder typeBuilder = CreateTypeThatInheritsFromTypedPageData(type =>
+                environmentContext.AddTypeInheritingFromTypedPageData(type =>
                 {
                     type.Name = className;
                     type.Attributes.Add(pageTypeAttribute);
-                });
-
-                Container container = CreateContainerWithInMemoryImplementations();
-                ((InMemoryAssemblyLocator)container.GetInstance<IAssemblyLocator>()).Add(typeBuilder.Assembly);
-                pageTypeFactory = (InMemoryPageTypeFactory)container.GetInstance<IPageTypeFactory>();
-                synchronizer = container.GetInstance<PageTypeSynchronizer>();        
+                });   
             };
 
-        Because synchronization = 
-            () => synchronizer.SynchronizePageTypes();
+        Because of =
+            () => environmentContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_new_page_type_with_the_name_of_the_class =
-            () => pageTypeFactory.Load(className).ShouldNotBeNull();
+            () => environmentContext.PageTypeFactory.Load(className).ShouldNotBeNull();
 
         It should_create_a_new_page_type_with_the_description_entered_in_the_PageType_attribute =
-            () => pageTypeFactory.Load(className).Description.ShouldEqual(pageTypeAttribute.Description);
+            () => environmentContext.PageTypeFactory.Load(className).Description.ShouldEqual(pageTypeAttribute.Description);
     }
 }
