@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
-using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs
 {
@@ -21,16 +20,13 @@ namespace PageTypeBuilder.Specs
                 propertyAttribute.EditCaption = "Property's edit caption";
                 propertyAttribute.SortOrder = 123;
 
-                environmentContext.AddTypeInheritingFromTypedPageData(type =>
+                environmentContext.AddPageTypeClass(type => 
+                    type.AddProperty(prop =>
                     {
-                        type.Attributes.Add(new PageTypeAttribute());
-                        type.AddProperty(prop =>
-                            {
-                                prop.Name = propertyName;
-                                prop.Type = typeof (string);
-                                prop.Attributes = new List<Attribute> {propertyAttribute};
-                            });
-                    });
+                        prop.Name = propertyName;
+                        prop.Type = typeof (string);
+                        prop.Attributes = new List<Attribute> {propertyAttribute};
+                    }));
             };
 
         Because of =

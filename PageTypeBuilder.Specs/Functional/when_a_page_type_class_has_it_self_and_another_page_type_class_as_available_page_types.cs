@@ -1,7 +1,6 @@
 ﻿using System.Reflection.Emit;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
-using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs.Functional
 {

@@ -1,7 +1,5 @@
-﻿using System.Reflection.Emit;
-using Machine.Specifications;
+﻿using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
-using It = Machine.Specifications.It;
 
 namespace PageTypeBuilder.Specs.Functional
 {
@@ -10,12 +8,11 @@ namespace PageTypeBuilder.Specs.Functional
         static InMemoryContext environmentContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
 
-        Establish context = () =>
+        Establish context = () => 
+            environmentContext.AddTypeInheritingFromTypedPageData(type =>
             {
-                environmentContext.AddTypeInheritingFromTypedPageData(type =>
-                {
-                    type.Name = "MyPageTypeClass";
-                    type.BeforeAttributeIsAddedToType = (attribute, t) =>
+                type.Name = "MyPageTypeClass";
+                type.BeforeAttributeIsAddedToType = (attribute, t) =>
                     {
                         if (!(attribute is PageTypeAttribute))
                             return;
@@ -24,9 +21,8 @@ namespace PageTypeBuilder.Specs.Functional
 
 
                     };
-                    type.Attributes.Add(new PageTypeAttribute());
-                });
-            };
+                type.Attributes.Add(new PageTypeAttribute());
+            });
 
         Because of =
             () => environmentContext.PageTypeSynchronizer.SynchronizePageTypes();

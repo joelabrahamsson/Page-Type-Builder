@@ -23,5 +23,14 @@ namespace PageTypeBuilder.Specs.Helpers
 
             return CreateTypeInheritingFromTypedPageData(moduleBuilder, typeSpecificationExpression);
         }
+
+        public static TypeBuilder CreatePageTypeClass(Action<TypeSpecification> typeSpecificationExpression)
+        {
+            return CreateTypeInheritingFromTypedPageData(type =>
+                {
+                    type.Attributes.Add(new PageTypeAttribute());
+                    typeSpecificationExpression(type);
+                });
+        }
     }
 }

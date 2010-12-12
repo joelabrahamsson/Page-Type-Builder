@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Specs.Helpers
             Container = new Container(new InMemoryComponentsRegistry());
         }
 
-        public Container Container { get; set; }
+        private Container Container { get; set; }
 
         public InMemoryAssemblyLocator AssemblyLocator
         {
@@ -58,6 +58,13 @@ namespace PageTypeBuilder.Specs.Helpers
         public void AddTypeInheritingFromTypedPageData(ModuleBuilder module, Action<TypeSpecification> typeSpecificationExpression)
         {
             TypeBuilder type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, typeSpecificationExpression);
+
+            AssemblyLocator.Add(type.Assembly);
+        }
+
+        public void AddPageTypeClass(Action<TypeSpecification> typeSpecificationExpression)
+        {
+            TypeBuilder type = PageTypeClassFactory.CreatePageTypeClass(typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
         }
