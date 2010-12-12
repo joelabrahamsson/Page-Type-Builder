@@ -3,7 +3,7 @@ using System.Reflection.Emit;
 
 namespace PageTypeBuilder.Specs.Helpers
 {
-    public abstract class FunctionalSpecFixture
+    public class PageTypeClassFactory
     {
         public static TypeBuilder CreateTypeInheritingFromTypedPageData(ModuleBuilder moduleBuilder, Action<TypeSpecification> typeSpecificationExpression)
         {

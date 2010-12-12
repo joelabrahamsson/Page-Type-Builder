@@ -50,14 +50,14 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public void AddTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
-            TypeBuilder type = FunctionalSpecFixture.CreateTypeInheritingFromTypedPageData(typeSpecificationExpression);
+            TypeBuilder type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
         }
 
         public void AddTypeInheritingFromTypedPageData(ModuleBuilder module, Action<TypeSpecification> typeSpecificationExpression)
         {
-            TypeBuilder type = FunctionalSpecFixture.CreateTypeInheritingFromTypedPageData(module, typeSpecificationExpression);
+            TypeBuilder type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
         }

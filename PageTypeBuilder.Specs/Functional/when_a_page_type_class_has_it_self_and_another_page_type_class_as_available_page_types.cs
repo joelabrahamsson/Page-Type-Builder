@@ -15,12 +15,12 @@ namespace PageTypeBuilder.Specs.Functional
             {
                 var module = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly");
                 var anotherModule = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("AnotherAssembly");
-                var another = FunctionalSpecFixture.CreateTypeInheritingFromTypedPageData(anotherModule, type =>
+                var another = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(anotherModule, type =>
                     {
                         type.Name = otherClassName;
                         type.Attributes.Add(new PageTypeAttribute());
                     });
-                TypeBuilder typeBuilder = FunctionalSpecFixture.CreateTypeInheritingFromTypedPageData(module, type =>
+                TypeBuilder typeBuilder = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, type =>
                 {
                     type.Name = "MyPageTypeClass";
                     type.BeforeAttributeIsAddedToType = (attribute, t) =>
