@@ -33,7 +33,7 @@ namespace PageTypeBuilder.Specs.Functional
                     };
                     type.Attributes.Add(new PageTypeAttribute());
                 });
-
+                ((AssemblyBuilder)module.Assembly).Save("DynamicAssembly.dll");
                 ((AssemblyBuilder)another.Assembly).Save("AnotherAssembly.dll");
                 environmentContext.AssemblyLocator.Add(typeBuilder.Assembly);
                 environmentContext.AssemblyLocator.Add(another.Assembly);    
