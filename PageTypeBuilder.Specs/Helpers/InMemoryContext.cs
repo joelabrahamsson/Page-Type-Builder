@@ -52,8 +52,6 @@ namespace PageTypeBuilder.Specs.Helpers
         {
             TypeBuilder type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(typeSpecificationExpression);
             
-            //((AssemblyBuilder) type.Assembly).Save(type.Assembly.GetName().Name + ".dll");
-
             AssemblyLocator.Add(type.Assembly);
         }
 

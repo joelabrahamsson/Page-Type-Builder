@@ -28,8 +28,6 @@ namespace PageTypeBuilder.Specs.Functional
                     type.Name = className;
                     type.ParentType = abstractClass;
                 });
-
-                //syncContext.AssemblyLocator.Add(typeBuilder.Assembly);
             };
 
         Because of =
