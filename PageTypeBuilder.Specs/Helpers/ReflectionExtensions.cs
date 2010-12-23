@@ -60,7 +60,7 @@ namespace PageTypeBuilder.Specs.Helpers
             AddProperties(typeBuilder, typeSpec.Properties);
 
             typeBuilder.CreateType();
-
+            
             return typeBuilder;
         }
 

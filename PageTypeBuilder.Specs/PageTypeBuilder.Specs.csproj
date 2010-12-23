@@ -83,6 +83,9 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Functional\when_a_class_inheriting_from_an_abstract_page_type_class_has_been_added.cs" />
+    <Compile Include="Functional\when_a_new_abstract_page_type_class_has_been_added.cs" />
+    <Compile Include="Functional\when_a_new_class_inheriting_from_TypedPageData_but_without_a_PageType_attribute_has_been_added.cs" />
     <Compile Include="Functional\when_a_page_type_property_has_a_name_longer_than_50_characters.cs" />
     <Compile Include="Functional\when_a_page_type_class_has_it_self_and_another_page_type_class_as_available_page_types.cs" />
     <Compile Include="Functional\when_a_page_type_class_only_has_it_self_as_available_page_type.cs" />

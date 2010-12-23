@@ -6,7 +6,7 @@ namespace PageTypeBuilder.Specs.Functional
 {
     public class when_a_page_type_class_has_it_self_and_another_page_type_class_as_available_page_types
     {
-        static InMemoryContext environmentContext = new InMemoryContext();
+        static InMemoryContext syncContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
         static string otherClassName = "Another";
 
@@ -34,18 +34,17 @@ namespace PageTypeBuilder.Specs.Functional
                     type.Attributes.Add(new PageTypeAttribute());
                 });
 
-                ((AssemblyBuilder)another.Assembly).Save("AnotherAssembly.dll");
-                environmentContext.AssemblyLocator.Add(typeBuilder.Assembly);
-                environmentContext.AssemblyLocator.Add(another.Assembly);    
+                syncContext.AssemblyLocator.Add(typeBuilder.Assembly);
+                syncContext.AssemblyLocator.Add(another.Assembly);    
             };
 
         Because of =
-            () => environmentContext.PageTypeSynchronizer.SynchronizePageTypes();
+            () => syncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_ensure_that_the_corresponding_page_type_has_both_page_types_in_its_AllowedPageTypes_property =
-            () => environmentContext.PageTypeFactory.Load(className)
+            () => syncContext.PageTypeFactory.Load(className)
                 .AllowedPageTypes.ShouldContainOnly(
-                    environmentContext.PageTypeFactory.Load(className).ID,
-                    environmentContext.PageTypeFactory.Load(otherClassName).ID);
+                    syncContext.PageTypeFactory.Load(className).ID,
+                    syncContext.PageTypeFactory.Load(otherClassName).ID);
     }
 }

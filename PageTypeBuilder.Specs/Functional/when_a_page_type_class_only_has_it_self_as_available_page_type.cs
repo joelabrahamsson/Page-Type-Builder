@@ -1,34 +1,40 @@
-﻿using Machine.Specifications;
+﻿using System;
+using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Functional
 {
     public class when_a_new_page_type_class_only_has_it_self_as_available_page_type
     {
-        static InMemoryContext environmentContext = new InMemoryContext();
+        static InMemoryContext syncContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
 
-        Establish context = () => 
-            environmentContext.AddTypeInheritingFromTypedPageData(type =>
+        Establish context = () =>
             {
-                type.Name = "MyPageTypeClass";
-                type.BeforeAttributeIsAddedToType = (attribute, t) =>
+                 var pageTypeClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
                     {
-                        if (!(attribute is PageTypeAttribute))
-                            return;
+                        type.Name = "MyPageTypeClass";
+                        type.BeforeAttributeIsAddedToType = (attribute, t) =>
+                            {
+                                if (!(attribute is PageTypeAttribute))
+                                    return;
 
-                        ((PageTypeAttribute)attribute).AvailablePageTypes = new[] { t };
+                                ((PageTypeAttribute) attribute).AvailablePageTypes = new[] {t};
 
 
-                    };
-                type.Attributes.Add(new PageTypeAttribute());
-            });
+                            };
+                        type.Attributes.Add(new PageTypeAttribute());
+                    });
+
+                 syncContext.AssemblyLocator.Add(pageTypeClass.Assembly);
+            };
+
 
         Because of =
-            () => environmentContext.PageTypeSynchronizer.SynchronizePageTypes();
+            () => syncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_page_type_that_has_only_itself_in_its_AllowedPageTypes_property =
-            () => environmentContext.PageTypeFactory.Load(className).AllowedPageTypes
-                .ShouldContainOnly(environmentContext.PageTypeFactory.Load(className).ID);
+            () => syncContext.PageTypeFactory.Load(className).AllowedPageTypes
+                .ShouldContainOnly(syncContext.PageTypeFactory.Load(className).ID);
     }
 }

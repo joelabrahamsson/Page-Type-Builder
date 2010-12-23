@@ -10,16 +10,17 @@ namespace PageTypeBuilder.Specs.Helpers
             TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
             {
                 type.Name = "DefaultPageTypeClassName";
-                typeSpecificationExpression(type);
                 type.ParentType = typeof(TypedPageData);
+                typeSpecificationExpression(type);
+                    
             });
-
+            
             return typeBuilder;
         }
 
         public static TypeBuilder CreateTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
-            ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly");
+            ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly" + Guid.NewGuid());
 
             return CreateTypeInheritingFromTypedPageData(moduleBuilder, typeSpecificationExpression);
         }
