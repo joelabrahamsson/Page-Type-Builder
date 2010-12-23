@@ -6,7 +6,7 @@ using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Functional
 {
-    public class when_a_class_inheriting_from_an_abstract_page_type_class_in_the_same_assembly_has_been_added
+    public class when_a_class_inheriting_from_an_abstract_page_type_class_in_another_assembly_has_been_added
     {
         static InMemoryContext syncContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
@@ -18,15 +18,16 @@ namespace PageTypeBuilder.Specs.Functional
                         type.Name = "BaseClass";
                         type.TypeAttributes = TypeAttributes.Abstract;
                         type.Attributes.Add(new PageTypeAttribute());
+                        type.TypeAttributes = TypeAttributes.Public;
                     });
-
                 syncContext.AssemblyLocator.Add(abstractClass.Assembly);
 
-                ((ModuleBuilder)abstractClass.Module).CreateClass(type =>
+                TypeBuilder typeBuilder = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
                 {
                     type.Name = className;
                     type.ParentType = abstractClass;
                 });
+                syncContext.AssemblyLocator.Add(typeBuilder.Assembly);
             };
 
         Because of =

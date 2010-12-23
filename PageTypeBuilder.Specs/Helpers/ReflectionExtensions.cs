@@ -26,7 +26,7 @@ namespace PageTypeBuilder.Specs.Helpers
 
             foreach (var assemblyAttribute in assemblySpec.AttributeSpecification)
             {
-                AddAttribute(assemblyBuilder, assemblyAttribute.GetType());
+                assemblyBuilder.AddAttribute(assemblyAttribute.GetType());
             }
 
             return assemblyBuilder.DefineDynamicModule(assemblySpec.Name, assemblySpec.Name + ".dll");
@@ -39,11 +39,11 @@ namespace PageTypeBuilder.Specs.Helpers
                 AssemblyBuilderAccess.RunAndSave);
         }
 
-        private static void AddAttribute(AssemblyBuilder assemblyBuilder, Type attributeType)
+        public static void AddAttribute(this AssemblyBuilder assemblyBuilder, Type attributeType)
         {
-            ConstructorInfo pageTypePropertyAttributeCtor = attributeType.GetConstructor(new Type[] { });
+            ConstructorInfo attributeCtor = attributeType.GetConstructor(new Type[] { });
             CustomAttributeBuilder pageTypePropertyAttributeBuilder =
-                new CustomAttributeBuilder(pageTypePropertyAttributeCtor, new object[] { });
+                new CustomAttributeBuilder(attributeCtor, new object[] { });
             assemblyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
         }
 
