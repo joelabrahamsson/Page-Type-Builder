@@ -13,10 +13,11 @@ namespace PageTypeBuilder.Specs
             syncContext.AddPageTypeClass(type =>
                 type.Name = 51.CharactersLongAlphanumericString());
 
-        Because of =
-            () => thrownException = Catch.Exception(() => syncContext.PageTypeSynchronizer.SynchronizePageTypes());
+        Because of = () => 
+            thrownException = Catch.Exception(
+                () => syncContext.PageTypeSynchronizer.SynchronizePageTypes());
 
-        It should_throw_a_PageTypeBuilderException =
-            () => thrownException.ShouldBeOfType<PageTypeBuilderException>();
+        It should_throw_a_PageTypeBuilderException = () => 
+            thrownException.ShouldBeOfType<PageTypeBuilderException>();
     }
 }
