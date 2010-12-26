@@ -22,7 +22,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                 propertyAttribute.EditCaption = "Property's edit caption";
                 propertyAttribute.SortOrder = 123;
 
-                SyncContext.AddPageTypeClass(type => 
+                SyncContext.AddPageTypeClassToAppDomain(type => 
                     type.AddProperty(prop =>
                     {
                         prop.Name = propertyName;

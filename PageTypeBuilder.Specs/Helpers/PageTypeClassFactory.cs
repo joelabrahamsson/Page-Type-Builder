@@ -34,4 +34,9 @@ namespace PageTypeBuilder.Specs.Helpers
                 });
         }
     }
+
+    public static class TypeExtensions
+    {
+        
+    }
 }

@@ -2,7 +2,7 @@
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.Validation
 {
     [Subject("Synchronization")]
     public class when_a_page_type_property_has_a_name_longer_than_50_characters
@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Specs.Synchronization
         static Exception thrownException;
 
         Establish context = () => 
-            SyncContext.AddPageTypeClass(type =>
+            SyncContext.AddPageTypeClassToAppDomain(type =>
                 type.Name = 51.CharactersLongAlphanumericString());
 
         Because of = () => 

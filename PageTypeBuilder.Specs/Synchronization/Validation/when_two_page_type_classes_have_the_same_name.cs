@@ -1,7 +1,7 @@
 ﻿using System;
 using Machine.Specifications;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.Validation
 {
     [Subject("Synchronization")]
     public class when_two_page_type_classes_have_the_same_name
@@ -12,12 +12,12 @@ namespace PageTypeBuilder.Specs.Synchronization
 
         Establish context = () =>
         {
-            SyncContext.AddPageTypeClass(type =>
+            SyncContext.AddPageTypeClassToAppDomain(type =>
             {
                 type.Name = pageTypeName;
             });
 
-            SyncContext.AddPageTypeClass(type =>
+            SyncContext.AddPageTypeClassToAppDomain(type =>
             {
                 type.Name = pageTypeName;
             });

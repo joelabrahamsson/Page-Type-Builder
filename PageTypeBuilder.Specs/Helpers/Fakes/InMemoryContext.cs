@@ -63,14 +63,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             AssemblyLocator.Add(type.Assembly);
         }
 
-        public void AddPageTypeClass(Action<TypeSpecification> typeSpecificationExpression)
+        public void AddPageTypeClassToAppDomain(Action<TypeSpecification> typeSpecificationExpression)
         {
             Type type = PageTypeClassFactory.CreatePageTypeClass(typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
         }
 
-        public void AddPageTypeClass(Action<TypeSpecification> typeSpecificationExpression, Action<PageTypeAttribute> pageTypeAttributeExpression)
+        public void AddPageTypeClassToAppDomain(Action<TypeSpecification> typeSpecificationExpression, Action<PageTypeAttribute> pageTypeAttributeExpression)
         {
             var attribute = new PageTypeAttribute();
             pageTypeAttributeExpression(attribute);
