@@ -1,6 +1,6 @@
 ﻿using Machine.Specifications;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
     [Subject("Synchronization")]
     public class when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added

@@ -1,7 +1,7 @@
 ﻿using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
     [Subject("Synchronization")]
     public class when_a_new_page_type_class_only_has_it_self_as_available_page_type

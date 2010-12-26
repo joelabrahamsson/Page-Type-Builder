@@ -3,7 +3,7 @@ using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
     [Subject("Synchronization")]
     public class when_a_page_type_class_has_it_self_and_another_page_type_class_as_available_page_types

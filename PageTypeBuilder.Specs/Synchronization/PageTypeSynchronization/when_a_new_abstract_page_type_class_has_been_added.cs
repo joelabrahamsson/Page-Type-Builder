@@ -1,9 +1,10 @@
-﻿using Machine.Specifications;
+﻿using System.Reflection;
+using Machine.Specifications;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
     [Subject("Synchronization")]
-    public class when_a_new_class_inheriting_from_TypedPageData_but_without_a_PageType_attribute_has_been_added
+    public class when_a_new_abstract_page_type_class_has_been_added
         : SynchronizationSpecs
     {
         static string className = "MyPageTypeClass";
@@ -11,6 +12,8 @@ namespace PageTypeBuilder.Specs.Synchronization
         Establish context = () => SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = className;
+                type.TypeAttributes = TypeAttributes.Abstract;
+                type.AddAttributeTemplate(new PageTypeAttribute());
             });
 
         Because of =

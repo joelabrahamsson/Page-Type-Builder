@@ -5,7 +5,7 @@ using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
     [Subject("Synchronization")]
     public class when_a_class_inheriting_from_an_abstract_page_type_class_in_the_same_assembly_has_been_added
