@@ -1,5 +1,6 @@
 ﻿using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
+using PageTypeBuilder.Specs.Helpers.Fakes;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {

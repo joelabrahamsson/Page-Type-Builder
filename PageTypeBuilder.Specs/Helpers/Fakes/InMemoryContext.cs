@@ -5,7 +5,7 @@ using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
 using StructureMap;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class InMemoryContext
     {

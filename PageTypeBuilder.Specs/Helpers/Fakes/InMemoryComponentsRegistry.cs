@@ -5,7 +5,7 @@ using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class InMemoryComponentsRegistry : Registry
     { 

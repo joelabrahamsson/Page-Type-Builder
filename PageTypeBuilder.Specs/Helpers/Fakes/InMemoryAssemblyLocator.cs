@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using PageTypeBuilder.Reflection;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class InMemoryAssemblyLocator : IAssemblyLocator
     {
