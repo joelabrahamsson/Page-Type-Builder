@@ -4,7 +4,7 @@ using System.Linq;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs
+namespace PageTypeBuilder.Specs.Synchronization
 {
     public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class
     {

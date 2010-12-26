@@ -2,7 +2,7 @@
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Functional
+namespace PageTypeBuilder.Specs.Synchronization
 {
     public class when_a_new_abstract_page_type_class_has_been_added
     {

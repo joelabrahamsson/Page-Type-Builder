@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Reflection.Emit;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Functional
+namespace PageTypeBuilder.Specs.Synchronization
 {
     public class when_a_page_type_class_has_it_self_and_another_page_type_class_as_available_page_types
     {

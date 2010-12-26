@@ -1,7 +1,7 @@
 ﻿using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Functional
+namespace PageTypeBuilder.Specs.Synchronization
 {
     public class when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added
     {
