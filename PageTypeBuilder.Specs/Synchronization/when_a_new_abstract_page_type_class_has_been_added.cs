@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
 using Machine.Specifications;
-using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
     public class when_a_new_abstract_page_type_class_has_been_added
+        : SynchronizationSpecs
     {
-        static InMemoryContext syncContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
 
-        Establish context = () => syncContext.AddTypeInheritingFromTypedPageData(type =>
+        Establish context = () => SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = className;
                 type.TypeAttributes = TypeAttributes.Abstract;
@@ -17,9 +16,9 @@ namespace PageTypeBuilder.Specs.Synchronization
             });
 
         Because of =
-            () => syncContext.PageTypeSynchronizer.SynchronizePageTypes();
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_page_type =
-            () => syncContext.PageTypeFactory.List().ShouldBeEmpty();
+            () => SyncContext.PageTypeFactory.List().ShouldBeEmpty();
     }
 }

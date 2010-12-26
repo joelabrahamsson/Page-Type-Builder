@@ -4,8 +4,8 @@ using PageTypeBuilder.Specs.Helpers;
 namespace PageTypeBuilder.Specs.Synchronization
 {
     public class when_a_new_page_type_class_only_has_it_self_as_available_page_type
+        : SynchronizationSpecs
     {
-        static InMemoryContext syncContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
 
         Establish context = () =>
@@ -25,15 +25,15 @@ namespace PageTypeBuilder.Specs.Synchronization
                         type.Attributes.Add(new PageTypeAttribute());
                     });
 
-                 syncContext.AssemblyLocator.Add(pageTypeClass.Assembly);
+                 SyncContext.AssemblyLocator.Add(pageTypeClass.Assembly);
             };
 
 
         Because of =
-            () => syncContext.PageTypeSynchronizer.SynchronizePageTypes();
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_page_type_that_has_only_itself_in_its_AllowedPageTypes_property =
-            () => syncContext.PageTypeFactory.Load(className).AllowedPageTypes
-                .ShouldContainOnly(syncContext.PageTypeFactory.Load(className).ID);
+            () => SyncContext.PageTypeFactory.Load(className).AllowedPageTypes
+                .ShouldContainOnly(SyncContext.PageTypeFactory.Load(className).ID);
     }
 }
