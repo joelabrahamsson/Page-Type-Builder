@@ -2,6 +2,7 @@
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
+    [Subject("Synchronization")]
     public class when_a_new_class_inheriting_from_TypedPageData_but_without_a_PageType_attribute_has_been_added
         : SynchronizationSpecs
     {

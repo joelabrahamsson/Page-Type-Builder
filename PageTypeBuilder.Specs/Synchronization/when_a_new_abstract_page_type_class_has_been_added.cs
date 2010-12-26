@@ -3,6 +3,7 @@ using Machine.Specifications;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
+    [Subject("Synchronization")]
     public class when_a_new_abstract_page_type_class_has_been_added
         : SynchronizationSpecs
     {

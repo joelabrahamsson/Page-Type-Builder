@@ -4,6 +4,7 @@ using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
+    [Subject("Synchronization")]
     public class when_a_page_type_property_has_a_name_longer_than_50_characters
         : SynchronizationSpecs
     {

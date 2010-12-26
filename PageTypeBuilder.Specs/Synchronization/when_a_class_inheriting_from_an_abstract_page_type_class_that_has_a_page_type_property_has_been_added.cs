@@ -7,6 +7,7 @@ using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
+    [Subject("Synchronization")]
     public class when_a_class_inheriting_from_an_abstract_page_type_class_that_has_a_page_type_property_has_been_added
         : SynchronizationSpecs
     {
@@ -32,7 +33,7 @@ namespace PageTypeBuilder.Specs.Synchronization
 
                 SyncContext.AssemblyLocator.Add(abstractClass.Assembly);
 
-                var concrete = ((ModuleBuilder)abstractClass.Module).CreateClass(type =>
+                ((ModuleBuilder)abstractClass.Module).CreateClass(type =>
                 {
                     type.Name = className;
                     type.ParentType = abstractClass;
@@ -45,5 +46,9 @@ namespace PageTypeBuilder.Specs.Synchronization
         It should_create_a_page_definition_whose_PageTypeID_is_equal_to_the_page_types_ID =
             () => SyncContext.PageDefinitionFactory.List().First().PageTypeID
                 .ShouldEqual(SyncContext.PageTypeFactory.List().First().ID);
+
+        It should_create_a_page_definition_whose_name_equals_the_propertys_name =
+            () => SyncContext.PageDefinitionFactory.List().First().Name
+                .ShouldEqual(propertyName);
     }
 }

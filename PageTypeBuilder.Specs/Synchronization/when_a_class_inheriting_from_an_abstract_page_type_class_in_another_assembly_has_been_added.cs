@@ -5,6 +5,7 @@ using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
+    [Subject("Synchronization")]
     public class when_a_class_inheriting_from_an_abstract_page_type_class_in_another_assembly_has_been_added
         : SynchronizationSpecs
     {
