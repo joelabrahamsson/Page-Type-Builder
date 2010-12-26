@@ -27,7 +27,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                             {
                                 property.Name = propertyName;
                                 property.Type = propertyType;
-                                property.Attributes.Add(propertyAttribute);
+                                property.AddAttributeTemplate(propertyAttribute);
                             });
                     });
 

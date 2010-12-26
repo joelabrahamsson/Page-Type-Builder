@@ -19,7 +19,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                 SyncContext.AddTypeInheritingFromTypedPageData(type =>
                 {
                     type.Name = className;
-                    type.Attributes.Add(pageTypeAttribute);
+                    type.AddAttributeTemplate(pageTypeAttribute);
                 });   
             };
 

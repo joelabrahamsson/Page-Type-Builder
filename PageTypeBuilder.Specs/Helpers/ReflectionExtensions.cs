@@ -42,9 +42,9 @@ namespace PageTypeBuilder.Specs.Helpers
         public static void AddAttribute(this AssemblyBuilder assemblyBuilder, Type attributeType)
         {
             ConstructorInfo attributeCtor = attributeType.GetConstructor(new Type[] { });
-            CustomAttributeBuilder pageTypePropertyAttributeBuilder =
+            CustomAttributeBuilder attributeBuilder =
                 new CustomAttributeBuilder(attributeCtor, new object[] { });
-            assemblyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
+            assemblyBuilder.SetCustomAttribute(attributeBuilder);
         }
 
         public static Type CreateClass(
@@ -56,7 +56,6 @@ namespace PageTypeBuilder.Specs.Helpers
             TypeBuilder typeBuilder = moduleBuilder.CreateTypeFromSpecification(typeSpec);
 
             AddTypeAttributes(typeBuilder, typeSpec);
-
             AddProperties(typeBuilder, typeSpec.Properties);
 
             return typeBuilder.CreateType();
@@ -75,7 +74,7 @@ namespace PageTypeBuilder.Specs.Helpers
             foreach (var attributeTemplate in typeSpec.Attributes)
             {
                 if (typeSpec.BeforeAttributeIsAddedToType != null)
-                    typeSpec.BeforeAttributeIsAddedToType(attributeTemplate, typeBuilder);
+                    typeSpec.BeforeAttributeIsAddedToType(attributeTemplate.Template, typeBuilder);
                 typeBuilder.AddAttribute(attributeTemplate);
             }
         }
@@ -94,32 +93,56 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public static void AddAttribute(
             this TypeBuilder typeBuilder,
-            Attribute attributeTemplate)
+            AttributeSpecification attributeSpecification)
         {
-            CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeTemplate);
+            CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeSpecification);
 
             typeBuilder.SetCustomAttribute(customAttributeBuilder);
         }
 
-        private static CustomAttributeBuilder CreateAttributeWithValuesFromTemplate(Attribute attributeTemplate)
+        public static void AddAttribute(
+            this TypeBuilder typeBuilder,
+            CustomAttributeBuilder attributeBuilder)
         {
-            var properties = GetWritableProperties(attributeTemplate);
+            typeBuilder.SetCustomAttribute(attributeBuilder);
+        }
 
-            object[] propertyValues = GetPropertyValues(attributeTemplate, properties);
-
+        private static CustomAttributeBuilder CreateAttributeWithValuesFromTemplate(AttributeSpecification attributeSpecification)
+        {
             var propertiesWithValues = new List<PropertyInfo>();
             var nonNullPropertyValues = new List<Object>();
-            for (int i = 0; i < properties.Length; i++)
-            {
-                if (propertyValues[i] == null)
-                    continue;
 
-                propertiesWithValues.Add(properties[i]);
-                nonNullPropertyValues.Add(propertyValues[i]);
+            if (attributeSpecification.Template != null)
+            {
+                var properties = GetWritableProperties(attributeSpecification.Template);
+
+                object[] propertyValues = GetPropertyValues(attributeSpecification.Template, properties);
+
+
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    if (propertyValues[i] == null)
+                        continue;
+
+                    propertiesWithValues.Add(properties[i]);
+                    nonNullPropertyValues.Add(propertyValues[i]);
+                }
             }
 
-            ConstructorInfo constructor = attributeTemplate.GetType().GetConstructor(new Type[] { });
-            return new CustomAttributeBuilder(constructor, new object[] { }, 
+            ConstructorInfo constructor;
+            if (attributeSpecification.Constructor != null)
+                constructor = attributeSpecification.Constructor;
+            else
+                constructor = attributeSpecification.Type.GetConstructor(new Type[] { });
+
+            object[] constructorParams;
+            if (attributeSpecification.Constructor != null)
+                constructorParams = attributeSpecification.ConstructorParameters;
+            else
+                constructorParams = new object[] {};
+
+
+            return new CustomAttributeBuilder(constructor, constructorParams, 
                 propertiesWithValues.ToArray(), nonNullPropertyValues.ToArray());
         }
 
@@ -183,14 +206,14 @@ namespace PageTypeBuilder.Specs.Helpers
             return setMethodBuilder;
         }
 
-        public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder, Attribute templateAttribute)
+        public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder, AttributeSpecification attributeSpecification)
         {
-            propertyBuilder.AddAttribute(templateAttribute);
+            propertyBuilder.AddAttribute(attributeSpecification);
         }
 
-        public static void AddAttribute(this PropertyBuilder propertyBuilder, Attribute attributeTemplate)
+        public static void AddAttribute(this PropertyBuilder propertyBuilder, AttributeSpecification attributeSpecification)
         {
-            CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeTemplate);
+            CustomAttributeBuilder customAttributeBuilder = CreateAttributeWithValuesFromTemplate(attributeSpecification);
             propertyBuilder.SetCustomAttribute(customAttributeBuilder);
         }
 

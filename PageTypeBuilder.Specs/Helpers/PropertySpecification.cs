@@ -8,7 +8,7 @@ namespace PageTypeBuilder.Specs.Helpers
     {
         public PropertySpecification()
         {
-            Attributes = new List<Attribute>();
+            Attributes = new List<AttributeSpecification>();
             GetterAttributes = MethodAttributes.Public;
             SetterAttributes = MethodAttributes.Public;
         }
@@ -17,7 +17,12 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public Type Type { get; set; }
 
-        public List<Attribute> Attributes { get; set; }
+        public void AddAttributeTemplate(Attribute template)
+        {
+            Attributes.Add(new AttributeSpecification(template));
+        }
+
+        public List<AttributeSpecification> Attributes { get; set; }
 
         public MethodAttributes GetterAttributes { get; set; }
 

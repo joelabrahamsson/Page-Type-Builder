@@ -22,7 +22,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                     {
                         type.Name = "BaseClass";
                         type.TypeAttributes = TypeAttributes.Abstract;
-                        type.Attributes.Add(attribute);
+                        type.AddAttributeTemplate(attribute);
                     });
 
                 SyncContext.AssemblyLocator.Add(abstractClass.Assembly);

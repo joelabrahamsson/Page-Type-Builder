@@ -83,6 +83,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Helpers\AttributeSpecification.cs" />
     <Compile Include="Synchronization\SynchronizationSpecs.cs" />
     <Compile Include="Synchronization\when_a_class_inheriting_from_an_abstract_page_type_class_that_has_a_page_type_property_has_been_added.cs" />
     <Compile Include="Synchronization\when_a_class_inheriting_from_an_abstract_page_type_class_in_another_assembly_has_been_added.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Helpers\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Synchronization\when_two_page_type_classes_have_same_guid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

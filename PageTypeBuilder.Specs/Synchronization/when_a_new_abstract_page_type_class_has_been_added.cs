@@ -13,7 +13,7 @@ namespace PageTypeBuilder.Specs.Synchronization
             {
                 type.Name = className;
                 type.TypeAttributes = TypeAttributes.Abstract;
-                type.Attributes.Add(new PageTypeAttribute());
+                type.AddAttributeTemplate(new PageTypeAttribute());
             });
 
         Because of =

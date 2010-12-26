@@ -17,7 +17,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                     {
                         type.Name = "BaseClass";
                         type.TypeAttributes = TypeAttributes.Abstract | TypeAttributes.Public;
-                        type.Attributes.Add(new PageTypeAttribute());
+                        type.AddAttributeTemplate(new PageTypeAttribute());
                     });
                 SyncContext.AssemblyLocator.Add(abstractClass.Assembly);
 

@@ -68,5 +68,17 @@ namespace PageTypeBuilder.Specs.Helpers
 
             AssemblyLocator.Add(type.Assembly);
         }
+
+        public void AddPageTypeClass(Action<TypeSpecification> typeSpecificationExpression, Action<PageTypeAttribute> pageTypeAttributeExpression)
+        {
+            var attribute = new PageTypeAttribute();
+            pageTypeAttributeExpression(attribute);
+            Type pageTypeClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
+            {
+                type.AddAttributeTemplate(attribute);
+                typeSpecificationExpression(type);
+            });
+            AssemblyLocator.Add(pageTypeClass.Assembly);
+        }
     }
 }

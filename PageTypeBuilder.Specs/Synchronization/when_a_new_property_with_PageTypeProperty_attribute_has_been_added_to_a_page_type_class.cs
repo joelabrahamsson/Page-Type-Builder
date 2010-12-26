@@ -26,7 +26,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                     {
                         prop.Name = propertyName;
                         prop.Type = typeof (string);
-                        prop.Attributes = new List<Attribute> {propertyAttribute};
+                        prop.AddAttributeTemplate(propertyAttribute);
                     }));
             };
 

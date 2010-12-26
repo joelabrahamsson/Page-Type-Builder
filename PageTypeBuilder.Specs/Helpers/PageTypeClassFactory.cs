@@ -12,7 +12,6 @@ namespace PageTypeBuilder.Specs.Helpers
                 type.Name = "DefaultPageTypeClassName";
                 type.ParentType = typeof(TypedPageData);
                 typeSpecificationExpression(type);
-                    
             });
             
             return createdClass;
@@ -29,7 +28,7 @@ namespace PageTypeBuilder.Specs.Helpers
         {
             return CreateTypeInheritingFromTypedPageData(type =>
                 {
-                    type.Attributes.Add(new PageTypeAttribute());
+                    type.AddAttributeTemplate(new PageTypeAttribute());
                     typeSpecificationExpression(type);
                 });
         }

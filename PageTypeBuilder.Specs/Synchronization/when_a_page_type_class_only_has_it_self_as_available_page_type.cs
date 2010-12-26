@@ -23,7 +23,7 @@ namespace PageTypeBuilder.Specs.Synchronization
 
 
                             };
-                        type.Attributes.Add(new PageTypeAttribute());
+                        type.AddAttributeTemplate(new PageTypeAttribute());
                     });
 
                  SyncContext.AssemblyLocator.Add(pageTypeClass.Assembly);

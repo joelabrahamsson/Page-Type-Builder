@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Specs.Synchronization
                 var another = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(anotherModule, type =>
                     {
                         type.Name = otherClassName;
-                        type.Attributes.Add(new PageTypeAttribute());
+                        type.AddAttributeTemplate(new PageTypeAttribute());
                     });
                 Type typeBuilder = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, type =>
                 {
@@ -32,7 +32,7 @@ namespace PageTypeBuilder.Specs.Synchronization
 
 
                     };
-                    type.Attributes.Add(new PageTypeAttribute());
+                    type.AddAttributeTemplate(new PageTypeAttribute());
                 });
 
                 SyncContext.AssemblyLocator.Add(typeBuilder.Assembly);

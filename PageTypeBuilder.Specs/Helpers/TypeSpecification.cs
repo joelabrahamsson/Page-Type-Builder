@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace PageTypeBuilder.Specs.Helpers
 {
@@ -8,8 +9,13 @@ namespace PageTypeBuilder.Specs.Helpers
     {
         public TypeSpecification()
         {
-            Attributes = new List<Attribute>();
+            Attributes = new List<AttributeSpecification>();
             Properties = new List<PropertySpecification>();
+        }
+
+        public void AddAttributeTemplate(Attribute template)
+        {
+            Attributes.Add(new AttributeSpecification(template));
         }
 
         public string Name { get; set; }
@@ -18,7 +24,7 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public Type ParentType { get; set; }
 
-        public List<Attribute> Attributes { get; set; }
+        public List<AttributeSpecification> Attributes { get; set; }
 
         public List<PropertySpecification> Properties { get; set; }
 
