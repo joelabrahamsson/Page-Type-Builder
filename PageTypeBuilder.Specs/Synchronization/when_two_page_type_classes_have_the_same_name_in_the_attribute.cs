@@ -1,41 +1,31 @@
 ﻿using System;
 using Machine.Specifications;
-using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {
     [Subject("Synchronization")]
-    public class when_two_page_type_classes_have_same_guid
+    public class when_two_page_type_classes_have_the_same_name_in_the_attribute
         : SynchronizationSpecs
     {
         static Exception thrownException;
         static string firstPageTypeName = "aPageType";
         static string secondPageTypeName = "anotherPageType";
+        static string nameInAttribute = "nameInAttribute";
 
         Establish context = () =>
         {
-            string guid = new Guid().ToString();
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = firstPageTypeName;
-                type.Attributes.Add(CreatePageTypeAttributeSpecification(guid));
+                type.AddAttributeTemplate(new PageTypeAttribute() { Name = nameInAttribute});
             });
 
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = secondPageTypeName;
-                type.Attributes.Add(CreatePageTypeAttributeSpecification(guid));
+                type.AddAttributeTemplate(new PageTypeAttribute() { Name = nameInAttribute });
             });
         };
-
-        static AttributeSpecification CreatePageTypeAttributeSpecification(string guid)
-        {
-            return new AttributeSpecification
-                       {
-                           Constructor = typeof(PageTypeAttribute).GetConstructor(new [] { typeof(string) }),
-                           ConstructorParameters = new object[] { guid}
-                       };
-        }
 
         Because of = () =>
             thrownException = Catch.Exception(
@@ -44,15 +34,12 @@ namespace PageTypeBuilder.Specs.Synchronization
         It should_throw_an_Exception = () =>
             thrownException.ShouldNotBeNull();
 
-        [Ignore]
         It should_throw_a_PageTypeBuilderException = () =>
             thrownException.ShouldBeOfType<PageTypeBuilderException>();
 
-        [Ignore] 
         It should_throw_Exception_containing_the_first_page_types_name = () =>
             thrownException.Message.ShouldContain(firstPageTypeName);
 
-        [Ignore]
         It should_throw_Exception_containing_the_second_page_types_name = () =>
             thrownException.Message.ShouldContain(secondPageTypeName);
     }

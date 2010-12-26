@@ -95,6 +95,8 @@
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
+    <Compile Include="Synchronization\when_two_page_type_classes_have_the_same_name_in_the_attribute.cs" />
+    <Compile Include="Synchronization\when_two_page_type_classes_have_the_same_name.cs" />
     <Compile Include="Synchronization\SynchronizationSpecs.cs" />
     <Compile Include="Synchronization\when_a_class_inheriting_from_an_abstract_page_type_class_that_has_a_page_type_property_has_been_added.cs" />
     <Compile Include="Synchronization\when_a_class_inheriting_from_an_abstract_page_type_class_in_another_assembly_has_been_added.cs" />
