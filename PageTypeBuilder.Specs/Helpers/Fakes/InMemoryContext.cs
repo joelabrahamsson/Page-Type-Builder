@@ -2,6 +2,7 @@
 using System.Reflection.Emit;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Reflection;
+using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 using PageTypeBuilder.Synchronization;
 using StructureMap;
 

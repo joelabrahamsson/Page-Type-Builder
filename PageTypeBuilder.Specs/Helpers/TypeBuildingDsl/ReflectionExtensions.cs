@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 {
     public static class ReflectionExtensions
     {

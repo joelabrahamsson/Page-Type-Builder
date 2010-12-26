@@ -83,7 +83,6 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="Helpers\AttributeSpecification.cs" />
     <Compile Include="Helpers\Fakes\InMemoryAssemblyLocator.cs" />
     <Compile Include="Helpers\Fakes\InMemoryComponentsRegistry.cs" />
     <Compile Include="Helpers\Fakes\InMemoryContext.cs" />
@@ -91,6 +90,11 @@
     <Compile Include="Helpers\Fakes\InMemoryPageDefinitionTypeFactory.cs" />
     <Compile Include="Helpers\Fakes\InMemoryPageTypeFactory.cs" />
     <Compile Include="Helpers\Fakes\InMemoryTabFactory.cs" />
+    <Compile Include="Helpers\TypeBuildingDsl\AssemblySpecification.cs" />
+    <Compile Include="Helpers\TypeBuildingDsl\AttributeSpecification.cs" />
+    <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
+    <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
+    <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
     <Compile Include="Synchronization\SynchronizationSpecs.cs" />
     <Compile Include="Synchronization\when_a_class_inheriting_from_an_abstract_page_type_class_that_has_a_page_type_property_has_been_added.cs" />
     <Compile Include="Synchronization\when_a_class_inheriting_from_an_abstract_page_type_class_in_another_assembly_has_been_added.cs" />
@@ -102,12 +106,8 @@
     <Compile Include="Synchronization\when_a_page_type_class_only_has_it_self_as_available_page_type.cs" />
     <Compile Include="Synchronization\when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class.cs" />
     <Compile Include="Synchronization\when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added.cs" />
-    <Compile Include="Helpers\AssemblySpecification.cs" />
     <Compile Include="Helpers\IntegerExtensions.cs" />
     <Compile Include="Helpers\PageTypeClassFactory.cs" />
-    <Compile Include="Helpers\PropertySpecification.cs" />
-    <Compile Include="Helpers\ReflectionExtensions.cs" />
-    <Compile Include="Helpers\TypeSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Synchronization\when_two_page_type_classes_have_same_guid.cs" />
   </ItemGroup>

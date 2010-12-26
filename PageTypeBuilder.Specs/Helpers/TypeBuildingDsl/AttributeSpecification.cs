@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 {
     public class AttributeSpecification
     {

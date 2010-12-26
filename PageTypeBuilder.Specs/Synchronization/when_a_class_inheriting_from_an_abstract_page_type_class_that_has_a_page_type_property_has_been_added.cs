@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
+using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization
 {

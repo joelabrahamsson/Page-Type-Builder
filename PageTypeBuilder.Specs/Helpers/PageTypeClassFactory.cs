@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Helpers
 {
