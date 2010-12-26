@@ -112,6 +112,7 @@
     <Compile Include="Helpers\IntegerExtensions.cs" />
     <Compile Include="Helpers\PageTypeClassFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Synchronization\when_two_page_type_classes_have_the_same_name_but_one_has_a_different_name_in_the_attribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
