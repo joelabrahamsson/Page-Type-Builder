@@ -47,7 +47,7 @@ namespace PageTypeBuilder.Specs.Helpers
             assemblyBuilder.SetCustomAttribute(pageTypePropertyAttributeBuilder);
         }
 
-        public static TypeBuilder CreateClass(
+        public static Type CreateClass(
             this ModuleBuilder moduleBuilder,
             Action<TypeSpecification> typeSpecificationExpression)
         {
@@ -59,9 +59,7 @@ namespace PageTypeBuilder.Specs.Helpers
 
             AddProperties(typeBuilder, typeSpec.Properties);
 
-            typeBuilder.CreateType();
-            
-            return typeBuilder;
+            return typeBuilder.CreateType();
         }
 
         private static TypeBuilder CreateTypeFromSpecification(this ModuleBuilder moduleBuilder, TypeSpecification typeSpec)
@@ -146,9 +144,43 @@ namespace PageTypeBuilder.Specs.Helpers
             this TypeBuilder typeBuilder,
             PropertySpecification propertySpec)
         {
+            var property = typeBuilder.DefineProperty(
+                propertySpec.Name, PropertyAttributes.None, propertySpec.Type, null);
 
-            return typeBuilder.DefineProperty(
-                propertySpec.Name, PropertyAttributes.HasDefault, propertySpec.Type, null);
+            FieldBuilder fieldBuilder = typeBuilder.DefineField("_" + propertySpec.Name.ToLowerInvariant(), propertySpec.Type, FieldAttributes.Private);
+
+            MethodBuilder getMethodBuilder = CreatePropertyGetMethod(typeBuilder, property, propertySpec.GetterAttributes, fieldBuilder);
+
+            MethodBuilder setMethodBuilder = CreatePropertySetMethod(typeBuilder, property, propertySpec.SetterAttributes, fieldBuilder);
+
+            property.SetGetMethod(getMethodBuilder);
+            property.SetSetMethod(setMethodBuilder);
+
+
+            return property;
+        }
+
+        static MethodBuilder CreatePropertyGetMethod(TypeBuilder typeBuilder, PropertyBuilder property, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
+        {
+            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + property.Name, methodAttributes, fieldBuilder.FieldType, Type.EmptyTypes);
+
+            ILGenerator getMethodILGenerator = getMethodBuilder.GetILGenerator();
+            getMethodILGenerator.Emit(OpCodes.Ldarg_0);
+            getMethodILGenerator.Emit(OpCodes.Ldfld, fieldBuilder);
+            getMethodILGenerator.Emit(OpCodes.Ret);
+            return getMethodBuilder;
+        }
+
+        static MethodBuilder CreatePropertySetMethod(TypeBuilder typeBuilder, PropertyBuilder property, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
+        {
+            MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + property.Name, methodAttributes, null, new Type[] { fieldBuilder.FieldType });
+
+            ILGenerator setMethodILGenerator = setMethodBuilder.GetILGenerator();
+            setMethodILGenerator.Emit(OpCodes.Ldarg_0);
+            setMethodILGenerator.Emit(OpCodes.Ldarg_1);
+            setMethodILGenerator.Emit(OpCodes.Stfld, fieldBuilder);
+            setMethodILGenerator.Emit(OpCodes.Ret);
+            return setMethodBuilder;
         }
 
         public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder, Attribute templateAttribute)

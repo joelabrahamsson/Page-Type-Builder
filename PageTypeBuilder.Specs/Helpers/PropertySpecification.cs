@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace PageTypeBuilder.Specs.Helpers
 {
@@ -8,6 +9,8 @@ namespace PageTypeBuilder.Specs.Helpers
         public PropertySpecification()
         {
             Attributes = new List<Attribute>();
+            GetterAttributes = MethodAttributes.Public;
+            SetterAttributes = MethodAttributes.Public;
         }
 
         public string Name { get; set; }
@@ -15,5 +18,9 @@ namespace PageTypeBuilder.Specs.Helpers
         public Type Type { get; set; }
 
         public List<Attribute> Attributes { get; set; }
+
+        public MethodAttributes GetterAttributes { get; set; }
+
+        public MethodAttributes SetterAttributes { get; set; }
     }
 }

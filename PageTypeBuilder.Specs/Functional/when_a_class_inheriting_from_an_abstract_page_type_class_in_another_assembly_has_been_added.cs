@@ -16,18 +16,17 @@ namespace PageTypeBuilder.Specs.Functional
                 Type abstractClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
                     {
                         type.Name = "BaseClass";
-                        type.TypeAttributes = TypeAttributes.Abstract;
+                        type.TypeAttributes = TypeAttributes.Abstract | TypeAttributes.Public;
                         type.Attributes.Add(new PageTypeAttribute());
-                        type.TypeAttributes = TypeAttributes.Public;
                     });
                 syncContext.AssemblyLocator.Add(abstractClass.Assembly);
 
-                TypeBuilder typeBuilder = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
+                Type pageTypeClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
                 {
                     type.Name = className;
                     type.ParentType = abstractClass;
                 });
-                syncContext.AssemblyLocator.Add(typeBuilder.Assembly);
+                syncContext.AssemblyLocator.Add(pageTypeClass.Assembly);
             };
 
         Because of =

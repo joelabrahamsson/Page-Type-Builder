@@ -5,9 +5,9 @@ namespace PageTypeBuilder.Specs.Helpers
 {
     public class PageTypeClassFactory
     {
-        public static TypeBuilder CreateTypeInheritingFromTypedPageData(ModuleBuilder moduleBuilder, Action<TypeSpecification> typeSpecificationExpression)
+        public static Type CreateTypeInheritingFromTypedPageData(ModuleBuilder moduleBuilder, Action<TypeSpecification> typeSpecificationExpression)
         {
-            TypeBuilder typeBuilder = moduleBuilder.CreateClass(type =>
+            Type createdClass = moduleBuilder.CreateClass(type =>
             {
                 type.Name = "DefaultPageTypeClassName";
                 type.ParentType = typeof(TypedPageData);
@@ -15,17 +15,17 @@ namespace PageTypeBuilder.Specs.Helpers
                     
             });
             
-            return typeBuilder;
+            return createdClass;
         }
 
-        public static TypeBuilder CreateTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
+        public static Type CreateTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
             ModuleBuilder moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("DynamicAssembly" + Guid.NewGuid());
 
             return CreateTypeInheritingFromTypedPageData(moduleBuilder, typeSpecificationExpression);
         }
 
-        public static TypeBuilder CreatePageTypeClass(Action<TypeSpecification> typeSpecificationExpression)
+        public static Type CreatePageTypeClass(Action<TypeSpecification> typeSpecificationExpression)
         {
             return CreateTypeInheritingFromTypedPageData(type =>
                 {

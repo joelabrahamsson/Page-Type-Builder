@@ -50,21 +50,21 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public void AddTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
-            TypeBuilder type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(typeSpecificationExpression);
+            Type type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(typeSpecificationExpression);
             
             AssemblyLocator.Add(type.Assembly);
         }
 
         public void AddTypeInheritingFromTypedPageData(ModuleBuilder module, Action<TypeSpecification> typeSpecificationExpression)
         {
-            TypeBuilder type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, typeSpecificationExpression);
+            Type type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
         }
 
         public void AddPageTypeClass(Action<TypeSpecification> typeSpecificationExpression)
         {
-            TypeBuilder type = PageTypeClassFactory.CreatePageTypeClass(typeSpecificationExpression);
+            Type type = PageTypeClassFactory.CreatePageTypeClass(typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
         }

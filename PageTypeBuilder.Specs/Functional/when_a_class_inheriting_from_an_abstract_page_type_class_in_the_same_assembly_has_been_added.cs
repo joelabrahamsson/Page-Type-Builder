@@ -10,14 +10,18 @@ namespace PageTypeBuilder.Specs.Functional
     {
         static InMemoryContext syncContext = new InMemoryContext();
         static string className = "MyPageTypeClass";
+        static PageTypeAttribute attribute;
 
         Establish context = () =>
             {
+                attribute = new PageTypeAttribute();
+                attribute.Description = "Description in base class' attribute";
+
                 Type abstractClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
                     {
                         type.Name = "BaseClass";
                         type.TypeAttributes = TypeAttributes.Abstract;
-                        type.Attributes.Add(new PageTypeAttribute());
+                        type.Attributes.Add(attribute);
                     });
 
                 syncContext.AssemblyLocator.Add(abstractClass.Assembly);
@@ -32,7 +36,10 @@ namespace PageTypeBuilder.Specs.Functional
         Because of =
             () => syncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
-        It should_create_a_new_page_type_with_the_name_of_the_class =
+        It should_create_a_new_page_type_with_the_name_of_the_concrete_class =
             () => syncContext.PageTypeFactory.Load(className).ShouldNotBeNull();
+
+        It should_create_a_new_page_type_with_a_description_from_the_abstract_class_page_type_attribute =
+            () => syncContext.PageTypeFactory.Load(className).Description.ShouldEqual(attribute.Description);
     }
 }

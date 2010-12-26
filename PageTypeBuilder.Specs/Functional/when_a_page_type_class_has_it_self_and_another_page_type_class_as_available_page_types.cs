@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
@@ -19,7 +20,7 @@ namespace PageTypeBuilder.Specs.Functional
                         type.Name = otherClassName;
                         type.Attributes.Add(new PageTypeAttribute());
                     });
-                TypeBuilder typeBuilder = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, type =>
+                Type typeBuilder = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(module, type =>
                 {
                     type.Name = "MyPageTypeClass";
                     type.BeforeAttributeIsAddedToType = (attribute, t) =>
