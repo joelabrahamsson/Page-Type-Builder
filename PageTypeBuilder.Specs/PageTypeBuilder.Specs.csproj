@@ -90,6 +90,7 @@
     <Compile Include="Helpers\Fakes\InMemoryPageDefinitionTypeFactory.cs" />
     <Compile Include="Helpers\Fakes\InMemoryPageTypeFactory.cs" />
     <Compile Include="Helpers\Fakes\InMemoryTabFactory.cs" />
+    <Compile Include="Helpers\TabClassFactory.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\AssemblySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\AttributeSpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
