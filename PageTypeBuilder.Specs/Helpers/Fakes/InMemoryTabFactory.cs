@@ -20,7 +20,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public TabDefinition GetTabDefinition(string name)
         {
-            var record = tabs.Where(t => t.Name == name);
+            var record = tabs.Where(t => t.Name == name).FirstOrDefault();
             if (record == null)
                 return null;
 

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 {
     public class PropertySpecification
     {
+        ///TODO: Require Name and Type in ctor
         public PropertySpecification()
         {
             Attributes = new List<AttributeSpecification>();
@@ -27,5 +29,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
         public MethodAttributes GetterAttributes { get; set; }
 
         public MethodAttributes SetterAttributes { get; set; }
+
+        public Func<TypeBuilder, MethodBuilder> GetterImplementation { get; set; }
     }
 }

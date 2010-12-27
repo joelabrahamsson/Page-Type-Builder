@@ -11,6 +11,11 @@ namespace PageTypeBuilder.Synchronization
             TabFactory = new TabFactory();
         }
 
+        public TabDefinitionUpdater(ITabFactory tabFactory)
+        {
+            TabFactory = tabFactory;
+        }
+
         public virtual void UpdateTabDefinitions(IEnumerable<Tab> tabs)
         {
             foreach (Tab tab in tabs)

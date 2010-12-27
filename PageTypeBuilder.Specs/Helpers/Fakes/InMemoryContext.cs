@@ -49,6 +49,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             }
         }
 
+        public InMemoryTabFactory TabFactory
+        {
+            get
+            {
+                return (InMemoryTabFactory) Container.GetInstance<ITabFactory>();
+            }
+        }
+
         public void AddTypeInheritingFromTypedPageData(Action<TypeSpecification> typeSpecificationExpression)
         {
             Type type = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(typeSpecificationExpression);

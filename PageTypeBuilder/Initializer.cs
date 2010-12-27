@@ -30,7 +30,8 @@ namespace PageTypeBuilder
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
                 PageTypeResolver.Instance,
                 pageTypeLocator,
-                pageTypeUpdater);
+                pageTypeUpdater,
+                new TabDefinitionUpdater());
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

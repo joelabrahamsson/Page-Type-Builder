@@ -82,13 +82,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
         private static void AddProperties(TypeBuilder typeBuilder, IEnumerable<PropertySpecification> properties)
         {
             foreach (var propertySpecification in properties)
-            {
-                PropertyBuilder property = typeBuilder.AddProperty(propertySpecification);
-                foreach (var attributeTemplate in propertySpecification.Attributes)
-                {
-                    property.AddAttribute(attributeTemplate);
-                }
-            }
+                typeBuilder.AddProperty(propertySpecification);
         }
 
         public static void AddAttribute(
@@ -163,29 +157,40 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             return propertyValues;
         }
 
-        public static PropertyBuilder AddProperty(
+        public static void AddProperty(
             this TypeBuilder typeBuilder,
             PropertySpecification propertySpec)
         {
-            var property = typeBuilder.DefineProperty(
-                propertySpec.Name, PropertyAttributes.None, propertySpec.Type, null);
+            
 
             FieldBuilder fieldBuilder = typeBuilder.DefineField("_" + propertySpec.Name.ToLowerInvariant(), propertySpec.Type, FieldAttributes.Private);
 
-            MethodBuilder getMethodBuilder = CreatePropertyGetMethod(typeBuilder, property, propertySpec.GetterAttributes, fieldBuilder);
+            MethodBuilder getterMethodBuilder;
+            if (propertySpec.GetterImplementation != null)
+                getterMethodBuilder = propertySpec.GetterImplementation(typeBuilder);
+            else
+                getterMethodBuilder = CreatePropertyGetMethodWithBackingField(typeBuilder, propertySpec.Name, propertySpec.GetterAttributes, fieldBuilder);
 
-            MethodBuilder setMethodBuilder = CreatePropertySetMethod(typeBuilder, property, propertySpec.SetterAttributes, fieldBuilder);
+            MethodBuilder setterMethodBuilder = CreatePropertySetMethodWithBackingField(typeBuilder, propertySpec.Name, propertySpec.SetterAttributes, fieldBuilder);
 
-            property.SetGetMethod(getMethodBuilder);
-            property.SetSetMethod(setMethodBuilder);
+            if (typeBuilder.BaseType.GetProperty(propertySpec.Name) != null)
+                return;
 
+            var property = typeBuilder.DefineProperty(
+                propertySpec.Name, PropertyAttributes.None, propertySpec.Type, null);
 
-            return property;
+            property.SetGetMethod(getterMethodBuilder);
+            property.SetSetMethod(setterMethodBuilder);
+
+            foreach (var attributeTemplate in propertySpec.Attributes)
+            {
+                property.AddAttribute(attributeTemplate);
+            }
         }
 
-        static MethodBuilder CreatePropertyGetMethod(TypeBuilder typeBuilder, PropertyBuilder property, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
+        static MethodBuilder CreatePropertyGetMethodWithBackingField(TypeBuilder typeBuilder, string name, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
         {
-            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + property.Name, methodAttributes, fieldBuilder.FieldType, Type.EmptyTypes);
+            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + name, methodAttributes, fieldBuilder.FieldType, Type.EmptyTypes);
 
             ILGenerator getMethodILGenerator = getMethodBuilder.GetILGenerator();
             getMethodILGenerator.Emit(OpCodes.Ldarg_0);
@@ -194,9 +199,9 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             return getMethodBuilder;
         }
 
-        static MethodBuilder CreatePropertySetMethod(TypeBuilder typeBuilder, PropertyBuilder property, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
+        static MethodBuilder CreatePropertySetMethodWithBackingField(TypeBuilder typeBuilder, string name, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
         {
-            MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + property.Name, methodAttributes, null, new Type[] { fieldBuilder.FieldType });
+            MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + name, methodAttributes, null, new Type[] { fieldBuilder.FieldType });
 
             ILGenerator setMethodILGenerator = setMethodBuilder.GetILGenerator();
             setMethodILGenerator.Emit(OpCodes.Ldarg_0);
@@ -204,11 +209,6 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             setMethodILGenerator.Emit(OpCodes.Stfld, fieldBuilder);
             setMethodILGenerator.Emit(OpCodes.Ret);
             return setMethodBuilder;
-        }
-
-        public static void AddPageTypePropertyAttribute(this PropertyBuilder propertyBuilder, AttributeSpecification attributeSpecification)
-        {
-            propertyBuilder.AddAttribute(attributeSpecification);
         }
 
         public static void AddAttribute(this PropertyBuilder propertyBuilder, AttributeSpecification attributeSpecification)

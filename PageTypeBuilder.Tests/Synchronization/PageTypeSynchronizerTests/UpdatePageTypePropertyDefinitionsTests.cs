@@ -35,7 +35,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
                 new PageTypeResolver(),
                 pageTypeLocator,
-                new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()));
+                new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()), new TabDefinitionUpdater());
             synchronizer.PageTypeUpdater = pageTypeUpdater;
             synchronizer.UpdatePageTypePropertyDefinitions(definitions);
 
