@@ -12,9 +12,49 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public InMemoryPageDefinitionTypeFactory()
         {
-            pageDefinitions = new List<PageDefinitionType>();
+            pageDefinitions = new List<PageDefinitionType>
+            {
+                new PageDefinitionType(0, PropertyDataType.Boolean,
+                                        "PropertyBoolean", "EPiServer.Core.PropertyBoolean",
+                                        "EPiServer"),
 
-            pageDefinitions.Add(new PageDefinitionType(1, PropertyDataType.String, "PropertyXHtmlString", "EPiServer.SpecializedProperties.PropertyXhtmlString", "EPiServer"));
+                new PageDefinitionType(1, PropertyDataType.Number,
+                                        "PropertyNumber", "EPiServer.Core.PropertyNumber",
+                                        "EPiServer"),
+
+                new PageDefinitionType(2, PropertyDataType.FloatNumber,
+                                        "PropertyFloatNumber", "EPiServer.Core.PropertyFloatNumber",
+                                        "EPiServer"),
+
+                new PageDefinitionType(3, PropertyDataType.PageType,
+                                        "PropertyPageType", "EPiServer.Core.PropertyPageType",
+                                        "EPiServer"),
+
+                new PageDefinitionType(4, PropertyDataType.PageReference,
+                                        "PropertyPageReference", "EPiServer.Core.PropertyPageReference",
+                                        "EPiServer"),
+
+                new PageDefinitionType(5, PropertyDataType.Date,
+                                        "PropertyDate", "EPiServer.Core.PropertyDate",
+                                        "EPiServer"),
+
+                new PageDefinitionType(6, PropertyDataType.String,
+                                        "PropertyString", "EPiServer.Core.PropertyString",
+                                        "EPiServer"),
+
+                new PageDefinitionType(7, PropertyDataType.LongString,
+                                        "PropertyLongString", "EPiServer.Core.PropertyLongString",
+                                        "EPiServer"),
+
+                new PageDefinitionType(8, PropertyDataType.Category,
+                                        "PropertyCategory", "EPiServer.Core.PropertyCategory",
+                                        "EPiServer"),
+
+                new PageDefinitionType(100, PropertyDataType.LongString,
+                                        "PropertyXHtmlString",
+                                        "EPiServer.SpecializedProperties.PropertyXhtmlString",
+                                        "EPiServer")
+            };
         }
 
         public PageDefinitionType GetPageDefinitionType(int id)

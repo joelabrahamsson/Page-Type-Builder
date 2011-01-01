@@ -105,6 +105,7 @@
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_has_it_self_and_another_page_type_class_as_available_page_types.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_only_has_it_self_as_available_page_type.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\DefaultPropertyTypeMappings.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_two_page_type_classes_have_the_same_name_but_one_has_a_different_name_in_the_attribute.cs" />
     <Compile Include="Synchronization\TabSynchronization\when_a_new_class_inheriting_from_Tab_has_been_added.cs" />
     <Compile Include="Synchronization\Validation\when_a_page_type_property_has_a_name_longer_than_50_characters.cs" />
