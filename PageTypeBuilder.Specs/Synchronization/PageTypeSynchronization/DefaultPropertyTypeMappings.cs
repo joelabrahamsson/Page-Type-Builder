@@ -29,6 +29,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         }
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_string_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -42,6 +43,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyXHtmlString");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_int_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -55,6 +57,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyNumber");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_nullable_int_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -68,6 +71,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyNumber");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_bool_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -81,6 +85,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyBoolean");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_nullable_bool_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -94,6 +99,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyBoolean");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_DateTime_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -107,6 +113,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyDate");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_nullable_DateTime_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -120,6 +127,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyDate");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_float_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -133,6 +141,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyFloatNumber");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_nullable_float_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -146,6 +155,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyFloatNumber");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_PageType_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -159,6 +169,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyPageType");
     }
 
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_PageReference_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
@@ -173,6 +184,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
     }
 
     [Ignore]
+    [Subject("Synchronization")]
     public class when_a_page_type_property_of_type_LinkItemCollection_doesnt_have_a_type_specified_in_the_attribute
         : DefaultPropertyTypeMappingSpecs
     {
