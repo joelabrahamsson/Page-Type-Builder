@@ -135,7 +135,7 @@ namespace PageTypeBuilder.Synchronization
             if (propertyAttribute.Tab != null)
             {
                 Tab definedTab = (Tab) Activator.CreateInstance(propertyAttribute.Tab);
-                tab = TabDefinition.Load(definedTab.Name);
+                tab = _tabFactory.GetTabDefinition(definedTab.Name);
             }
             pageDefinition.Tab = tab;
         }
