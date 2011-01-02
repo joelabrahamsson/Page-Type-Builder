@@ -10,6 +10,8 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
     {
         private int nextId = 1;
         private List<TabDefinition> tabs;
+        private SavesPerIdCounter numberOfSavesPerTabIdCounter = new SavesPerIdCounter();
+
 
         public InMemoryTabFactory()
         {
@@ -40,6 +42,8 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                 Mapper.Map(tabDefinition, record);
                 tabs.Add(record);
             }
+
+            numberOfSavesPerTabIdCounter.IncrementNumberOfSaves(tabDefinition.ID);
         }
 
         public TabDefinitionCollection List()
@@ -61,6 +65,16 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                 Mapper.Map(record, exposed);
                 return exposed;
             });
+        }
+
+        public int GetNumberOfSaves(int pageTypeId)
+        {
+            return numberOfSavesPerTabIdCounter.GetNumberOfSaves(pageTypeId);
+        }
+
+        public void ResetNumberOfSaves()
+        {
+            numberOfSavesPerTabIdCounter.ResetNumberOfSaves();
         }
     }
 }
