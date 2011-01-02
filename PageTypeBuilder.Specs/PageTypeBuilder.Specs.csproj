@@ -113,6 +113,7 @@
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_with_a_different_class_name_but_the_same_GUID_as_an_existing_page_type_exists.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_two_page_type_classes_have_the_same_name_but_one_has_a_different_name_in_the_attribute.cs" />
     <Compile Include="Synchronization\TabSynchronization\when_a_new_class_inheriting_from_Tab_has_been_added.cs" />
+    <Compile Include="Synchronization\Validation\when_a_page_type_class_with_the_name_of_an_existing_page_type_exists_and_a_page_type_class_with_another_name_but_the_same_GUID_as_the_same_existing_page_type_exists.cs" />
     <Compile Include="Synchronization\Validation\when_a_page_type_property_has_an_invalid_type_specified_in_the_attribute.cs" />
     <Compile Include="Synchronization\Validation\when_a_page_type_class_has_a_name_longer_than_50_characters_specified_in_the_attribute.cs" />
     <Compile Include="Synchronization\Validation\when_a_page_type_class_has_a_name_longer_than_50_characters_and_no_name_specified_in_the_attribute.cs" />
