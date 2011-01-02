@@ -42,6 +42,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                 Mapper.Map(tabDefinition, record);
                 tabs.Add(record);
             }
+            else
+            {
+                var existingTabDefinitionRecord = tabs.First(td => td.ID == tabDefinition.ID);
+                Mapper.Map(tabDefinition, existingTabDefinitionRecord);
+            }
 
             numberOfSavesPerTabIdCounter.IncrementNumberOfSaves(tabDefinition.ID);
         }
