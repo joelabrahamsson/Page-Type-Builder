@@ -97,6 +97,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_with_a_name_specified_in_the_attribute_but_the_same_GUID_as_an_existing_page_type_exists.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\DefaultPropertyTypeMappings.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\when_a_class_inheriting_from_an_abstract_page_type_class_that_has_a_page_type_property_has_been_added.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class.cs" />
