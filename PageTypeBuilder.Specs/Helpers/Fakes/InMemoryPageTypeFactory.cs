@@ -11,6 +11,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
     {
         private int nextId;
         private List<PageType> pageTypes;
+        private Dictionary<int, int> numberOfSavesPerPageTypeId = new Dictionary<int, int>();
 
         public InMemoryPageTypeFactory()
         {
@@ -72,11 +73,35 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                 var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.ID == pageTypeToSave.ID);
                 Mapper.Map(pageTypeToSave, pageTypeRecord);
             }
+
+            IncrementNumberOfSaves(pageTypeToSave.ID);
         }
 
+        
         public IEnumerable<PageType> List()
         {
             return pageTypes;
+        }
+
+        public int GetNumberOfSaves(int pageTypeId)
+        {
+            if (numberOfSavesPerPageTypeId.ContainsKey(pageTypeId))
+                return numberOfSavesPerPageTypeId[pageTypeId];
+
+            return 0;
+        }
+
+        public void ResetNumberOfSaves()
+        {
+            numberOfSavesPerPageTypeId.Clear();
+        }
+
+        private void IncrementNumberOfSaves(int pageTypeId)
+        {
+            if (!numberOfSavesPerPageTypeId.ContainsKey(pageTypeId))
+                numberOfSavesPerPageTypeId[pageTypeId] = 0;
+
+            numberOfSavesPerPageTypeId[pageTypeId]++;
         }
     }
 }

@@ -104,6 +104,7 @@
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_new_property_with_PageTypeProperty_attribute_has_been_added_to_a_page_type_class.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_has_it_self_and_another_page_type_class_as_available_page_types.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_has_the_name_of_an_existing_page_type_and_the_default_Filename.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_only_has_it_self_as_available_page_type.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\DefaultPropertyTypeMappings.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_two_page_type_classes_have_the_same_name_but_one_has_a_different_name_in_the_attribute.cs" />
