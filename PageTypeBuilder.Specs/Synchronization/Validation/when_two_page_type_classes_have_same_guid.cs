@@ -1,5 +1,6 @@
 ﻿using System;
 using Machine.Specifications;
+using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization.Validation
@@ -18,24 +19,15 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = firstPageTypeName;
-                type.Attributes.Add(CreatePageTypeAttributeSpecification(guid));
+                type.Attributes.Add(AttributeHelper.CreatePageTypeAttributeSpecification(guid));
             });
 
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = secondPageTypeName;
-                type.Attributes.Add(CreatePageTypeAttributeSpecification(guid));
+                type.Attributes.Add(AttributeHelper.CreatePageTypeAttributeSpecification(guid));
             });
         };
-
-        static AttributeSpecification CreatePageTypeAttributeSpecification(string guid)
-        {
-            return new AttributeSpecification
-                       {
-                           Constructor = typeof(PageTypeAttribute).GetConstructor(new [] { typeof(string) }),
-                           ConstructorParameters = new object[] { guid}
-                       };
-        }
 
         Because of = () =>
             thrownException = Catch.Exception(
