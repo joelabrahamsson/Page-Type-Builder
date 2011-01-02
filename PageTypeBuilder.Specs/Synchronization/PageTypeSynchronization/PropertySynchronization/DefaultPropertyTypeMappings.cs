@@ -6,7 +6,7 @@ using EPiServer.SpecializedProperties;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization
 {
     public class DefaultPropertyTypeMappingSpecs : SynchronizationSpecs
     {

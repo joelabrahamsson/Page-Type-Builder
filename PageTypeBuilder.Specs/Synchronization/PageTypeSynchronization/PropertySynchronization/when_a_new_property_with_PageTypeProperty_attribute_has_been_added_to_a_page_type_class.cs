@@ -2,7 +2,7 @@
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization
 {
     [Subject("Synchronization")]
     public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class

@@ -4,7 +4,7 @@ using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization
 {
     [Subject("Synchronization")]
     public class when_a_page_type_class_has_a_property_with_a_tab_specified
