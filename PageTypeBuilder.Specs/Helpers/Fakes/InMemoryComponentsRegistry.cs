@@ -1,9 +1,11 @@
 ﻿using System;
 using Moq;
 using PageTypeBuilder.Abstractions;
+using PageTypeBuilder.Configuration;
 using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
@@ -20,6 +22,10 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             For<PageTypeResolver>().Use(new PageTypeResolver());
 
             For<IPageTypeValueExtractor>().Use(new Mock<PageTypeValueExtractor>().Object);
+
+            For<PageTypeBuilderConfiguration>()
+                .LifecycleIs(new SingletonLifecycle())
+                .Use<FakePageTypeBuilderConfiguration>();
 
             Scan(scanner =>
             {

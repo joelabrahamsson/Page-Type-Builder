@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection.Emit;
 using PageTypeBuilder.Abstractions;
+using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 using PageTypeBuilder.Synchronization;
@@ -54,6 +55,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             get
             {
                 return (InMemoryTabFactory) Container.GetInstance<ITabFactory>();
+            }
+        }
+
+        public FakePageTypeBuilderConfiguration Configuration
+        {
+            get
+            {
+                return (FakePageTypeBuilderConfiguration)Container.GetInstance<PageTypeBuilderConfiguration>();
             }
         }
 
