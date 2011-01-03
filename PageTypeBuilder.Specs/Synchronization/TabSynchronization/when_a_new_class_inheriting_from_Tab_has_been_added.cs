@@ -12,11 +12,16 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization
         static AccessLevel requiredAccess = AccessLevel.Publish;
         static int sortIndex = 12;
 
-        Establish context = () => TabClassFactory.CreateTabClass(
-            "NameOfClass",
-            tabName, 
-            requiredAccess, 
-            sortIndex);
+        Establish context = () =>
+            {
+                var tabClass =TabClassFactory.CreateTabClass(
+                    "NameOfClass",
+                    tabName,
+                    requiredAccess,
+                    sortIndex);
+            
+                SyncContext.AssemblyLocator.Add(tabClass.Assembly);
+            };
 
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();

@@ -6,21 +6,22 @@ using PageTypeBuilder.Reflection;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
-    public class InMemoryAssemblyLocator : IAssemblyLocator
+    public class InMemoryAssemblyLocator : IAssemblyLocator, IDisposable
     {
         private List<Assembly> assemblies;
 
         public InMemoryAssemblyLocator()
         {
             assemblies = new List<Assembly>();
-            AppDomain.CurrentDomain.AssemblyResolve +=
-                    (object sender, ResolveEventArgs args) =>
-                    {
-                        if (assemblies.Count(assembly => assembly.FullName == args.Name) == 1)
-                            return assemblies.First(assembly => assembly.FullName == args.Name);
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
 
-                        return null;
-                    };
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+ 	        if (assemblies.Count(assembly => assembly.FullName == args.Name) == 1)
+                                    return assemblies.First(assembly => assembly.FullName == args.Name);
+
+                                return null;
         }
 
         public void Add(Assembly assembly)
@@ -31,6 +32,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         public IEnumerable<Assembly> GetAssemblies()
         {
             return assemblies;
+        }
+
+        public void Dispose()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
         }
     }
 }

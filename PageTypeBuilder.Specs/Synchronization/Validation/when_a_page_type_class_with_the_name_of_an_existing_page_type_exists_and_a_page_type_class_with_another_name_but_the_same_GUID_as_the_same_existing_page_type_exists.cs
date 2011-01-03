@@ -7,7 +7,6 @@ using PageTypeBuilder.Synchronization;
 namespace PageTypeBuilder.Specs.Synchronization.Validation
 {
     [Subject("Synchronization")]
-    //[Ignore]
     public class when_a_page_type_class_with_the_name_of_an_existing_page_type_exists_and_a_page_type_class_with_another_name_but_the_same_GUID_as_the_same_existing_page_type_exists
         : SynchronizationSpecs
     {

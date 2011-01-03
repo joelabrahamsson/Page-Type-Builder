@@ -26,11 +26,13 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization
             existingTabDefinitionId = existingTab.ID;
             SyncContext.TabFactory.ResetNumberOfSaves();
 
-            TabClassFactory.CreateTabClass(
+            var tabClass = TabClassFactory.CreateTabClass(
                 "NameOfClass",
                 existingTab.Name,
                 existingTab.RequiredAccess,
                 sortIndexSpecifiedInTheClass);
+
+            SyncContext.AssemblyLocator.Add(tabClass.Assembly);
         };
 
         Because of =
