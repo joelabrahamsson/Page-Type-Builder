@@ -15,7 +15,7 @@ namespace PageTypeBuilder.Synchronization
         private PageTypeBuilderConfiguration _configuration;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
-            : this(pageTypeDefinitionLocator, configuration, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory()), new PageTypeUpdater(pageTypeDefinitionLocator, new PageTypeFactory()), new TabDefinitionUpdater()) { }
+            : this(pageTypeDefinitionLocator, configuration, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory()), new PageTypeUpdater(pageTypeDefinitionLocator, new PageTypeFactory()), new TabDefinitionUpdater(), new TabLocator()) { }
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
@@ -24,11 +24,12 @@ namespace PageTypeBuilder.Synchronization
             PageTypeResolver pageTypeResolver,
             IPageTypeLocator pageTypeLocator,
             PageTypeUpdater pageTypeUpdater,
-            TabDefinitionUpdater tabDefinitionUpdater)
+            TabDefinitionUpdater tabDefinitionUpdater,
+            TabLocator tabLocator)
         {
             _configuration = configuration;
             PageTypeResolver = pageTypeResolver;
-            TabLocator = new TabLocator();
+            TabLocator = tabLocator;
             TabDefinitionUpdater = tabDefinitionUpdater;
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeUpdater = pageTypeUpdater;

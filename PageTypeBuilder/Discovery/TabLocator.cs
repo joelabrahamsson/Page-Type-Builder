@@ -8,6 +8,17 @@ namespace PageTypeBuilder.Discovery
 {
     public class TabLocator
     {
+        private IAssemblyLocator _assemblyLocator;
+
+        public TabLocator()
+            : this(new AppDomainAssemblyLocator())
+        {}
+
+        public TabLocator(IAssemblyLocator assemblyLocator)
+        {
+            _assemblyLocator = assemblyLocator;
+        }
+
         public virtual IEnumerable<Tab> GetDefinedTabs()
         {
             List<Tab> definedTabs = new List<Tab>();
@@ -25,7 +36,7 @@ namespace PageTypeBuilder.Discovery
         {
             string tabTypeAssemblyName = typeof(Tab).Assembly.GetName().Name;
             List<Type> tabTypes = new List<Type>();
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = _assemblyLocator.GetAssemblies();
             foreach (Assembly assembly in assemblies)
             {
                 if(assembly.GetReferencedAssemblies().Count(a => a.Name == tabTypeAssemblyName) == 0)
