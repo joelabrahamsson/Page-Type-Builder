@@ -32,5 +32,10 @@ namespace PageTypeBuilder.Abstractions
         {
             pageTypeToSave.Save();
         }
+
+        public virtual IPageType CreateNew()
+        {
+            return new NativePageType();
+        }
     }
 }

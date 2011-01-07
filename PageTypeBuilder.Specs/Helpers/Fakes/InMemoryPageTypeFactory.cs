@@ -20,6 +20,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             Mapper.Configuration.CreateMap<IPageType, FakePageType>()
                 .ForMember(x => x.DefaultFrameID, m => m.Ignore())
                 .ForMember(x => x.FileName, m => m.Ignore());
+            Mapper.Configuration.CreateMap<FakePageType, IPageType>()
+                .ForMember(x => x.DefaultFrameID, m => m.Ignore())
+                .ForMember(x => x.FileName, m => m.Ignore());
             Mapper.Configuration.CreateMap<IPageType, IPageType>();
 
             nextId = 1;
@@ -95,6 +98,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         {
             numberOfSavesPerPageTypeIdCounter.ResetNumberOfSaves();
         }
+
+        public IPageType CreateNew()
+        {
+            return new FakePageType();
+        }
     }
 
     public class FakePageType : IPageType
@@ -102,6 +110,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         public FakePageType()
         {
             AllowedPageTypes = new int[0];
+            Defaults = new PageTypeDefault();
         }
 
         int[] allowedPageTypes; 
@@ -131,7 +140,13 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         public Guid GUID { get; set; }
         public int ID { get; set; }
         public bool IsAvailable { get; set; }
-        public bool IsNew { get; private set; }
+        public bool IsNew 
+        { 
+            get
+            {
+                return (ID <= 0);
+            }
+        }
         public string Name { get; set; }
         public void Save()
         {

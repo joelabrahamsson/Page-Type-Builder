@@ -42,7 +42,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual IPageType CreateNewPageType(PageTypeDefinition definition)
         {
-            IPageType pageType = new NativePageType();
+            IPageType pageType = PageTypeFactory.CreateNew();
 
             PageTypeAttribute attribute = definition.Attribute;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using EPiServer.DataAbstraction;
 
 namespace PageTypeBuilder.Abstractions
 {
@@ -9,5 +8,6 @@ namespace PageTypeBuilder.Abstractions
         IPageType Load(Guid guid);
         IPageType Load(int id);
         void Save(IPageType pageTypeToSave);
+        IPageType CreateNew();
     }
 }

@@ -33,6 +33,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             MockRepository mocks = new MockRepository();
             PageTypeFactory fakePageTypeFactory = mocks.Stub<PageTypeFactory>();
             fakePageTypeFactory.Stub(factory => factory.Save(Arg<IPageType>.Is.NotNull));
+            fakePageTypeFactory.Stub(factory => factory.CreateNew()).Return(new NativePageType());
             fakePageTypeFactory.Replay();
             pageTypeUpdater.PageTypeFactory = fakePageTypeFactory;
         }
