@@ -16,5 +16,10 @@ namespace PageTypeBuilder.Specs.Helpers
 
             return result.ToString();
         }
+
+        public static TimeSpan Minutes(this int number)
+        {
+            return new TimeSpan(0, 0, number, 0);
+        }
     }
 }

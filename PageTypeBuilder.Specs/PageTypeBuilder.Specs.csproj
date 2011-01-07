@@ -84,6 +84,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\Fakes\FakePageType.cs" />
     <Compile Include="Helpers\Fakes\FakePageTypeBuilderConfiguration.cs" />
     <Compile Include="Helpers\Fakes\InMemoryAssemblyLocator.cs" />
     <Compile Include="Helpers\Fakes\InMemoryComponentsRegistry.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\when_a_page_type_class_matches_existing_PageType_but_everything_specified_in_its_attribute_is_different_than_corresponding_values_in_the_PageType.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\when_a_new_page_type_property_exists_for_an_existing_PageType_but_page_type_updation_has_been_disabled_through_configuration.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\when_a_new_page_type_property_with_no_EditCaption_specified_in_the_attribute_exists.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_a_new_page_type_class_exists_with_everything_specified_in_its_attribute.cs" />
