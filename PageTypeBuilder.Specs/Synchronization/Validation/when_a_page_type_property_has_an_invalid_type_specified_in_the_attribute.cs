@@ -12,7 +12,7 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
         static string pageTypeName = "NameOfThePropertysPageType";
         static string propertyName = "ThePropertysName";
 
-        Establish context = () => SyncContext.AddPageTypeClassToAppDomain(type =>
+        Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
                 type.Name = pageTypeName;
                 type.AddProperty(property =>

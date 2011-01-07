@@ -19,7 +19,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                          scanner.Convention<InMemoryConvention>();
                      });
 
-            For<PageTypeResolver>().Use(new PageTypeResolver());
+            For<PageTypeResolver>()
+                .LifecycleIs(new SingletonLifecycle())
+                .Use(new PageTypeResolver());
 
             For<IPageTypeValueExtractor>().Use(new Mock<PageTypeValueExtractor>().Object);
 

@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             propertyAttribute = new PageTypePropertyAttribute();
             propertyAttribute.Tab = typeof(string);
 
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
                 type.Name = nameOfThePageTypeClass;
                 type.AddProperty(prop =>

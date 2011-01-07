@@ -20,13 +20,13 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
         {
             var guid = Guid.NewGuid();
 
-            IPageType existingPageType = new NativePageType();
+            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
             existingPageType.Name = nameOfTheFirstPageTypeClass;
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.GUID = guid;
             SyncContext.PageTypeFactory.Save(existingPageType);
 
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 {
                     type.Name = nameOfTheFirstPageTypeClass;
                 });

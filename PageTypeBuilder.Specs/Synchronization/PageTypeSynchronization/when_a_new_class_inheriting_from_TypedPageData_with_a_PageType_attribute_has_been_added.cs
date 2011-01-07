@@ -11,10 +11,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
         Establish context = () =>
             {
-                pageTypeAttribute = new PageTypeAttribute
-                {
-                    Description = "A description of the page type"
-                };
+                pageTypeAttribute = new PageTypeAttribute();
 
                 SyncContext.AddTypeInheritingFromTypedPageData(type =>
                 {
@@ -28,8 +25,5 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
         It should_create_a_new_page_type_with_the_name_of_the_class =
             () => SyncContext.PageTypeFactory.Load(className).ShouldNotBeNull();
-
-        It should_create_a_new_page_type_with_the_description_entered_in_the_PageType_attribute =
-            () => SyncContext.PageTypeFactory.Load(className).Description.ShouldEqual(pageTypeAttribute.Description);
     }
 }

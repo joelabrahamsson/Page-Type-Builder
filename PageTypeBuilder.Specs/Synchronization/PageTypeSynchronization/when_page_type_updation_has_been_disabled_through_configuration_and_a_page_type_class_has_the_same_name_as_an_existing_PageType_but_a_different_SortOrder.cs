@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
         Establish context = () =>
         {
-            IPageType existingPageType = new NativePageType();
+            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
             existingPageType.Name = "NameOfThePageType";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.SortOrder = originalSortOrder;

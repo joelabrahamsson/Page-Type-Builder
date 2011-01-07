@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         static string className = "MyPageTypeClass";
         static string propertyName = "NameOfTheProperty";
 
-        Establish context = () => SyncContext.AddPageTypeClassToAppDomain(type => 
+        Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type => 
                 type.AddProperty(property =>
                 {
                     property.Name = propertyName;

@@ -17,7 +17,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         {
             var guid = Guid.NewGuid();
 
-            IPageType existingPageType = new NativePageType();
+            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
             existingPageType.Name = "ADifferentName";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.GUID = guid;

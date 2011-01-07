@@ -9,7 +9,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
     {
         Establish context = () =>
         {
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 {
                     type.Name = "NameOfThePageTypeClass";
                 });

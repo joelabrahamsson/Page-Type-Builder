@@ -58,6 +58,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             }
         }
 
+        public PageTypeResolver PageTypeResolver
+        {
+            get
+            {
+                return Container.GetInstance<PageTypeResolver>();
+            }
+        }
+
         public FakePageTypeBuilderConfiguration Configuration
         {
             get
@@ -80,14 +88,16 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             AssemblyLocator.Add(type.Assembly);
         }
 
-        public void AddPageTypeClassToAppDomain(Action<TypeSpecification> typeSpecificationExpression)
+        public Type CreateAndAddPageTypeClassToAppDomain(Action<TypeSpecification> typeSpecificationExpression)
         {
             Type type = PageTypeClassFactory.CreatePageTypeClass(typeSpecificationExpression);
 
             AssemblyLocator.Add(type.Assembly);
+
+            return type;
         }
 
-        public void AddPageTypeClassToAppDomain(Action<TypeSpecification, PageTypeAttribute> typeSpecificationExpression)
+        public void CreateAndAddPageTypeClassToAppDomain(Action<TypeSpecification, PageTypeAttribute> typeSpecificationExpression)
         {
             var attribute = new PageTypeAttribute();
             Type pageTypeClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>

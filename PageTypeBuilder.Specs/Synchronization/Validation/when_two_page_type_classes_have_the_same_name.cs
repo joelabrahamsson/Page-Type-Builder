@@ -12,12 +12,12 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
 
         Establish context = () =>
         {
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
                 type.Name = pageTypeName;
             });
 
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
                 type.Name = pageTypeName;
             });

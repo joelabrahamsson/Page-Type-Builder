@@ -16,12 +16,12 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         static string nameInAttribute = "PageTypeNameInAttribute";
         Establish context = () =>
             {
-                SyncContext.AddPageTypeClassToAppDomain(type =>
+                SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 {
                     type.Name = commonClassName;   
                 });
 
-                SyncContext.AddPageTypeClassToAppDomain((type, attribute) =>
+                SyncContext.CreateAndAddPageTypeClassToAppDomain((type, attribute) =>
                 {
                     type.Name = commonClassName;
                     attribute.Name = nameInAttribute;

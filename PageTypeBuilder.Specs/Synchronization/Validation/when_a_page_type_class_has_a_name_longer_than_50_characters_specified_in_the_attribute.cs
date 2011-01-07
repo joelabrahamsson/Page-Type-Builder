@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
         static Exception thrownException;
 
         Establish context = () =>
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 type.Name = 51.CharactersLongAlphanumericString());
 
         Because of = () =>

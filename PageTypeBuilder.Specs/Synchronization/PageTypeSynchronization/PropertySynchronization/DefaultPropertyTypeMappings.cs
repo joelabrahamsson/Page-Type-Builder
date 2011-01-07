@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         protected static void AddPageTypeClassWithAPropertyOfTypeToAppDomain<TProperty>()
         {
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 type.AddProperty(prop =>
                 {
                     prop.Name = PropertyName;

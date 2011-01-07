@@ -13,14 +13,14 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
         Establish context = () =>
         {
-            IPageType existingPageType = new NativePageType();
+            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
             existingPageType.Name = pageTypeName;
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             SyncContext.PageTypeFactory.Save(existingPageType);
             pageTypeId = existingPageType.ID;
             SyncContext.PageTypeFactory.ResetNumberOfSaves();
 
-            SyncContext.AddPageTypeClassToAppDomain(type =>
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
                 type.Name = pageTypeName;
             }); 

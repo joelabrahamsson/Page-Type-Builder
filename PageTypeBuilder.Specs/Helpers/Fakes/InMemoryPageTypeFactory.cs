@@ -17,12 +17,10 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public InMemoryPageTypeFactory()
         {
-            Mapper.Configuration.CreateMap<IPageType, FakePageType>()
-                .ForMember(x => x.DefaultFrameID, m => m.Ignore())
-                .ForMember(x => x.FileName, m => m.Ignore());
-            Mapper.Configuration.CreateMap<FakePageType, IPageType>()
-                .ForMember(x => x.DefaultFrameID, m => m.Ignore())
-                .ForMember(x => x.FileName, m => m.Ignore());
+            Mapper.Configuration.CreateMap<IPageType, FakePageType>();
+                //.ForMember(x => x.DefaultFrameID, m => m.Ignore())
+                //.ForMember(x => x.FileName, m => m.Ignore());
+            Mapper.Configuration.CreateMap<FakePageType, IPageType>();
             Mapper.Configuration.CreateMap<IPageType, IPageType>();
 
             nextId = 1;
@@ -109,7 +107,19 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
     {
         public FakePageType()
         {
-            AllowedPageTypes = new int[0];
+            var template = new PageType();
+            AllowedPageTypes = template.AllowedPageTypes;
+            DefaultArchivePageLink = template.DefaultArchivePageLink;
+            DefaultChildOrderRule = template.DefaultChildOrderRule;
+            DefaultPageName = template.DefaultPageName;
+            DefaultPeerOrder = template.DefaultPeerOrder;
+            DefaultStartPublishOffset = template.DefaultStartPublishOffset;
+            DefaultStopPublishOffset = template.DefaultStopPublishOffset;
+            DefaultVisibleInMenu = template.DefaultVisibleInMenu;
+            Description = template.Description;
+            IsAvailable = template.IsAvailable;
+            Name = template.Name;
+            SortOrder = template.SortOrder;
             Defaults = new PageTypeDefault();
         }
 

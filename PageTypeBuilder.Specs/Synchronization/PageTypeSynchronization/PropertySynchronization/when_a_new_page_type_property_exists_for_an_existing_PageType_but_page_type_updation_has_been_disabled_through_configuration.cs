@@ -12,7 +12,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static int numberOfPageDefinitionsBeforeSynchronization;
 
-        Establish context = () => SyncContext.AddPageTypeClassToAppDomain(type =>
+        Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
                 numberOfPageDefinitionsBeforeSynchronization = 
                     SyncContext.PageDefinitionFactory.List().Count();
