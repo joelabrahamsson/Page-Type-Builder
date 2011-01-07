@@ -99,6 +99,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\when_a_new_page_type_class_exists_with_everything_specified_in_its_attribute.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_page_type_updation_has_been_disabled_through_configuration_and_a_new_page_type_class_exists.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\when_page_type_updation_has_been_disabled_through_configuration_and_a_page_type_class_has_the_same_name_as_an_existing_PageType_but_a_different_SortOrder.cs" />
     <Compile Include="Synchronization\Validation\when_a_page_type_property_has_a_Tab_specified_in_the_attribute_that_is_not_a_valid_Tab_class.cs" />
