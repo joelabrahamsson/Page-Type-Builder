@@ -18,21 +18,24 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
+        private IFrameFacade _frameFacade;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitionLocator, pageTypeFactory, new PageTypeValueExtractor(), new PageTypeLocator(pageTypeFactory)) { }
+            : this(pageTypeDefinitionLocator, pageTypeFactory, new PageTypeValueExtractor(), new PageTypeLocator(pageTypeFactory), new FrameFacade()) { }
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeFactory pageTypeFactory, 
             IPageTypeValueExtractor pageTypeValueExtractor,
-            IPageTypeLocator pageTypeLocator)
+            IPageTypeLocator pageTypeLocator,
+            IFrameFacade frameFacade)
         {
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeFactory = pageTypeFactory;
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
             _pageTypeLocator = pageTypeLocator;
+            _frameFacade = frameFacade;
         }
 
         protected internal virtual IPageType GetExistingPageType(PageTypeDefinition definition)
@@ -215,7 +218,7 @@ namespace PageTypeBuilder.Synchronization
         protected internal virtual void UpdateFrame(IPageType pageType, PageTypeAttribute attribute)
         {
             if (attribute.DefaultFrameID != 0)
-                pageType.Defaults.DefaultFrame = Frame.Load(attribute.DefaultFrameID);
+                pageType.Defaults.DefaultFrame = _frameFacade.Load(attribute.DefaultFrameID);
             else
                 pageType.Defaults.DefaultFrame = null;
         }
