@@ -3,7 +3,6 @@ using System.Linq;
 using EPiServer.Filters;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
@@ -35,8 +34,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             pageTypeAttribute.Name = pageTypeName;
 
             guidInAttribute = Guid.NewGuid();
+            
             var attributeSpecification = AttributeHelper.CreatePageTypeAttributeSpecification(guidInAttribute.ToString());
             attributeSpecification.Template = pageTypeAttribute;
+            
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
                 type.Name = pageTypeName;
