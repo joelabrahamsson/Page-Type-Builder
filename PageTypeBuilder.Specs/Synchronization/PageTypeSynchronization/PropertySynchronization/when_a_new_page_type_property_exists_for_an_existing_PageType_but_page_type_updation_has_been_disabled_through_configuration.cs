@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using EPiServer.DataAbstraction;
 using Machine.Specifications;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization
@@ -16,7 +17,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 numberOfPageDefinitionsBeforeSynchronization = 
                     SyncContext.PageDefinitionFactory.List().Count();
 
-                PageType existingPageType = new PageType();
+                IPageType existingPageType = new NativePageType();
                 existingPageType.Name = "NameOfExistingPageType";
                 {
                     type.Name = existingPageType.Name;

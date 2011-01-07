@@ -24,7 +24,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
                                                     Attribute = new PageTypeAttribute()
                                                 };
             definitions.Add(definition);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             pageType.ID = 1;
             MockRepository fakes = new MockRepository();
             IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();

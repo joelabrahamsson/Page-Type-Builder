@@ -1,11 +1,12 @@
 ﻿using System;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Discovery
 {
     public class PageTypePropertyDefinition
     {
-        public PageTypePropertyDefinition(string name, Type propertyType, PageType pageType, PageTypePropertyAttribute pageTypePropertyAttribute)
+        public PageTypePropertyDefinition(string name, Type propertyType, IPageType pageType, PageTypePropertyAttribute pageTypePropertyAttribute)
         {
             Name = name;
             PropertyType = propertyType;
@@ -15,7 +16,7 @@ namespace PageTypeBuilder.Discovery
 
         public string Name { get; set; }
         public Type PropertyType { get; set; }
-        public PageType PageType { get; set; }
+        public IPageType PageType { get; set; }
         public PageTypePropertyAttribute PageTypePropertyAttribute { get; set; }
     }
 }

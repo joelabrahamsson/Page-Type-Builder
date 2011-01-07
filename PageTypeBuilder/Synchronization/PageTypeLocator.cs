@@ -14,9 +14,9 @@ namespace PageTypeBuilder.Synchronization
             _pageTypeFactory = pageTypeFactory;
         }
 
-        public virtual PageType GetExistingPageType(PageTypeDefinition definition)
+        public virtual IPageType GetExistingPageType(PageTypeDefinition definition)
         {
-            PageType existingPageType = null;
+            IPageType existingPageType = null;
             Type type = definition.Type;
             PageTypeAttribute attribute = definition.Attribute;
             if (attribute.Guid.HasValue)

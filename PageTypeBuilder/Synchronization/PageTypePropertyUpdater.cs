@@ -29,7 +29,7 @@ namespace PageTypeBuilder.Synchronization
             _tabFactory = tabFactory;
         }
 
-        protected internal virtual void UpdatePageTypePropertyDefinitions(PageType pageType, PageTypeDefinition pageTypeDefinition)
+        protected internal virtual void UpdatePageTypePropertyDefinitions(IPageType pageType, PageTypeDefinition pageTypeDefinition)
         {
             IEnumerable<PageTypePropertyDefinition> definitions = 
                 PageTypePropertyDefinitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeDefinition.Type);
@@ -44,7 +44,7 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        protected internal virtual PageDefinition GetExistingPageDefinition(PageType pageType, PageTypePropertyDefinition propertyDefinition)
+        protected internal virtual PageDefinition GetExistingPageDefinition(IPageType pageType, PageTypePropertyDefinition propertyDefinition)
         {
             return pageType.Definitions.FirstOrDefault(definition => definition.Name == propertyDefinition.Name);
         }

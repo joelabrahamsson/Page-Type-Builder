@@ -94,7 +94,7 @@ namespace PageTypeBuilder.Synchronization
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                PageType pageType = _pageTypeLocator.GetExistingPageType(definition);
+                IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
                 PageTypeResolver.AddPageType(pageType.ID, definition.Type);
             }
         }
@@ -111,7 +111,7 @@ namespace PageTypeBuilder.Synchronization
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                PageType pageType = _pageTypeLocator.GetExistingPageType(definition);
+                IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
                 PageTypePropertyUpdater.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }

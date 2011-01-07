@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EPiServer.DataAbstraction;
 using Machine.Specifications;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Synchronization;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
@@ -17,7 +18,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
         Establish context = () =>
         {
-            PageType existingPageType = new PageType();
+            IPageType existingPageType = new NativePageType();
             existingPageType.Name = "NameOfThePageType";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.SortOrder = originalSortOrder;

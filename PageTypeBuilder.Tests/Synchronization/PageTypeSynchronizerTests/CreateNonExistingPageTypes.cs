@@ -24,7 +24,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             definitions.Add(definition);
             pageTypeUpdater.Replay();
             IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();
-            pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(new PageType());
+            pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(new NativePageType());
             pageTypeLocator.Replay();
             PageTypeSynchronizer synchronizer = CreateSynchronizer(pageTypeLocator);
 
@@ -52,7 +52,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             PageTypeDefinition definition = new PageTypeDefinition();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition>();
             definitions.Add(definition);
-            pageTypeUpdater.Stub(updater => updater.CreateNewPageType(definition)).Return(new PageType());
+            pageTypeUpdater.Stub(updater => updater.CreateNewPageType(definition)).Return(new NativePageType());
             pageTypeUpdater.Replay();
             IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();
             pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(null);

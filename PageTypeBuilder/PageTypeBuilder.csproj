@@ -101,7 +101,14 @@
     </Compile>
     <Compile Include="Abstractions\IPageDefinitionFactory.cs" />
     <Compile Include="Abstractions\IPageDefinitionTypeFactory.cs" />
+    <Compile Include="Abstractions\IPageType.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Abstractions\IPageTypeValueExtractor.cs" />
+    <Compile Include="Abstractions\NativePageType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abstractions\WrappedPageType.cs" />
     <Compile Include="Discovery\IPageTypeDefinitionLocator.cs" />
     <Compile Include="Abstractions\IPageTypeFactory.cs" />
     <Compile Include="Abstractions\ITabFactory.cs" />

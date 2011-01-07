@@ -4,22 +4,31 @@ namespace PageTypeBuilder.Abstractions
 {
     public class PageTypeFactory : IPageTypeFactory
     {
-        public virtual PageType Load(string name)
+        public virtual IPageType Load(string name)
         {
-            return PageType.Load(name);
+            var pageType = PageType.Load(name);
+            if (pageType == null)
+                return null;
+            return new WrappedPageType(pageType);
         }
 
-        public virtual PageType Load(System.Guid guid)
+        public virtual IPageType Load(System.Guid guid)
         {
-            return PageType.Load(guid);
+            var pageType = PageType.Load(guid);
+            if (pageType == null)
+                return null;
+            return new WrappedPageType(pageType);
         }
 
-        public virtual PageType Load(int id)
+        public virtual IPageType Load(int id)
         {
-            return PageType.Load(id);
+            var pageType = PageType.Load(id);
+            if (pageType == null)
+                return null;
+            return new WrappedPageType(pageType);
         }
 
-        public virtual void Save(PageType pageTypeToSave)
+        public virtual void Save(IPageType pageTypeToSave)
         {
             pageTypeToSave.Save();
         }

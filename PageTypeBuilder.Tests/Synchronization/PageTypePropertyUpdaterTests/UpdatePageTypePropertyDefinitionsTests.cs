@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using Rhino.Mocks;
@@ -15,7 +16,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         {
             List<PageTypePropertyDefinition> definitions = new List<PageTypePropertyDefinition>();
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdater(definitions);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             PageTypeDefinition pageTypeDefinition = new PageTypeDefinition();
 
             pageTypePropertyUpdater.UpdatePageTypePropertyDefinitions(pageType, pageTypeDefinition);
@@ -33,7 +34,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             PageTypePropertyDefinitionLocator definitionLocator = fakes.Stub<PageTypePropertyDefinitionLocator>();
             definitionLocator.Stub(
                 locator => locator.GetPageTypePropertyDefinitions(
-                               Arg<PageType>.Is.Anything, Arg<Type>.Is.Anything))
+                               Arg<IPageType>.Is.Anything, Arg<Type>.Is.Anything))
                 .Return(definitionsToReturnFromGetPageTypePropertyDefinitions);
             definitionLocator.Replay();
             pageTypePropertyUpdater.Replay();
@@ -49,7 +50,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
             definitions.Add(pageTypePropertyDefinition);
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdater(definitions);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             PageTypeDefinition pageTypeDefinition = new PageTypeDefinition();
             pageTypePropertyUpdater.Stub(utility => utility.GetExistingPageDefinition(
                                                         pageType, pageTypePropertyDefinition)).Return(new PageDefinition());
@@ -72,7 +73,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
             definitions.Add(pageTypePropertyDefinition);
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdater(definitions);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             PageTypeDefinition pageTypeDefinition = new PageTypeDefinition();
             pageTypePropertyUpdater.Stub(utility => utility.GetExistingPageDefinition(
                                                         pageType, pageTypePropertyDefinition)).Return(null);
@@ -96,7 +97,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
             definitions.Add(pageTypePropertyDefinition);
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdater(definitions);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             PageTypeDefinition pageTypeDefinition = new PageTypeDefinition();
             PageDefinition existingPageDefinition = new PageDefinition();
             pageTypePropertyUpdater.Stub(utility => utility.GetExistingPageDefinition(

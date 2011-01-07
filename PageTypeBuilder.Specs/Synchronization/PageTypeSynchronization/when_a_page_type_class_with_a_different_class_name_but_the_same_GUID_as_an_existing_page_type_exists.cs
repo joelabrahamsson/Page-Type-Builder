@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EPiServer.DataAbstraction;
 using Machine.Specifications;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 using PageTypeBuilder.Synchronization;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
@@ -21,7 +17,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         {
             var guid = Guid.NewGuid();
 
-            PageType existingPageType = new PageType();
+            IPageType existingPageType = new NativePageType();
             existingPageType.Name = "ADifferentName";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.GUID = guid;

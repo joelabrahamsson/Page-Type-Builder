@@ -1,5 +1,6 @@
 using System;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using Xunit;
@@ -12,7 +13,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         public void GivenPageTypeWithPropertyAndCorrespondingPropertyDefition_GetExistingPropertyDefinition_ReturnsPageDefinition()
         {
             PageTypePropertyUpdater utility = new PageTypePropertyUpdater();
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             string name = TestValueUtility.CreateRandomString();
             Type type = typeof(string);
             PageTypePropertyAttribute attribute = new PageTypePropertyAttribute();

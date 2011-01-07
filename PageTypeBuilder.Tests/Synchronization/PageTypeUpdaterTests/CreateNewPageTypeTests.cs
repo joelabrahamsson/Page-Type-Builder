@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
             SetupPageTypeUpdaterWithFakePageTypeFactory(pageTypeUpdater);
 
-            PageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
+            IPageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
 
             Assert.Equal(typeof(object).Name, returnedPageType.Name);
         }
@@ -32,7 +32,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         {
             MockRepository mocks = new MockRepository();
             PageTypeFactory fakePageTypeFactory = mocks.Stub<PageTypeFactory>();
-            fakePageTypeFactory.Stub(factory => factory.Save(Arg<PageType>.Is.NotNull));
+            fakePageTypeFactory.Stub(factory => factory.Save(Arg<IPageType>.Is.NotNull));
             fakePageTypeFactory.Replay();
             pageTypeUpdater.PageTypeFactory = fakePageTypeFactory;
         }
@@ -45,7 +45,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
             SetupPageTypeUpdaterWithFakePageTypeFactory(pageTypeUpdater);
 
-            PageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
+            IPageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
 
             Assert.Equal(definition.Attribute.Name, returnedPageType.Name);
         }
@@ -61,7 +61,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
             SetupPageTypeUpdaterWithFakePageTypeFactory(pageTypeUpdater);
 
-            PageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
+            IPageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
 
             Assert.Equal<Guid?>(definition.Attribute.Guid, returnedPageType.GUID);
         }
@@ -74,7 +74,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
             SetupPageTypeUpdaterWithFakePageTypeFactory(pageTypeUpdater);
 
-            PageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
+            IPageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
 
             Assert.Equal<string>(definition.Attribute.Filename, returnedPageType.FileName);
         }
@@ -90,7 +90,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             //the filename begins with a slash
             pageTypeUpdater.DefaultFilename = TestValueUtility.CreateRandomString();
 
-            PageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
+            IPageType returnedPageType = pageTypeUpdater.CreateNewPageType(definition);
 
             Assert.Equal<string>(pageTypeUpdater.DefaultFilename, returnedPageType.FileName);
         }
@@ -104,7 +104,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
             pageTypeUpdater.CreateNewPageType(definition);
 
-            pageTypeUpdater.PageTypeFactory.AssertWasCalled(factory => factory.Save(Arg<PageType>.Is.NotNull));
+            pageTypeUpdater.PageTypeFactory.AssertWasCalled(factory => factory.Save(Arg<IPageType>.Is.NotNull));
         }
     }
 }

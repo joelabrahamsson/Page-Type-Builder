@@ -20,7 +20,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             
             MockRepository fakes = new MockRepository();
             PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             PageTypePropertyUpdater pageTypePropertyUpdater = fakes.Stub<PageTypePropertyUpdater>();
             pageTypePropertyUpdater.Stub(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));
             pageTypePropertyUpdater.Replay();

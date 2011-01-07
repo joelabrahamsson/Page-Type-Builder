@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EPiServer.DataAbstraction;
-using Machine.Specifications;
+﻿using Machine.Specifications;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Synchronization;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
@@ -17,7 +13,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
         Establish context = () =>
         {
-            PageType existingPageType = new PageType();
+            IPageType existingPageType = new NativePageType();
             existingPageType.Name = pageTypeName;
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             SyncContext.PageTypeFactory.Save(existingPageType);

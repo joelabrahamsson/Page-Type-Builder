@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Reflection;
 
 namespace PageTypeBuilder.Discovery
 {
     public class PageTypePropertyDefinitionLocator
     {
-        public virtual IEnumerable<PageTypePropertyDefinition> GetPageTypePropertyDefinitions(PageType pageType, Type pageTypeType)
+        public virtual IEnumerable<PageTypePropertyDefinition> GetPageTypePropertyDefinitions(IPageType pageType, Type pageTypeType)
         {
             var properties = pageTypeType.GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces();
 

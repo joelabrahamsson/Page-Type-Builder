@@ -5,9 +5,9 @@ namespace PageTypeBuilder.Abstractions
 {
     public interface IPageTypeFactory
     {
-        PageType Load(string name);
-        PageType Load(Guid guid);
-        PageType Load(int id);
-        void Save(PageType pageTypeToSave);
+        IPageType Load(string name);
+        IPageType Load(Guid guid);
+        IPageType Load(int id);
+        void Save(IPageType pageTypeToSave);
     }
 }
