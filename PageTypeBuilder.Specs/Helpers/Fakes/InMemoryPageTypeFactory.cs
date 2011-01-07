@@ -18,8 +18,6 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         public InMemoryPageTypeFactory()
         {
             Mapper.Configuration.CreateMap<IPageType, FakePageType>();
-                //.ForMember(x => x.DefaultFrameID, m => m.Ignore())
-                //.ForMember(x => x.FileName, m => m.Ignore());
             Mapper.Configuration.CreateMap<FakePageType, IPageType>();
             Mapper.Configuration.CreateMap<IPageType, IPageType>();
 

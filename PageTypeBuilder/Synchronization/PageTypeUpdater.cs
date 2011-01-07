@@ -218,9 +218,7 @@ namespace PageTypeBuilder.Synchronization
         protected internal virtual void UpdateFrame(IPageType pageType, PageTypeAttribute attribute)
         {
             if (attribute.DefaultFrameID != 0)
-                pageType.Defaults.DefaultFrame = _frameFacade.Load(attribute.DefaultFrameID);
-            else
-                pageType.Defaults.DefaultFrame = null;
+                pageType.DefaultFrameID = attribute.DefaultFrameID;
         }
 
         protected internal virtual void UpdateAvailablePageTypes(IPageType pageType, Type[] availablePageTypes)

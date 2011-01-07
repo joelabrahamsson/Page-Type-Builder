@@ -30,8 +30,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             pageTypeAttribute.DefaultVisibleInMenu = false;
             pageTypeAttribute.DefaultChildSortOrder = FilterSortOrder.Alphabetical;
             pageTypeAttribute.DefaultSortIndex = 345;
-            //Requires abstraction of the Frame class
-            //pageTypeAttribute.DefaultFrameID = 456;
+            pageTypeAttribute.DefaultFrameID = 1;
             pageTypeAttribute.Filename = "~/TemplateForThePageType.aspx";
             pageTypeAttribute.Name = pageTypeName;
 
@@ -101,8 +100,6 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             SyncContext.PageTypeFactory.Load(guidInAttribute).FileName
             .ShouldEqual(pageTypeAttribute.Filename);
 
-        //Requires abstraction of the Frame class
-        [Ignore]
         It should_create_a_new_PageType_with_the_same_DefaultFrameID_as_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(pageTypeName).DefaultFrameID
             .ShouldEqual(pageTypeAttribute.DefaultFrameID);

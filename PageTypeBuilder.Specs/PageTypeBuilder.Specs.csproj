@@ -88,6 +88,7 @@
     <Compile Include="Helpers\Fakes\InMemoryAssemblyLocator.cs" />
     <Compile Include="Helpers\Fakes\InMemoryComponentsRegistry.cs" />
     <Compile Include="Helpers\Fakes\InMemoryContext.cs" />
+    <Compile Include="Helpers\Fakes\InMemoryFrameFacade.cs" />
     <Compile Include="Helpers\Fakes\InMemoryPageDefinitionFactory.cs" />
     <Compile Include="Helpers\Fakes\InMemoryPageDefinitionTypeFactory.cs" />
     <Compile Include="Helpers\Fakes\InMemoryPageTypeFactory.cs" />
