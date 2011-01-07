@@ -8,10 +8,5 @@ namespace PageTypeBuilder.Abstractions
         {
             return Frame.Load(id);
         }
-
-        public void Save(Frame frameToSave)
-        {
-            frameToSave.Save();
-        }
     }
 }
