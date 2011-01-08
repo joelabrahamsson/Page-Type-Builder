@@ -7,8 +7,13 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
     public class when_page_type_updation_has_been_disabled_through_configuration_and_a_new_page_type_class_exists
         : SynchronizationSpecs
     {
+        static int numberOfPageTypesBeforeSynchronization;
+
         Establish context = () =>
         {
+            numberOfPageTypesBeforeSynchronization = 
+                    SyncContext.PageTypeFactory.List().Count();
+
             SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 {
                     type.Name = "NameOfThePageTypeClass";
@@ -21,6 +26,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_page_type =
-            () => SyncContext.PageTypeFactory.List().Count().ShouldEqual(0);
+            () => SyncContext.PageTypeFactory.List().Count()
+                .ShouldEqual(numberOfPageTypesBeforeSynchronization);
     }
 }

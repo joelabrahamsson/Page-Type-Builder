@@ -14,9 +14,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         Establish context = () =>
             {
                 propertyAttribute = new PageTypePropertyAttribute();
+                propertyAttribute.DefaultValue = "Specified default value";
+                
                 propertyAttribute.EditCaption = "Property's Edit Caption";
                 propertyAttribute.HelpText = "Property's help text";
-                propertyAttribute.EditCaption = "Property's edit caption";
                 propertyAttribute.SortOrder = 123;
 
                 SyncContext.CreateAndAddPageTypeClassToAppDomain(type => 
@@ -38,17 +39,21 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () => SyncContext.PageDefinitionFactory.List().First().PageTypeID
                 .ShouldEqual(SyncContext.PageTypeFactory.List().First().ID);
 
-        It should_create_a_page_definition_with_a_name_equal_to_the_propertys_name =
+        It should_create_a_page_definition_whose_name_equals_the_propertys_name =
             () => SyncContext.PageDefinitionFactory.List().First().Name.ShouldEqual(propertyName);
 
-        It should_create_a_page_definition_with_a_help_text_equal_to_the_attributes =
-            () => SyncContext.PageDefinitionFactory.List().First().HelpText.ShouldEqual(propertyAttribute.HelpText);
+        It should_create_a_page_definition_whose_HelpText_equals_the_attributes_HelpText =
+            () => SyncContext.PageDefinitionFactory.List().First()
+                .HelpText.ShouldEqual(propertyAttribute.HelpText);
 
-        It should_create_a_page_definition_with_an_edit_caption_equal_to_the_attributes =
+        It should_create_a_page_definition_whose_EditCaption_equals_the_attributes_EditCaption =
             () => SyncContext.PageDefinitionFactory.List().First().EditCaption.ShouldEqual(propertyAttribute.EditCaption);
 
-        It should_create_a_page_definition_with_FieldOrder_equal_to_the_attributes_SortOrder =
+        It should_create_a_page_definition_whose_FieldOrder_equals_the_attributes_SortOrder =
             () => SyncContext.PageDefinitionFactory.List().First().FieldOrder.ShouldEqual(propertyAttribute.SortOrder);
 
+        It should_create_a_page_definition_whose_DefaultValue_equals_the_attributes_DefaultValue =
+            () => SyncContext.PageDefinitionFactory.List().First()
+                .DefaultValue.ShouldEqual(propertyAttribute.DefaultValue);
     }
 }

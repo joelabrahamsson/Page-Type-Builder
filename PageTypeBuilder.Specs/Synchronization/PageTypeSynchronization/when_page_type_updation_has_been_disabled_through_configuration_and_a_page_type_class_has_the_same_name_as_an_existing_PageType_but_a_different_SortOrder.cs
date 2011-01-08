@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EPiServer.DataAbstraction;
-using Machine.Specifications;
+﻿using Machine.Specifications;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Synchronization;
 
