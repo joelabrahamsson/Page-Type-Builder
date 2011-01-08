@@ -1,4 +1,5 @@
-﻿using Machine.Specifications;
+﻿using System.Linq;
+using Machine.Specifications;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
@@ -7,6 +8,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         : SynchronizationSpecs
     {
         static string className = "MyPageTypeClass";
+        static int numberOfPageTypesBeforeSynchronization;
 
         Establish context = () => SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
@@ -17,6 +19,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_page_type =
-            () => SyncContext.PageTypeFactory.List().ShouldBeEmpty();
+            () => SyncContext.PageTypeFactory.List().Count()
+                .ShouldEqual(numberOfPageTypesBeforeSynchronization);
     }
 }

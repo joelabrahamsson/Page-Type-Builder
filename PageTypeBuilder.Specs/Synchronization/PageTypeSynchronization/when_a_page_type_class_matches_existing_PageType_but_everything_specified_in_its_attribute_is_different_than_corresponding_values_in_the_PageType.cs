@@ -28,7 +28,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             });
 
             IPageType existingPageType = 
-                PageTypeMother.CreatePageTypeWithEverythingButGuidDifferentThanAttribute(pageTypeAttribute);
+                PageTypeMother.CreatePageTypeWithEverythingButGuidDifferentThanAttribute(SyncContext, pageTypeAttribute);
 
             SyncContext.PageTypeFactory.Save(existingPageType);
             SyncContext.PageTypeFactory.ResetNumberOfSaves();

@@ -43,7 +43,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
-        It should_ensure_that_the_corresponding_page_type_has_both_page_types_in_its_AllowedPageTypes_property =
+        It should_ensure_that_the_corresponding_page_type_has_the_IDs_of_those_two_page_types_in_its_AllowedPageTypes_property =
             () => SyncContext.PageTypeFactory.Load(className)
                 .AllowedPageTypes.ShouldContainOnly(
                     SyncContext.PageTypeFactory.Load(className).ID,

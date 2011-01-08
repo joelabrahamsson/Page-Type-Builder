@@ -1,4 +1,5 @@
-﻿using Machine.Specifications;
+﻿using System.Linq;
+using Machine.Specifications;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
@@ -6,8 +7,8 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
     public class when_a_new_class_inheriting_from_TypedPageData_with_a_PageType_attribute_has_been_added
         : SynchronizationSpecs
     {
-        static string className = "MyPageTypeClass";
         static PageTypeAttribute pageTypeAttribute;
+        static int numberOfPageTypesBeforeSynchronization;
 
         Establish context = () =>
             {
@@ -15,7 +16,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 
                 SyncContext.AddTypeInheritingFromTypedPageData(type =>
                 {
-                    type.Name = className;
+                    type.Name = "MyPageTypeClass";
                     type.AddAttributeTemplate(pageTypeAttribute);
                 });   
             };
@@ -23,7 +24,8 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
-        It should_create_a_new_page_type_with_the_name_of_the_class =
-            () => SyncContext.PageTypeFactory.Load(className).ShouldNotBeNull();
+        It should_create_a_new_page_type =
+            () => SyncContext.PageTypeFactory.List().Count()
+                .ShouldEqual(numberOfPageTypesBeforeSynchronization + 1);
     }
 }

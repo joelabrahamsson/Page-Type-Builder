@@ -21,7 +21,13 @@ namespace PageTypeBuilder.Specs.Helpers
             var guid = Guid.NewGuid();
 
             var pageTypeAttribute = new PageTypeAttribute(guid.ToString());
+            
             var anotherPageTypeClass = syncContext.CreateAndAddPageTypeClassToAppDomain(type => { });
+            var existingPageType = syncContext.PageTypeFactory.CreateNew();
+            existingPageType.Name = anotherPageTypeClass.Name;
+            syncContext.PageTypeFactory.Save(existingPageType);
+            syncContext.PageTypeResolver.AddPageType(existingPageType.ID, anotherPageTypeClass);
+
             var availablePageTypes = new[] { anotherPageTypeClass };
             pageTypeAttribute.AvailablePageTypes = availablePageTypes;
             pageTypeAttribute.AvailableInEditMode = false;
