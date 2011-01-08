@@ -89,7 +89,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             .ShouldContainOnly(pageTypeAttribute.AvailablePageTypes
                 .Select(type => SyncContext.PageTypeResolver.GetPageTypeID(type).Value));
 
-        It should_update_the_PageType_to_have_IsAvailable_set_to_the_value_as_the_attibutes_AvailableInEditMode = () =>
+        It should_update_the_PageType_to_have_IsAvailable_set_to_the_value_of_the_attibutes_AvailableInEditMode = () =>
             SyncContext.PageTypeFactory.Load(idOfExistingPageType).IsAvailable
             .ShouldEqual(pageTypeAttribute.AvailableInEditMode);
 
@@ -105,11 +105,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             SyncContext.PageTypeFactory.Load(idOfExistingPageType).DefaultPageName
             .ShouldEqual(pageTypeAttribute.DefaultPageName);
 
-        It should_update_the_PageType_so_that_its_DefaultStartPublishOffsets_TotalMinutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
+        It should_update_the_PageType_so_that_its_DefaultStartPublishOffsets_converted_to_minutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
             SyncContext.PageTypeFactory.Load(idOfExistingPageType).DefaultStartPublishOffset.TotalMinutes
             .ShouldEqual(pageTypeAttribute.DefaultStartPublishOffsetMinutes);
 
-        It should_update_the_PageType_so_that_its_DefaultStopPublishOffsets_TotalMinutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
+        It should_update_the_PageType_so_that_its_DefaultStopPublishOffsets_converted_to_minutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
             SyncContext.PageTypeFactory.Load(idOfExistingPageType).DefaultStopPublishOffset.TotalMinutes
             .ShouldEqual(pageTypeAttribute.DefaultStopPublishOffsetMinutes);
 
@@ -129,7 +129,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             SyncContext.PageTypeFactory.Load(idOfExistingPageType).FileName
             .ShouldEqual(pageTypeAttribute.Filename);
 
-        It should_update_the_PageType_to_have_the_same_DefaultFrameID_as_the_attribute = () =>
+        It should_update_the_PageType_to_have_the_same_DefaultFrameID_as_in_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(pageTypeName).DefaultFrameID
             .ShouldEqual(pageTypeAttribute.DefaultFrameID);
 

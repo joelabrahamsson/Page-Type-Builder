@@ -10,9 +10,9 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
     public class when_a_new_page_type_class_exists_with_everything_specified_in_its_attribute
         : SynchronizationSpecs
     {
-        static string pageTypeName = "NameOfTheClass";
         static PageTypeAttribute pageTypeAttribute;
         static Guid guidInAttribute;
+
         Establish context = () =>
         {
             var anotherPageTypeClass = SyncContext.CreateAndAddPageTypeClassToAppDomain(type => {});
@@ -31,7 +31,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             pageTypeAttribute.DefaultSortIndex = 345;
             pageTypeAttribute.DefaultFrameID = 1;
             pageTypeAttribute.Filename = "~/TemplateForThePageType.aspx";
-            pageTypeAttribute.Name = pageTypeName;
+            pageTypeAttribute.Name = "Page type name";
 
             guidInAttribute = Guid.NewGuid();
             
@@ -40,7 +40,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
-                type.Name = pageTypeName;
+                type.Name = "NameOfTheClass";
                 type.Attributes.Add(attributeSpecification);
             });
         };
@@ -48,11 +48,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
         Because of = () =>
             SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
-        It should_create_a_new_PageType_with_the_same_GUID_as_the_attibutes_Guid_property = () =>
+        It should_create_a_new_PageType_with_the_same_GUID_as_the_attributes_Guid_property = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).GUID
             .ShouldEqual(guidInAttribute);
 
-        It should_create_a_new_PageType_with_the_same_Name_as_the_attibutes_Name_property = () =>
+        It should_create_a_new_PageType_with_the_same_Name_as_the_attributes_Name_property = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).Name
             .ShouldEqual(pageTypeAttribute.Name);
 
@@ -61,31 +61,31 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             .ShouldContainOnly(pageTypeAttribute.AvailablePageTypes
                 .Select(type => SyncContext.PageTypeResolver.GetPageTypeID(type).Value));
 
-        It should_create_a_new_PageType_with_IsAvailable_set_to_the_value_as_the_attibutes_AvailableInEditMode = () =>
+        It should_create_a_new_PageType_with_IsAvailable_set_to_the_value_of_the_attributes_AvailableInEditMode_property = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).IsAvailable
             .ShouldEqual(pageTypeAttribute.AvailableInEditMode);
 
-        It should_create_a_new_PageType_with_the_same_Description_as_in_the_attibute= () =>
+        It should_create_a_new_PageType_with_the_same_Description_as_in_the_attribute= () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).Description
             .ShouldEqual(pageTypeAttribute.Description);
 
-        It should_create_a_new_PageType_with_the_same_SortOrder_as_in_the_attibute = () =>
+        It should_create_a_new_PageType_with_the_same_SortOrder_as_in_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).SortOrder
             .ShouldEqual(pageTypeAttribute.SortOrder);
 
-        It should_create_a_new_PageType_with_the_same_DefaultPageName_as_in_the_attibute = () =>
+        It should_create_a_new_PageType_with_the_same_DefaultPageName_as_in_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).DefaultPageName
             .ShouldEqual(pageTypeAttribute.DefaultPageName);
 
-        It should_create_a_new_PageType_whose_DefaultStartPublishOffsets_TotalMinutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
+        It should_create_a_new_PageType_whose_DefaultStartPublishOffsets_converted_to_minutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).DefaultStartPublishOffset.TotalMinutes
             .ShouldEqual(pageTypeAttribute.DefaultStartPublishOffsetMinutes);
 
-        It should_create_a_new_PageType_whose_DefaultStopPublishOffsets_TotalMinutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
+        It should_create_a_new_PageType_whose_DefaultStopPublishOffsets_converted_to_minutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).DefaultStopPublishOffset.TotalMinutes
             .ShouldEqual(pageTypeAttribute.DefaultStopPublishOffsetMinutes);
 
-        It should_create_a_new_PageType_with_the_same_DefaultVisibleInMenu_as_in_the_attibute = () =>
+        It should_create_a_new_PageType_with_the_same_value_of_DefaultVisibleInMenu_as_in_the_attribute = () =>
             SyncContext.PageTypeFactory.Load(guidInAttribute).DefaultVisibleInMenu
             .ShouldEqual(pageTypeAttribute.DefaultVisibleInMenu);
 
@@ -101,12 +101,12 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             SyncContext.PageTypeFactory.Load(guidInAttribute).FileName
             .ShouldEqual(pageTypeAttribute.Filename);
 
-        It should_create_a_new_PageType_with_the_same_DefaultFrameID_as_the_attribute = () =>
-            SyncContext.PageTypeFactory.Load(pageTypeName).DefaultFrameID
+        It should_create_a_new_PageType_with_the_same_DefaultFrameID_as_in_the_attribute = () =>
+            SyncContext.PageTypeFactory.Load(guidInAttribute).DefaultFrameID
             .ShouldEqual(pageTypeAttribute.DefaultFrameID);
 
         It should_create_a_new_PageType_whose_DefaultArchivePageLink_has_an_ID_equal_to_the_attributes_DefaultArchiveToPageID = () =>
-            SyncContext.PageTypeFactory.Load(pageTypeName).DefaultArchivePageLink.ID
+            SyncContext.PageTypeFactory.Load(guidInAttribute).DefaultArchivePageLink.ID
             .ShouldEqual(pageTypeAttribute.DefaultArchiveToPageID);
     }
 }
