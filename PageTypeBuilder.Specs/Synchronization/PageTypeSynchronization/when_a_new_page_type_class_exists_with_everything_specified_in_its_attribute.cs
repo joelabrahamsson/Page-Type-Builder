@@ -15,7 +15,8 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             pageTypeAttribute = AttributeHelper
                 .CreatePageTypeAttributeWithEverythingSpeficied(SyncContext);
 
-            var attributeSpecification = AttributeHelper.CreatePageTypeAttributeSpecification(pageTypeAttribute.Guid.Value.ToString());
+            var attributeSpecification = AttributeHelper
+                .CreatePageTypeAttributeSpecification(pageTypeAttribute.Guid.Value.ToString());
             attributeSpecification.Template = pageTypeAttribute;
             
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
