@@ -142,7 +142,12 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 
         private static PropertyInfo[] GetWritableProperties(Attribute attributeTemplate)
         {
-            return attributeTemplate.GetType().GetProperties().Where(prop => prop.CanWrite).ToArray();
+            return attributeTemplate.GetType().GetProperties().Where(prop => IsSettableProperty(prop)).ToArray();
+        }
+
+        private static bool IsSettableProperty(PropertyInfo prop)
+        {
+            return prop.GetSetMethod() != null && prop.GetSetMethod().IsPublic;
         }
 
         private static object[] GetPropertyValues(Attribute attributeTemplate, PropertyInfo[] properties)

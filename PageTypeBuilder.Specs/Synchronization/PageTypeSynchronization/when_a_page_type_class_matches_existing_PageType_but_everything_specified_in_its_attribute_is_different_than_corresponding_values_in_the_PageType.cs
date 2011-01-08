@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using EPiServer.Core;
-using EPiServer.Filters;
+﻿using System.Linq;
 using Machine.Specifications;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Specs.Helpers.Fakes;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
 {
@@ -14,32 +11,14 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
     {
         static string pageTypeName = "NameOfTheClass";
         static PageTypeAttribute pageTypeAttribute;
-        static Guid guidInAttribute;
         static int idOfExistingPageType;
 
         Establish context = () =>
         {
-            var anotherPageTypeClass = SyncContext.CreateAndAddPageTypeClassToAppDomain(type => {});
-
-            pageTypeAttribute = new PageTypeAttribute();
-            pageTypeAttribute.AvailablePageTypes = new [] { anotherPageTypeClass };
-            pageTypeAttribute.AvailableInEditMode = false;
-            pageTypeAttribute.Description = "A description";
-            pageTypeAttribute.SortOrder = 123;
-            pageTypeAttribute.DefaultArchiveToPageID = 567;
-            pageTypeAttribute.DefaultPageName = "Default page name";
-            pageTypeAttribute.DefaultStartPublishOffsetMinutes = 1234;
-            pageTypeAttribute.DefaultStopPublishOffsetMinutes = 12345;
-            pageTypeAttribute.DefaultVisibleInMenu = false;
-            pageTypeAttribute.DefaultChildSortOrder = FilterSortOrder.Alphabetical;
-            pageTypeAttribute.DefaultSortIndex = 345;
-            pageTypeAttribute.DefaultFrameID = 1;
-            pageTypeAttribute.Filename = "~/TemplateForThePageType.aspx";
-            pageTypeAttribute.Name = pageTypeName;
-
-            guidInAttribute = Guid.NewGuid();
+            pageTypeAttribute = AttributeHelper
+                .CreatePageTypeAttributeWithEverythingSpeficied(SyncContext);
             
-            var attributeSpecification = AttributeHelper.CreatePageTypeAttributeSpecification(guidInAttribute.ToString());
+            var attributeSpecification = AttributeHelper.CreatePageTypeAttributeSpecification(pageTypeAttribute.Guid.Value.ToString());
             attributeSpecification.Template = pageTypeAttribute;
             
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
@@ -48,25 +27,8 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
                 type.Attributes.Add(attributeSpecification);
             });
 
-            var existingPageType = new FakePageType();
-            existingPageType.GUID = guidInAttribute;
-            existingPageType.AllowedPageTypes = new int[0];
-            existingPageType.Description = pageTypeAttribute.Description + " more text";
-            existingPageType.IsAvailable = !pageTypeAttribute.AvailableInEditMode;
-            existingPageType.DefaultArchivePageLink = 
-                new PageReference(pageTypeAttribute.DefaultArchiveToPageID + 1);
-            existingPageType.SortOrder = pageTypeAttribute.SortOrder + 1;
-            existingPageType.DefaultPageName = pageTypeAttribute.DefaultPageName + " more text";
-            existingPageType.DefaultStartPublishOffset = 
-                (pageTypeAttribute.DefaultStartPublishOffsetMinutes + 1).Minutes();
-            existingPageType.DefaultStopPublishOffset =
-                (pageTypeAttribute.DefaultStopPublishOffsetMinutes + 1).Minutes();
-            existingPageType.DefaultVisibleInMenu = !pageTypeAttribute.DefaultVisibleInMenu;
-            existingPageType.DefaultPeerOrder = pageTypeAttribute.DefaultSortIndex + 1;
-            existingPageType.DefaultChildOrderRule = FilterSortOrder.Index;
-            existingPageType.DefaultFrameID = pageTypeAttribute.DefaultFrameID + 1;
-            existingPageType.FileName = "~/OldTemplateForThePageType.aspx";
-            existingPageType.Name = pageTypeAttribute.Name + " more text";
+            IPageType existingPageType = 
+                PageTypeMother.CreatePageTypeWithEverythingButGuidDifferentThanAttribute(pageTypeAttribute);
 
             SyncContext.PageTypeFactory.Save(existingPageType);
             SyncContext.PageTypeFactory.ResetNumberOfSaves();
@@ -130,11 +92,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
             .ShouldEqual(pageTypeAttribute.Filename);
 
         It should_update_the_PageType_to_have_the_same_DefaultFrameID_as_in_the_attribute = () =>
-            SyncContext.PageTypeFactory.Load(pageTypeName).DefaultFrameID
+            SyncContext.PageTypeFactory.Load(idOfExistingPageType).DefaultFrameID
             .ShouldEqual(pageTypeAttribute.DefaultFrameID);
 
         It  should_update_the_PageType_so_that_its_DefaultArchivePageLink_has_an_ID_equal_to_the_attributes_DefaultArchiveToPageID = () =>
-            SyncContext.PageTypeFactory.Load(pageTypeName).DefaultArchivePageLink.ID
+            SyncContext.PageTypeFactory.Load(idOfExistingPageType).DefaultArchivePageLink.ID
             .ShouldEqual(pageTypeAttribute.DefaultArchiveToPageID);
     }
 }
