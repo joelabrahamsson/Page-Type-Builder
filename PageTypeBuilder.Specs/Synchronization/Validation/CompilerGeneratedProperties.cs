@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization.Validation
 {
+    [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_but_not_virtual
         : SynchronizationSpecs
     {
@@ -45,6 +42,7 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             thrownException.Message.ShouldContain(pageTypeName);
     }
 
+    [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_and_is_virtual
         : SynchronizationSpecs
     {
@@ -74,6 +72,7 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             thrownException.ShouldBeNull();
     }
 
+    [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_with_a_private_setter
         : SynchronizationSpecs
     {
@@ -112,6 +111,7 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             thrownException.Message.ShouldContain(pageTypeName);
     }
 
+    [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_with_a_private_getter
         : SynchronizationSpecs
     {
