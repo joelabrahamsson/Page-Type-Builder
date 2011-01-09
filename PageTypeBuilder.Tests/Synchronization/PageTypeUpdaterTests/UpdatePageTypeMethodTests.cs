@@ -7,6 +7,7 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 using Xunit.Extensions;
@@ -53,7 +54,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, new PageTypeFactory());
+            return PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object);
         }
 
         [Fact]

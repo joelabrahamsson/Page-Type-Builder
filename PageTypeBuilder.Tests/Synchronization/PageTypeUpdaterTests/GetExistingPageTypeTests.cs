@@ -4,6 +4,7 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -27,7 +28,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeGuid)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
 
             IPageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
@@ -37,7 +38,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, new PageTypeFactory());
+            return PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object);
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeDefinition.Attribute.Name)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
 
             IPageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
@@ -73,7 +74,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeDefinition.Type.Name)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
 
             IPageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 

@@ -6,6 +6,7 @@ using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -28,15 +29,8 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(pageType);
             pageTypeLocator.Replay();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition> { definition };
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
-                new PageTypeDefinitionLocator(),
-                new PageTypeBuilderConfiguration(),
-                pageTypePropertyUpdater,
-                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
-                new PageTypeResolver(),
-                pageTypeLocator,
-                new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()), new TabDefinitionUpdater(),
-                new TabLocator());
+            PageTypeSynchronizer synchronizer =
+                PageTypeSynchronizerFactory.Create(pageTypePropertyUpdater, pageTypeLocator);
             synchronizer.PageTypeUpdater = pageTypeUpdater;
             synchronizer.UpdatePageTypePropertyDefinitions(definitions);
 

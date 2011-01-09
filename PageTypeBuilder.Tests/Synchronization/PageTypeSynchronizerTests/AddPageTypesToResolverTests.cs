@@ -4,6 +4,7 @@ using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Synchronization.Validation;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 using PageTypeBuilder.Discovery;
@@ -31,15 +32,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(pageType);
             pageTypeLocator.Replay();
             PageTypeResolver resolver = new PageTypeResolver();
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
-                new PageTypeDefinitionLocator(), 
-                new PageTypeBuilderConfiguration(),
-                new PageTypePropertyUpdater(),
-                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
-                new PageTypeResolver(),
-                pageTypeLocator,
-                new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()), new TabDefinitionUpdater(),
-                new TabLocator());
+            PageTypeSynchronizer synchronizer = PageTypeSynchronizerFactory.Create(pageTypeLocator);
             synchronizer.PageTypeResolver = resolver;
 
             synchronizer.AddPageTypesToResolver(definitions);

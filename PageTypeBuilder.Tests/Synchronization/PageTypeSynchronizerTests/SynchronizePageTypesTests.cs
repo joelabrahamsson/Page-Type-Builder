@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.Validation;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -39,7 +42,16 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         private PageTypeSynchronizer GetPageTypePartiallyMockedSynchronizer(PageTypeDefinitionLocator definitionLocator, PageTypeBuilderConfiguration configuration)
         {
             MockRepository fakes = new MockRepository();
-            PageTypeSynchronizer pageTypeSynchronizer = fakes.PartialMock<PageTypeSynchronizer>(definitionLocator, configuration);
+            PageTypeSynchronizer pageTypeSynchronizer = fakes.PartialMock<PageTypeSynchronizer>(
+                definitionLocator, 
+                configuration,
+                new PageTypePropertyUpdater(),
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
+                new PageTypeResolver(),
+                new PageTypeLocator(new PageTypeFactory()),
+                PageTypeUpdaterFactory.Create(),
+                new TabDefinitionUpdater(),
+                new TabLocator());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.UpdateTabDefinitions());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.ValidatePageTypeDefinitions(Arg<List<PageTypeDefinition>>.Is.Anything));
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.CreateNonExistingPageTypes(Arg<List<PageTypeDefinition>>.Is.Anything));

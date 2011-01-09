@@ -21,10 +21,6 @@ namespace PageTypeBuilder.Synchronization
         private IFrameFacade _frameFacade;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
-            PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitionLocator, pageTypeFactory, new PageTypeValueExtractor(), new PageTypeLocator(pageTypeFactory), new FrameFacade()) { }
-
-        public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeFactory pageTypeFactory, 
             IPageTypeValueExtractor pageTypeValueExtractor,
             IPageTypeLocator pageTypeLocator,
