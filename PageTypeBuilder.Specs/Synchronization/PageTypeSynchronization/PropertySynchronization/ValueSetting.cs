@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using EPiServer.DataAbstraction;
 using EPiServer.Editor;
+using EPiServer.Security;
 using Machine.Specifications;
+using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization.ValueSetting
 {
     [Subject("Synchronization")]
     public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class
@@ -14,27 +16,27 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         static PageTypePropertyAttribute propertyAttribute;
 
         Establish context = () =>
-            {
-                propertyAttribute = new PageTypePropertyAttribute();
-                propertyAttribute.DefaultValue = "Specified default value";
-                propertyAttribute.DefaultValueType = DefaultValueType.Value;
-                propertyAttribute.DisplayInEditMode = false;
-                propertyAttribute.EditCaption = "Property's Edit Caption";
-                propertyAttribute.HelpText = "Property's help text";
-                propertyAttribute.LongStringSettings = EditorToolOption.Bold;
-                propertyAttribute.Required = true;
-                propertyAttribute.Searchable = true;
-                propertyAttribute.SortOrder = 123;
-                propertyAttribute.UniqueValuePerLanguage = true;
+        {
+            propertyAttribute = new PageTypePropertyAttribute();
+            propertyAttribute.DefaultValue = "Specified default value";
+            propertyAttribute.DefaultValueType = DefaultValueType.Value;
+            propertyAttribute.DisplayInEditMode = false;
+            propertyAttribute.EditCaption = "Property's Edit Caption";
+            propertyAttribute.HelpText = "Property's help text";
+            propertyAttribute.LongStringSettings = EditorToolOption.Bold;
+            propertyAttribute.Required = true;
+            propertyAttribute.Searchable = true;
+            propertyAttribute.SortOrder = 123;
+            propertyAttribute.UniqueValuePerLanguage = true;
 
-                SyncContext.CreateAndAddPageTypeClassToAppDomain(type => 
-                    type.AddProperty(prop =>
-                    {
-                        prop.Name = propertyName;
-                        prop.Type = typeof (string);
-                        prop.AddAttributeTemplate(propertyAttribute);
-                    }));
-            };
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+                type.AddProperty(prop =>
+                {
+                    prop.Name = propertyName;
+                    prop.Type = typeof(string);
+                    prop.AddAttributeTemplate(propertyAttribute);
+                }));
+        };
 
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
@@ -86,5 +88,38 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         It should_create_a_PageDefinition_whose_LanguageSpecific_property_equals_the_attributes_UniqueValuePerLanguage_property =
             () => SyncContext.PageDefinitionFactory.List().First()
                 .LanguageSpecific.ShouldEqual(propertyAttribute.UniqueValuePerLanguage);
+    }
+
+    [Subject("Synchronization")]
+    public class when_a_page_type_class_has_a_property_with_a_tab_specified
+        : SynchronizationSpecs
+    {
+        static string propertyName = "PropertyName";
+        static string tabName = "NameOfTheTab";
+
+        Establish context = () =>
+        {
+            var tabClass = TabClassFactory.CreateTabClass(
+            "NameOfClass", tabName, AccessLevel.Undefined, 0);
+
+            SyncContext.AssemblyLocator.Add(tabClass.Assembly);
+            PageTypePropertyAttribute propertyAttribute;
+            propertyAttribute = new PageTypePropertyAttribute();
+            propertyAttribute.Tab = tabClass;
+
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+                type.AddProperty(prop =>
+                {
+                    prop.Name = propertyName;
+                    prop.Type = typeof(string);
+                    prop.AddAttributeTemplate(propertyAttribute);
+                }));
+        };
+
+        Because of =
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        It should_create_a_page_definition_whose_Tab_property_matches_the_specified_Tab =
+            () => SyncContext.PageDefinitionFactory.List().First().Tab.ID.ShouldEqual(SyncContext.TabFactory.GetTabDefinition(tabName).ID);
     }
 }

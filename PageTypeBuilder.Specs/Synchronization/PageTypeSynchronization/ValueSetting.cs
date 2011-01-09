@@ -6,7 +6,7 @@ using Machine.Specifications;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization
+namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ValueSetting
 {
     class ValueSetting
     {
