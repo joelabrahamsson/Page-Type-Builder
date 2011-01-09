@@ -2,7 +2,7 @@
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization
+namespace PageTypeBuilder.Specs.Synchronization.Validation.InvalidTabInPageTypePropertyAttribute
 {
     [Subject("Synchronization")]
     public class when_a_page_type_property_has_a_Tab_specified_in_the_attribute_that_is_not_a_valid_Tab_class
@@ -22,11 +22,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             {
                 type.Name = nameOfThePageTypeClass;
                 type.AddProperty(prop =>
-                    {
-                        prop.Name = propertyName;
-                        prop.Type = typeof (string);
-                        prop.AddAttributeTemplate(propertyAttribute);
-                    });
+                {
+                    prop.Name = propertyName;
+                    prop.Type = typeof(string);
+                    prop.AddAttributeTemplate(propertyAttribute);
+                });
             });
         };
 

@@ -3,7 +3,7 @@ using EPiServer.Security;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization
+namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.NoSaving
 {
     [Subject("Synchronization")]
     public class when_a_tab_class_matches_an_existing_TabDefinition_by_Name_and_by_SortIndex_and_by_RequiredAccess
@@ -36,7 +36,7 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
-        It should_not_save_the_existing_TabDefinition= () =>
+        It should_not_save_the_existing_TabDefinition = () =>
             SyncContext.TabFactory.GetNumberOfSaves(existingTabDefinitionId).ShouldEqual(0);
     }
 }

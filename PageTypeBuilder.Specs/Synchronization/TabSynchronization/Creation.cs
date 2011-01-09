@@ -2,7 +2,7 @@
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 
-namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization
+namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.Creation
 {
     [Subject("Synchronization")]
     public class when_a_new_class_inheriting_from_Tab_has_been_added
@@ -13,15 +13,15 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization
         static int sortIndex = 12;
 
         Establish context = () =>
-            {
-                var tabClass =TabClassFactory.CreateTabClass(
-                    "NameOfClass",
-                    tabName,
-                    requiredAccess,
-                    sortIndex);
-            
-                SyncContext.AssemblyLocator.Add(tabClass.Assembly);
-            };
+        {
+            var tabClass = TabClassFactory.CreateTabClass(
+                "NameOfClass",
+                tabName,
+                requiredAccess,
+                sortIndex);
+
+            SyncContext.AssemblyLocator.Add(tabClass.Assembly);
+        };
 
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
