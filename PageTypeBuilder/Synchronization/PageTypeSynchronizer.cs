@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
@@ -13,9 +12,6 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
-
-        public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
-            : this(pageTypeDefinitionLocator, configuration, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory()), new PageTypeUpdater(pageTypeDefinitionLocator, new PageTypeFactory()), new TabDefinitionUpdater(), new TabLocator()) { }
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 

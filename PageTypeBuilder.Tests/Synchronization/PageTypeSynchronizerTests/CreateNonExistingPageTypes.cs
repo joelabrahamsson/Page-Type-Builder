@@ -35,7 +35,16 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
 
         private PageTypeSynchronizer CreateSynchronizer()
         {
-            return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
+            return new PageTypeSynchronizer(
+                new PageTypeDefinitionLocator(), 
+                new PageTypeBuilderConfiguration(),
+                new PageTypePropertyUpdater(), 
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
+                PageTypeResolver.Instance, 
+                new PageTypeLocator(new PageTypeFactory()), 
+                new PageTypeUpdater(new PageTypeDefinitionLocator(), new PageTypeFactory()), 
+                new TabDefinitionUpdater(), 
+                new TabLocator());
         }
 
         private PageTypeSynchronizer CreateSynchronizer(IPageTypeLocator pageTypeLocator)
