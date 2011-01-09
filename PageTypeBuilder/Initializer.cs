@@ -32,6 +32,8 @@ namespace PageTypeBuilder
 
             var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
 
+            var tabLocator = new TabLocator(new AppDomainAssemblyLocator());
+
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 pageTypeDefinitionLocator, 
                 Configuration,
@@ -41,7 +43,7 @@ namespace PageTypeBuilder
                 pageTypeLocator,
                 pageTypeUpdater,
                 tabDefinitionUpdater,
-                new TabLocator());
+                tabLocator);
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

@@ -10,10 +10,6 @@ namespace PageTypeBuilder.Discovery
     {
         private IAssemblyLocator _assemblyLocator;
 
-        public TabLocator()
-            : this(new AppDomainAssemblyLocator())
-        {}
-
         public TabLocator(IAssemblyLocator assemblyLocator)
         {
             _assemblyLocator = assemblyLocator;

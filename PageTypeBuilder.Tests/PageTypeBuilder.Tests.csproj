@@ -113,6 +113,7 @@
     <Compile Include="Helpers\PageTypeSynchronizerFactory.cs" />
     <Compile Include="Helpers\PageTypeUpdaterFactory.cs" />
     <Compile Include="Helpers\TabDefinitionUpdaterFactory.cs" />
+    <Compile Include="Helpers\TabLocatorFactory.cs" />
     <Compile Include="PageTypeWithCustomAttribute.cs" />
     <Compile Include="Synchronization\PageTypePropertyUpdaterTests\SerializeValuesTests.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidatorTests.cs" />

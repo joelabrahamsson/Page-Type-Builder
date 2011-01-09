@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Reflection;
 

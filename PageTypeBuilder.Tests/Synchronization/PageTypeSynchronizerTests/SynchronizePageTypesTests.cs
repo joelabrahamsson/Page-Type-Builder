@@ -51,7 +51,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
                 new PageTypeLocator(new PageTypeFactory()),
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
-                new TabLocator());
+                TabLocatorFactory.Create());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.UpdateTabDefinitions());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.ValidatePageTypeDefinitions(Arg<List<PageTypeDefinition>>.Is.Anything));
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.CreateNonExistingPageTypes(Arg<List<PageTypeDefinition>>.Is.Anything));

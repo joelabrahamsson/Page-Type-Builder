@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         {
             PageTypeSynchronizer pageTypeSynchronizer = PageTypeSynchronizerFactory.Create();
             MockRepository fakes = new MockRepository();
-            TabLocator fakeTabLocator = fakes.Stub<TabLocator>();
+            TabLocator fakeTabLocator = TabLocatorFactory.Stub(fakes);
             List<Tab> tabs = new List<Tab> { new TestTab() };
             fakeTabLocator.Stub(locator => locator.GetDefinedTabs()).Return(tabs);
             fakeTabLocator.Replay();

@@ -1,6 +1,5 @@
 ﻿using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
-using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
 
@@ -19,7 +18,7 @@ namespace PageTypeBuilder.Tests.Helpers
                 pageTypeLocator,
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
-                new TabLocator());
+                TabLocatorFactory.Create());
         }
 
         public static PageTypeSynchronizer Create(IPageTypeLocator pageTypeLocator)
