@@ -42,16 +42,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         private PageTypeSynchronizer GetPageTypePartiallyMockedSynchronizer(IPageTypeDefinitionLocator definitionLocator, PageTypeBuilderConfiguration configuration)
         {
             MockRepository fakes = new MockRepository();
-            PageTypeSynchronizer pageTypeSynchronizer = fakes.PartialMock<PageTypeSynchronizer>(
-                definitionLocator, 
-                configuration,
-                PageTypePropertyUpdaterFactory.Create(),
-                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
-                new PageTypeResolver(),
-                new PageTypeLocator(new PageTypeFactory()),
-                PageTypeUpdaterFactory.Create(),
-                TabDefinitionUpdaterFactory.Create(),
-                TabLocatorFactory.Create());
+            PageTypeSynchronizer pageTypeSynchronizer = PageTypeSynchronizerFactory.PartialMock(fakes, definitionLocator, configuration);
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.UpdateTabDefinitions());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.ValidatePageTypeDefinitions(Arg<List<PageTypeDefinition>>.Is.Anything));
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.CreateNonExistingPageTypes(Arg<List<PageTypeDefinition>>.Is.Anything));

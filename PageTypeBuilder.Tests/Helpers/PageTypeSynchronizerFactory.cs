@@ -1,7 +1,9 @@
 ﻿using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
+using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
+using Rhino.Mocks;
 
 namespace PageTypeBuilder.Tests.Helpers
 {
@@ -29,6 +31,23 @@ namespace PageTypeBuilder.Tests.Helpers
         public static PageTypeSynchronizer Create()
         {
             return Create(new PageTypeLocator(new PageTypeFactory()));
+        }
+
+        public static PageTypeSynchronizer PartialMock(
+            MockRepository fakesRepository, 
+            IPageTypeDefinitionLocator definitionLocator, 
+            PageTypeBuilderConfiguration configuration)
+        {
+            return fakesRepository.PartialMock<PageTypeSynchronizer>(
+                definitionLocator,
+                configuration,
+                PageTypePropertyUpdaterFactory.Create(),
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
+                new PageTypeResolver(),
+                new PageTypeLocator(new PageTypeFactory()),
+                PageTypeUpdaterFactory.Create(),
+                TabDefinitionUpdaterFactory.Create(),
+                TabLocatorFactory.Create());
         }
     }
 }
