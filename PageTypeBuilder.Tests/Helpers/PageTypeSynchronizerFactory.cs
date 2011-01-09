@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Tests.Helpers
                 PageTypeResolver.Instance,
                 pageTypeLocator,
                 PageTypeUpdaterFactory.Create(),
-                new TabDefinitionUpdater(),
+                TabDefinitionUpdaterFactory.Create(),
                 new TabLocator());
         }
 

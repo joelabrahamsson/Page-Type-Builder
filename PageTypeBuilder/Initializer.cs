@@ -27,6 +27,9 @@ namespace PageTypeBuilder
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(), 
                 new TabFactory());
+
+            var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
+
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 pageTypeDefinitionLocator, 
                 Configuration,
@@ -35,7 +38,7 @@ namespace PageTypeBuilder
                 PageTypeResolver.Instance,
                 pageTypeLocator,
                 pageTypeUpdater,
-                new TabDefinitionUpdater(),
+                tabDefinitionUpdater,
                 new TabLocator());
             synchronizer.SynchronizePageTypes();
 

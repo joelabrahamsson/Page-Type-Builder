@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 using PageTypeBuilder.Abstractions;
@@ -13,7 +14,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
         public void GivenNewTab_UpdateTabDefinitions_SavesNewTabDefinition()
         {
             MockRepository fakes = new MockRepository();
-            TabDefinitionUpdater tabDefinitionUpdater = fakes.PartialMock<TabDefinitionUpdater>();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.PartialMock(fakes);
             List<Tab> tabs = new List<Tab>();
             Tab newTab = new TestTab();
             tabs.Add(newTab);
@@ -35,7 +36,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
         public void GivenExistingTab_UpdateTabDefinitions_DoesNotSaveTab()
         {
             MockRepository fakes = new MockRepository();
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
             List<Tab> tabs = new List<Tab>();
             Tab existingTab = new TestTab();
             tabs.Add(existingTab);
@@ -54,7 +55,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
         public void GivenExistingTabThatShouldBeUpdated_UpdateTabDefinitions_UpdatesTab()
         {
             MockRepository fakes = new MockRepository();
-            TabDefinitionUpdater tabDefinitionUpdater = fakes.PartialMock<TabDefinitionUpdater>();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.PartialMock(fakes);
             List<Tab> tabs = new List<Tab>();
             Tab existingTab = new TestTab();
             tabs.Add(existingTab);

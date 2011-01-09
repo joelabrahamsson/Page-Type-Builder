@@ -50,7 +50,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
                 new PageTypeResolver(),
                 new PageTypeLocator(new PageTypeFactory()),
                 PageTypeUpdaterFactory.Create(),
-                new TabDefinitionUpdater(),
+                TabDefinitionUpdaterFactory.Create(),
                 new TabLocator());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.UpdateTabDefinitions());
             pageTypeSynchronizer.Stub(synchronizer => synchronizer.ValidatePageTypeDefinitions(Arg<List<PageTypeDefinition>>.Is.Anything));

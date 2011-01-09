@@ -6,11 +6,6 @@ namespace PageTypeBuilder.Synchronization
 {
     public class TabDefinitionUpdater
     {
-        public TabDefinitionUpdater()
-        {
-            TabFactory = new TabFactory();
-        }
-
         public TabDefinitionUpdater(ITabFactory tabFactory)
         {
             TabFactory = tabFactory;

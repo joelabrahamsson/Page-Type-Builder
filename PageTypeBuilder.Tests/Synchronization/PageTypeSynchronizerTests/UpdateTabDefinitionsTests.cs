@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Synchronization.Validation;
 using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
@@ -22,7 +19,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             fakeTabLocator.Stub(locator => locator.GetDefinedTabs()).Return(tabs);
             fakeTabLocator.Replay();
             pageTypeSynchronizer.TabLocator = fakeTabLocator;
-            TabDefinitionUpdater fakeTabDefinitionUpdater = fakes.Stub<TabDefinitionUpdater>();
+            TabDefinitionUpdater fakeTabDefinitionUpdater = TabDefinitionUpdaterFactory.Stub(fakes);
             fakeTabDefinitionUpdater.Stub(updater => updater.UpdateTabDefinitions(Arg<List<Tab>>.Is.Anything));
             fakeTabDefinitionUpdater.Replay();
             pageTypeSynchronizer.TabDefinitionUpdater = fakeTabDefinitionUpdater;

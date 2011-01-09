@@ -1,4 +1,5 @@
 ﻿using EPiServer.DataAbstraction;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 using PageTypeBuilder.Synchronization;
 
@@ -11,7 +12,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
         {
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             bool shouldBeUpdated = tabDefinitionUpdater.TabDefinitionShouldBeUpdated(tabDefinition, tab);
 
@@ -24,7 +25,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
             tabDefinition.Name = TestValueUtility.CreateRandomString();
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             bool shouldBeUpdated = tabDefinitionUpdater.TabDefinitionShouldBeUpdated(tabDefinition, tab);
 
@@ -37,7 +38,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
             tabDefinition.RequiredAccess = tabDefinition.RequiredAccess + 1;
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             bool shouldBeUpdated = tabDefinitionUpdater.TabDefinitionShouldBeUpdated(tabDefinition, tab);
 
@@ -50,7 +51,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
             tabDefinition.SortIndex++;
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             bool shouldBeUpdated = tabDefinitionUpdater.TabDefinitionShouldBeUpdated(tabDefinition, tab);
 
