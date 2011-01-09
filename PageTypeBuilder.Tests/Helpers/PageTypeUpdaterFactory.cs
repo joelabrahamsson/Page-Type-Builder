@@ -24,13 +24,13 @@ namespace PageTypeBuilder.Tests.Helpers
 
         public static PageTypeUpdater Create()
         {
-            return Create(new PageTypeDefinitionLocator());
+            return Create(PageTypeDefinitionLocatorFactory.Create());
         }
 
         public static PageTypeUpdater Stub(MockRepository fakesRepository)
         {
             return fakesRepository.Stub<PageTypeUpdater>(
-                new Mock<IPageTypeDefinitionLocator>().Object, 
+                PageTypeDefinitionLocatorFactory.Stub(), 
                 new PageTypeFactory(),
                 new PageTypeValueExtractor(),
                 new PageTypeLocator(new PageTypeFactory()));

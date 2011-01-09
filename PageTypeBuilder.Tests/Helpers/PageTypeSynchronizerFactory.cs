@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Tests.Helpers
         public static PageTypeSynchronizer Create(PageTypePropertyUpdater pageTypePropertyUpdater, IPageTypeLocator pageTypeLocator)
         {
             return new PageTypeSynchronizer(
-                new PageTypeDefinitionLocator(),
+                PageTypeDefinitionLocatorFactory.Create(),
                 new PageTypeBuilderConfiguration(),
                 pageTypePropertyUpdater,
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),

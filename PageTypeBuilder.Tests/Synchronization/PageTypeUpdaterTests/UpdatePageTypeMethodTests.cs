@@ -54,7 +54,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object);
+            return PageTypeUpdaterFactory.Create(PageTypeDefinitionLocatorFactory.Stub());
         }
 
         [Fact]
@@ -458,7 +458,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
                 Attribute = new PageTypeAttribute()
             };
             definitions.Add(definitionToReturn);
-            var pageTypeDefinitionLocator = new Mock<IPageTypeDefinitionLocator>();
+            var pageTypeDefinitionLocator = PageTypeDefinitionLocatorFactory.Mock();
             pageTypeDefinitionLocator.Setup(locator => locator.GetPageTypeDefinitions()).Returns(definitions);
             PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(
                 pageTypeDefinitionLocator.Object, 
@@ -503,7 +503,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         {
             MockRepository mocks = new MockRepository();
             PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(
-                new Mock<IPageTypeDefinitionLocator>().Object, 
+                PageTypeDefinitionLocatorFactory.Stub(), 
                 new PageTypeFactory(),
                 new PageTypeValueExtractor(),
                 new PageTypeLocator(new PageTypeFactory()));

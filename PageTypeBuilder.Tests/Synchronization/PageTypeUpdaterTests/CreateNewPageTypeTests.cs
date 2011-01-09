@@ -26,7 +26,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
         private PageTypeUpdater CreatePageTypeUpdater()
         {
-            return PageTypeUpdaterFactory.Create(new Mock<PageTypeDefinitionLocator>().Object);
+            return PageTypeUpdaterFactory.Create(PageTypeDefinitionLocatorFactory.Stub());
         }
 
         private void SetupPageTypeUpdaterWithFakePageTypeFactory(PageTypeUpdater pageTypeUpdater)
