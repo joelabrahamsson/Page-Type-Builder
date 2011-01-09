@@ -31,5 +31,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
         public MethodAttributes SetterAttributes { get; set; }
 
         public Func<TypeBuilder, MethodBuilder> GetterImplementation { get; set; }
+
+        public bool AnnotateAsCompilerGenerated { get; set; }
     }
 }

@@ -118,6 +118,7 @@
     <Compile Include="Synchronization\Validation\ClashingClasses.cs" />
     <Compile Include="Synchronization\Validation\InvalidPropertyType.cs" />
     <Compile Include="Synchronization\Validation\InvalidTabInPageTypePropertyAttribute.cs" />
+    <Compile Include="Synchronization\Validation\CompilerGeneratedProperties.cs" />
     <Compile Include="Synchronization\Validation\PageTypeNaming.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\DefaultPropertyTypeMappings.cs" />
     <Compile Include="Synchronization\SynchronizationSpecs.cs" />

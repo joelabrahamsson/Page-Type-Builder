@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 {
@@ -94,13 +95,6 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             typeBuilder.SetCustomAttribute(customAttributeBuilder);
         }
 
-        public static void AddAttribute(
-            this TypeBuilder typeBuilder,
-            CustomAttributeBuilder attributeBuilder)
-        {
-            typeBuilder.SetCustomAttribute(attributeBuilder);
-        }
-
         private static CustomAttributeBuilder CreateAttributeWithValuesFromTemplate(AttributeSpecification attributeSpecification)
         {
             var propertiesWithValues = new List<PropertyInfo>();
@@ -172,11 +166,24 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 
             MethodBuilder getterMethodBuilder;
             if (propertySpec.GetterImplementation != null)
+            {
                 getterMethodBuilder = propertySpec.GetterImplementation(typeBuilder);
+            }
             else
-                getterMethodBuilder = CreatePropertyGetMethodWithBackingField(typeBuilder, propertySpec.Name, propertySpec.GetterAttributes, fieldBuilder);
+            {
+                getterMethodBuilder = CreatePropertyGetMethodWithBackingField(
+                    typeBuilder, propertySpec.Name, propertySpec.GetterAttributes, fieldBuilder);
+            }
 
-            MethodBuilder setterMethodBuilder = CreatePropertySetMethodWithBackingField(typeBuilder, propertySpec.Name, propertySpec.SetterAttributes, fieldBuilder);
+            MethodBuilder setterMethodBuilder = CreatePropertySetMethodWithBackingField(
+                typeBuilder, propertySpec.Name, propertySpec.SetterAttributes, 
+                fieldBuilder);
+
+            if (propertySpec.AnnotateAsCompilerGenerated)
+            {
+                AddCompilerGeneratedAttribute(getterMethodBuilder);
+                AddCompilerGeneratedAttribute(setterMethodBuilder);
+            }
 
             if (typeBuilder.BaseType.GetProperty(propertySpec.Name) != null)
                 return;
@@ -193,7 +200,9 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             }
         }
 
-        static MethodBuilder CreatePropertyGetMethodWithBackingField(TypeBuilder typeBuilder, string name, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
+        static MethodBuilder CreatePropertyGetMethodWithBackingField(
+            TypeBuilder typeBuilder, string name, 
+            MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
         {
             MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + name, methodAttributes, fieldBuilder.FieldType, Type.EmptyTypes);
 
@@ -201,10 +210,22 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             getMethodILGenerator.Emit(OpCodes.Ldarg_0);
             getMethodILGenerator.Emit(OpCodes.Ldfld, fieldBuilder);
             getMethodILGenerator.Emit(OpCodes.Ret);
+
             return getMethodBuilder;
         }
 
-        static MethodBuilder CreatePropertySetMethodWithBackingField(TypeBuilder typeBuilder, string name, MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
+        static void AddCompilerGeneratedAttribute(MethodBuilder getMethodBuilder)
+        {
+            var compilerGeneratedAttributeCtor = 
+                typeof (CompilerGeneratedAttribute).GetConstructor(new Type[0]);
+            var compilerGeneratedAttribute = 
+                new CustomAttributeBuilder(compilerGeneratedAttributeCtor, new object[0]);    
+            getMethodBuilder.SetCustomAttribute(compilerGeneratedAttribute);
+        }
+
+        static MethodBuilder CreatePropertySetMethodWithBackingField(
+            TypeBuilder typeBuilder, string name, 
+            MethodAttributes methodAttributes, FieldBuilder fieldBuilder)
         {
             MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + name, methodAttributes, null, new Type[] { fieldBuilder.FieldType });
 
@@ -213,6 +234,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             setMethodILGenerator.Emit(OpCodes.Ldarg_1);
             setMethodILGenerator.Emit(OpCodes.Stfld, fieldBuilder);
             setMethodILGenerator.Emit(OpCodes.Ret);
+
             return setMethodBuilder;
         }
 
