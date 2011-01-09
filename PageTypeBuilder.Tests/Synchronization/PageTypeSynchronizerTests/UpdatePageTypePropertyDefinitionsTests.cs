@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
-using EPiServer.DataAbstraction;
-using Moq;
 using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Synchronization.Validation;
 using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
@@ -20,7 +16,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             PageTypeDefinition definition = new PageTypeDefinition();
             
             MockRepository fakes = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Stub(fakes);
             IPageType pageType = new NativePageType();
             PageTypePropertyUpdater pageTypePropertyUpdater = fakes.Stub<PageTypePropertyUpdater>();
             pageTypePropertyUpdater.Stub(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));

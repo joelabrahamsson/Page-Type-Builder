@@ -19,7 +19,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         {
             
             MockRepository fakes = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Stub(fakes);
             PageTypeDefinition definition = new PageTypeDefinition();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition>();
             definitions.Add(definition);
@@ -43,7 +43,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         public void GivenExistingPageTypeNotFound_CreateNonExistingPageTypes_PageTypeUpdaterCreateNewPageTypeCalled()
         {
             MockRepository fakes = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Stub(fakes);
             PageTypeDefinition definition = new PageTypeDefinition();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition>();
             definitions.Add(definition);

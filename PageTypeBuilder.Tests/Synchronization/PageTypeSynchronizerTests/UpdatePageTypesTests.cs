@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
-using Moq;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Synchronization.Validation;
 using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
@@ -18,7 +14,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         {
             PageTypeSynchronizer synchronizer = PageTypeSynchronizerFactory.Create();
             MockRepository fakes = new MockRepository();
-            PageTypeUpdater pageTypeUpdater = fakes.Stub<PageTypeUpdater>(new Mock<IPageTypeDefinitionLocator>().Object, new PageTypeFactory());
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Stub(fakes);
             PageTypeDefinition definition = new PageTypeDefinition();   
             pageTypeUpdater.Stub(updater => updater.UpdatePageType(definition));
             pageTypeUpdater.Replay();

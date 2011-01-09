@@ -21,8 +21,7 @@ namespace PageTypeBuilder
                 pageTypeDefinitionLocator,
                 new PageTypeFactory(), 
                 new PageTypeValueExtractor(),
-                pageTypeLocator,
-                new FrameFacade());
+                pageTypeLocator);
 
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 pageTypeDefinitionLocator, 

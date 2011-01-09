@@ -1,6 +1,8 @@
-﻿using PageTypeBuilder.Abstractions;
+﻿using Moq;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using Rhino.Mocks;
 
 namespace PageTypeBuilder.Tests.Helpers
 {
@@ -12,10 +14,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 pageDefinitionLocator,
                 pageTypeFactory,
                 new PageTypeValueExtractor(),
-                new PageTypeLocator(pageTypeFactory),
-                new FrameFacade());
+                new PageTypeLocator(pageTypeFactory));
         }
-
 
         public static PageTypeUpdater Create(IPageTypeDefinitionLocator pageDefinitionLocator)
         {
@@ -25,6 +25,15 @@ namespace PageTypeBuilder.Tests.Helpers
         public static PageTypeUpdater Create()
         {
             return Create(new PageTypeDefinitionLocator());
+        }
+
+        public static PageTypeUpdater Stub(MockRepository fakesRepository)
+        {
+            return fakesRepository.Stub<PageTypeUpdater>(
+                new Mock<IPageTypeDefinitionLocator>().Object, 
+                new PageTypeFactory(),
+                new PageTypeValueExtractor(),
+                new PageTypeLocator(new PageTypeFactory()));
         }
     }
 }

@@ -18,20 +18,17 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
-        private IFrameFacade _frameFacade;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeFactory pageTypeFactory, 
             IPageTypeValueExtractor pageTypeValueExtractor,
-            IPageTypeLocator pageTypeLocator,
-            IFrameFacade frameFacade)
+            IPageTypeLocator pageTypeLocator)
         {
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeFactory = pageTypeFactory;
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
             _pageTypeLocator = pageTypeLocator;
-            _frameFacade = frameFacade;
         }
 
         protected internal virtual IPageType GetExistingPageType(PageTypeDefinition definition)
