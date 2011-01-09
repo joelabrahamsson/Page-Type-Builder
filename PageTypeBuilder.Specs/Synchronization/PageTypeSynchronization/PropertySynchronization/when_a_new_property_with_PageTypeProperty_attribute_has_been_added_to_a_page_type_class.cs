@@ -23,7 +23,9 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 propertyAttribute.HelpText = "Property's help text";
                 propertyAttribute.LongStringSettings = EditorToolOption.Bold;
                 propertyAttribute.Required = true;
+                propertyAttribute.Searchable = true;
                 propertyAttribute.SortOrder = 123;
+                propertyAttribute.UniqueValuePerLanguage = true;
 
                 SyncContext.CreateAndAddPageTypeClassToAppDomain(type => 
                     type.AddProperty(prop =>
@@ -76,5 +78,13 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         It should_create_a_PageDefinition_whose_Required_property_equals_the_attributes_Required_property =
             () => SyncContext.PageDefinitionFactory.List().First()
                 .Required.ShouldEqual(propertyAttribute.Required);
+
+        It should_create_a_PageDefinition_whose_Searchable_property_equals_the_attributes_Searchable_property =
+            () => SyncContext.PageDefinitionFactory.List().First()
+                .Searchable.ShouldEqual(propertyAttribute.Searchable);
+
+        It should_create_a_PageDefinition_whose_LanguageSpecific_property_equals_the_attributes_UniqueValuePerLanguage_property =
+            () => SyncContext.PageDefinitionFactory.List().First()
+                .LanguageSpecific.ShouldEqual(propertyAttribute.UniqueValuePerLanguage);
     }
 }
