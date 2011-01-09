@@ -4,6 +4,7 @@ using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -30,7 +31,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             List<PageTypePropertyDefinition> definitionsToReturnFromGetPageTypePropertyDefinitions)
         {
             MockRepository fakes = new MockRepository();
-            PageTypePropertyUpdater pageTypePropertyUpdater = fakes.PartialMock<PageTypePropertyUpdater>();
+            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
             PageTypePropertyDefinitionLocator definitionLocator = fakes.Stub<PageTypePropertyDefinitionLocator>();
             definitionLocator.Stub(
                 locator => locator.GetPageTypePropertyDefinitions(

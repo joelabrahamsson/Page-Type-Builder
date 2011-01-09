@@ -23,10 +23,14 @@ namespace PageTypeBuilder
                 new PageTypeValueExtractor(),
                 pageTypeLocator);
 
+            var pageTypePropertyUpdater = new PageTypePropertyUpdater(
+                new PageDefinitionFactory(),
+                new PageDefinitionTypeFactory(), 
+                new TabFactory());
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 pageTypeDefinitionLocator, 
                 Configuration,
-                new PageTypePropertyUpdater(new PageDefinitionFactory()),
+                pageTypePropertyUpdater,
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
                 PageTypeResolver.Instance,
                 pageTypeLocator,

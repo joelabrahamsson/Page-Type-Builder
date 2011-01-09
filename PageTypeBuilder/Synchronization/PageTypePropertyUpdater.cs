@@ -13,14 +13,10 @@ namespace PageTypeBuilder.Synchronization
     {
         private ITabFactory _tabFactory;
 
-        public PageTypePropertyUpdater()
-            : this(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()) { }
-
-        public PageTypePropertyUpdater(IPageDefinitionFactory pageDefinitionFactory)
-            : this(pageDefinitionFactory, new PageDefinitionTypeFactory(), new TabFactory()) { }
-
-        public PageTypePropertyUpdater(IPageDefinitionFactory pageDefinitionFactory, 
-            IPageDefinitionTypeFactory pageDefinitionTypeFactory, ITabFactory tabFactory)
+        public PageTypePropertyUpdater(
+            IPageDefinitionFactory pageDefinitionFactory, 
+            IPageDefinitionTypeFactory pageDefinitionTypeFactory, 
+            ITabFactory tabFactory)
         {
             PageDefinitionFactory = pageDefinitionFactory;
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;

@@ -45,7 +45,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             PageTypeSynchronizer pageTypeSynchronizer = fakes.PartialMock<PageTypeSynchronizer>(
                 definitionLocator, 
                 configuration,
-                new PageTypePropertyUpdater(),
+                PageTypePropertyUpdaterFactory.Create(),
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
                 new PageTypeResolver(),
                 new PageTypeLocator(new PageTypeFactory()),

@@ -3,6 +3,7 @@ using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests;
 using Rhino.Mocks;
 using Xunit;
@@ -17,7 +18,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
             PageDefinitionFactory fakePageDefinitionFactory = fakes.Stub<PageDefinitionFactory>();
             fakePageDefinitionFactory.Stub(factory => factory.Save(Arg<PageDefinition>.Is.Anything));
             fakePageDefinitionFactory.Replay();
-            PageTypePropertyUpdater partiallyMockedUtility = fakes.PartialMock<PageTypePropertyUpdater>();
+            PageTypePropertyUpdater partiallyMockedUtility = PageTypePropertyUpdaterFactory.PartialMock(fakes);
             partiallyMockedUtility.Stub(
                 utility => utility.SetPageDefinitionType(
                     Arg<PageDefinition>.Is.Anything, Arg<PageTypePropertyDefinition>.Is.Anything));
@@ -93,7 +94,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
             PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
             PageDefinition pageDefinition = new PageDefinition();
             MockRepository fakes = new MockRepository();
-            PageTypePropertyUpdater pageTypePropertyUpdater = fakes.PartialMock<PageTypePropertyUpdater>();
+            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
             pageTypePropertyUpdater.Stub(
                 utility => utility.GetPageDefinitionType(pageTypePropertyDefinition)
                 ).Return(expectedPageDefintionType);

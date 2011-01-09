@@ -108,6 +108,7 @@
     <Compile Include="Discovery\TabLocatorTests.cs" />
     <Compile Include="Discovery\PageTypeDefinitionLocatorTests.cs" />
     <Compile Include="Discovery\PageTypePropertyDefinitionTests.cs" />
+    <Compile Include="Helpers\PageTypePropertyUpdaterFactory.cs" />
     <Compile Include="Helpers\PageTypeSynchronizerFactory.cs" />
     <Compile Include="Helpers\PageTypeUpdaterFactory.cs" />
     <Compile Include="PageTypeWithCustomAttribute.cs" />
