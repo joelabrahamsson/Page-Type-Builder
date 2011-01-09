@@ -5,19 +5,6 @@ using System.Linq;
 
 namespace PageTypeBuilder.Reflection
 {
-    public interface IAssemblyLocator
-    {
-        IEnumerable<Assembly> GetAssemblies();
-    }
-
-    public class AppDomainAssemblyLocator : IAssemblyLocator
-    {
-        public IEnumerable<Assembly> GetAssemblies()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies();
-        }
-    }
-
     internal class AttributedTypesUtility
     {
         internal static List<Type> GetTypesWithAttribute(IAssemblyLocator assemblyLocator,  Type attributeType)

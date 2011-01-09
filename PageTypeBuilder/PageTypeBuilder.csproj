@@ -121,6 +121,8 @@
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
     <Compile Include="PageTypeBuilderException.cs" />
+    <Compile Include="Reflection\AppDomainAssemblyLocator.cs" />
+    <Compile Include="Reflection\IAssemblyLocator.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Activation\PageTypePropertiesProxyGenerationHook.cs" />
     <Compile Include="Activation\PageTypePropertyInterceptor.cs" />
