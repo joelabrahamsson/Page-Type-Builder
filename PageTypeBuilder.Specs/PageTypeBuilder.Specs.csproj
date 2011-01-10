@@ -116,15 +116,16 @@
     <Compile Include="Synchronization\TabSynchronization\NoSaving.cs" />
     <Compile Include="Synchronization\TabSynchronization\ValueSetting.cs" />
     <Compile Include="Synchronization\Validation\ClashingClasses.cs" />
-    <Compile Include="Synchronization\Validation\InvalidPropertyType.cs" />
-    <Compile Include="Synchronization\Validation\InvalidTabInPageTypePropertyAttribute.cs" />
-    <Compile Include="Synchronization\Validation\CompilerGeneratedProperties.cs" />
+    <Compile Include="Synchronization\Validation\PropertyValidation\PropertyValidationSpecs.cs" />
     <Compile Include="Synchronization\Validation\PageTypeNaming.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\DefaultPropertyTypeMappings.cs" />
     <Compile Include="Synchronization\SynchronizationSpecs.cs" />
     <Compile Include="Helpers\IntegerExtensions.cs" />
     <Compile Include="Helpers\PageTypeClassFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Synchronization\Validation\PropertyValidation\CompilerGeneratedProperties.cs" />
+    <Compile Include="Synchronization\Validation\PropertyValidation\InvalidPropertyType.cs" />
+    <Compile Include="Synchronization\Validation\PropertyValidation\InvalidTabInPageTypePropertyAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

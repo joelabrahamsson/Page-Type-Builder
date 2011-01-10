@@ -1,18 +1,13 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
-namespace PageTypeBuilder.Specs.Synchronization.Validation
+namespace PageTypeBuilder.Specs.Synchronization.Validation.PropertyValidation.CompilerGeneratedProperties
 {
     [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_but_not_virtual
-        : SynchronizationSpecs
+        : PropertyValidationSpecs
     {
-        static Exception thrownException;
-        static string pageTypeName = "NameOfThePropertysPageType";
-        static string propertyName = "ThePropertysName";
-
         Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
         {
             type.Name = pageTypeName;
@@ -25,31 +20,13 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             });
         });
 
-        Because of = () =>
-            thrownException = Catch.Exception(
-                () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes());
-
-        It should_throw_an_Exception = () =>
-            thrownException.ShouldNotBeNull();
-
-        It should_throw_a_PageTypeBuilderException = () =>
-            thrownException.ShouldBeOfType<PageTypeBuilderException>();
-
-        It should_throw_an_Exception_whose_Message_should_contain_the_propertys_name = () =>
-            thrownException.Message.ShouldContain(propertyName);
-
-        It should_throw_an_Exception_whose_Message_should_contain_the_page_type_class_name = () =>
-            thrownException.Message.ShouldContain(pageTypeName);
+        Behaves_like<InvalidPageTypePropertyBehavior> it_found_an_invalid_property;
     }
 
     [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_and_is_virtual
-        : SynchronizationSpecs
+        : PropertyValidationSpecs
     {
-        static Exception thrownException;
-        static string pageTypeName = "NameOfThePropertysPageType";
-        static string propertyName = "ThePropertysName";
-
         Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
         {
             type.Name = pageTypeName;
@@ -64,22 +41,14 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             });
         });
 
-        Because of = () =>
-            thrownException = Catch.Exception(
-                () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes());
-
         It should_not_throw_an_Exception = () =>
             thrownException.ShouldBeNull();
     }
 
     [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_with_a_private_setter
-        : SynchronizationSpecs
+        : PropertyValidationSpecs
     {
-        static Exception thrownException;
-        static string pageTypeName = "NameOfThePropertysPageType";
-        static string propertyName = "ThePropertysName";
-
         Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
         {
             type.Name = pageTypeName;
@@ -94,31 +63,13 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             });
         });
 
-        Because of = () =>
-            thrownException = Catch.Exception(
-                () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes());
-
-        It should_throw_an_Exception = () =>
-            thrownException.ShouldNotBeNull();
-
-        It should_throw_a_PageTypeBuilderException = () =>
-            thrownException.ShouldBeOfType<PageTypeBuilderException>();
-
-        It should_throw_an_Exception_whose_Message_should_contain_the_propertys_name = () =>
-            thrownException.Message.ShouldContain(propertyName);
-
-        It should_throw_an_Exception_whose_Message_should_contain_the_page_type_class_name = () =>
-            thrownException.Message.ShouldContain(pageTypeName);
+        Behaves_like<InvalidPageTypePropertyBehavior> it_found_an_invalid_property;
     }
 
     [Subject("Synchronization")]
     public class when_a_property_in_a_page_type_class_has_a_PageTypePropertyAttribute_and_is_compiler_generated_with_a_private_getter
-        : SynchronizationSpecs
+        : PropertyValidationSpecs
     {
-        static Exception thrownException;
-        static string pageTypeName = "NameOfThePropertysPageType";
-        static string propertyName = "ThePropertysName";
-
         Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
         {
             type.Name = pageTypeName;
@@ -133,20 +84,6 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation
             });
         });
 
-        Because of = () =>
-            thrownException = Catch.Exception(
-                () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes());
-
-        It should_throw_an_Exception = () =>
-            thrownException.ShouldNotBeNull();
-
-        It should_throw_a_PageTypeBuilderException = () =>
-            thrownException.ShouldBeOfType<PageTypeBuilderException>();
-
-        It should_throw_an_Exception_whose_Message_should_contain_the_propertys_name = () =>
-            thrownException.Message.ShouldContain(propertyName);
-
-        It should_throw_an_Exception_whose_Message_should_contain_the_page_type_class_name = () =>
-            thrownException.Message.ShouldContain(pageTypeName);
+        Behaves_like<InvalidPageTypePropertyBehavior> it_found_an_invalid_property;
     }
 }
