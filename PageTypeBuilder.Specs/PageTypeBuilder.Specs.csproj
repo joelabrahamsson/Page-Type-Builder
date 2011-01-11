@@ -126,6 +126,7 @@
     <Compile Include="Synchronization\Validation\PropertyValidation\CompilerGeneratedProperties.cs" />
     <Compile Include="Synchronization\Validation\PropertyValidation\InvalidPropertyType.cs" />
     <Compile Include="Synchronization\Validation\PropertyValidation\InvalidTabInPageTypePropertyAttribute.cs" />
+    <Compile Include="TypeToIdMapping\PageTypeClassesMappedInPageTypeResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
