@@ -1,4 +1,5 @@
 ﻿using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using Xunit;
@@ -12,7 +13,7 @@ namespace PageTypeBuilder.Tests.Synchronization
         {
             string propertyName = TestValueUtility.CreateRandomString();
             PageTypePropertyDefinition definition = 
-                new PageTypePropertyDefinition(propertyName, typeof(string), new PageType(), new PageTypePropertyAttribute());
+                new PageTypePropertyDefinition(propertyName, typeof(string), new NativePageType(), new PageTypePropertyAttribute());
 
             string returnedEditCaption = definition.GetEditCaptionOrName();
 
@@ -24,7 +25,7 @@ namespace PageTypeBuilder.Tests.Synchronization
         {
             PageTypePropertyDefinition definition =
                 new PageTypePropertyDefinition(
-                    TestValueUtility.CreateRandomString(), typeof(string), new PageType(), new PageTypePropertyAttribute());
+                    TestValueUtility.CreateRandomString(), typeof(string), new NativePageType(), new PageTypePropertyAttribute());
             string editCaption = TestValueUtility.CreateRandomString();
             definition.PageTypePropertyAttribute.EditCaption = editCaption;
 

@@ -4,6 +4,7 @@ using EPiServer.Editor;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 using Xunit.Extensions;
@@ -29,7 +30,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         private PageTypePropertyUpdater CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakeUpdatePageDefinitionValuesMethod()
         {
             MockRepository fakes = new MockRepository();
-            PageTypePropertyUpdater pageTypePropertyUpdater = fakes.PartialMock<PageTypePropertyUpdater>();
+            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
             pageTypePropertyUpdater.Stub(
                 utility => utility.UpdatePageDefinitionValues(
                                Arg<PageDefinition>.Is.Anything, Arg<PageTypePropertyDefinition>.Is.Anything));
@@ -46,7 +47,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         {
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
             MockRepository fakes = new MockRepository();
-            PageTypePropertyUpdater pageTypePropertyUpdater = fakes.PartialMock<PageTypePropertyUpdater>();
+            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
             pageTypePropertyUpdater.Stub(
                 utility => utility.UpdatePageDefinitionValues(
                                Arg<PageDefinition>.Is.Anything, Arg<PageTypePropertyDefinition>.Is.Anything));
@@ -109,7 +110,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         private PageTypePropertyUpdater CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod()
         {
             MockRepository fakes = new MockRepository();
-            PageTypePropertyUpdater pageTypePropertyUpdater = fakes.PartialMock<PageTypePropertyUpdater>();
+            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
             pageTypePropertyUpdater.Stub(
                 utility => utility.UpdatePageDefinitionTab(Arg<PageDefinition>.Is.Anything, 
                                                            Arg<PageTypePropertyAttribute>.Is.Anything));

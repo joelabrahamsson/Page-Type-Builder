@@ -1,11 +1,13 @@
 ﻿using System;
 using Moq;
 using PageTypeBuilder.Abstractions;
+using PageTypeBuilder.Configuration;
 using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
+using StructureMap.Pipeline;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class InMemoryComponentsRegistry : Registry
     { 
@@ -17,9 +19,15 @@ namespace PageTypeBuilder.Specs.Helpers
                          scanner.Convention<InMemoryConvention>();
                      });
 
-            For<PageTypeResolver>().Use(new PageTypeResolver());
+            For<PageTypeResolver>()
+                .LifecycleIs(new SingletonLifecycle())
+                .Use(new PageTypeResolver());
 
             For<IPageTypeValueExtractor>().Use(new Mock<PageTypeValueExtractor>().Object);
+
+            For<PageTypeBuilderConfiguration>()
+                .LifecycleIs(new SingletonLifecycle())
+                .Use<FakePageTypeBuilderConfiguration>();
 
             Scan(scanner =>
             {

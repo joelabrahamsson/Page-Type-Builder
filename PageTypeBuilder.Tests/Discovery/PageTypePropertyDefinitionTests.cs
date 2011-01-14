@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace PageTypeBuilder.Tests.Discovery
             PageTypePropertyAttribute attribute = new PageTypePropertyAttribute();
             string name = TestValueUtility.CreateRandomString();
             Type propertyType = typeof(string);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             
             PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
 
@@ -28,7 +29,7 @@ namespace PageTypeBuilder.Tests.Discovery
             PageTypePropertyAttribute attribute = new PageTypePropertyAttribute();
             string name = TestValueUtility.CreateRandomString();
             Type propertyType = typeof(string);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
 
             PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
 
@@ -42,19 +43,19 @@ namespace PageTypeBuilder.Tests.Discovery
             PageTypePropertyAttribute attribute = new PageTypePropertyAttribute();
             string name = TestValueUtility.CreateRandomString();
             Type propertyType = typeof(string);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
             pageType.GUID = Guid.NewGuid();
 
             PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
 
 
-            Assert.Equal<PageType>(pageType, definition.PageType, new PageTypeComparer());
+            Assert.Equal<IPageType>(pageType, definition.PageType, new PageTypeComparer());
         }
 
-        private class PageTypeComparer : IComparer<PageType>
+        private class PageTypeComparer : IComparer<IPageType>
         {
 
-            public int Compare(PageType x, PageType y)
+            public int Compare(IPageType x, IPageType y)
             {
                 if (x.GUID == y.GUID)
                     return 0;
@@ -70,7 +71,7 @@ namespace PageTypeBuilder.Tests.Discovery
             attribute.HelpText = TestValueUtility.CreateRandomString();
             string name = TestValueUtility.CreateRandomString();
             Type propertyType = typeof(string);
-            PageType pageType = new PageType();
+            IPageType pageType = new NativePageType();
 
             PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
 

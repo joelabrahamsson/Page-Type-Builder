@@ -1,6 +1,7 @@
 ﻿using EPiServer.DataAbstraction;
 using EPiServer.Security;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
@@ -13,7 +14,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
             tabDefinition.Name = TestValueUtility.CreateRandomString();
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             tabDefinitionUpdater.UpdateTabDefinition(tabDefinition, tab);
 
@@ -26,7 +27,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
             tabDefinition.RequiredAccess = tab.RequiredAccess + 1;
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             tabDefinitionUpdater.UpdateTabDefinition(tabDefinition, tab);
 
@@ -39,7 +40,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab tab = new TestTab();
             TabDefinition tabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(tab);
             tabDefinition.SortIndex = tab.SortIndex + 1;
-            TabDefinitionUpdater tabDefinitionUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabDefinitionUpdater = TabDefinitionUpdaterFactory.Create();
 
             tabDefinitionUpdater.UpdateTabDefinition(tabDefinition, tab);
 

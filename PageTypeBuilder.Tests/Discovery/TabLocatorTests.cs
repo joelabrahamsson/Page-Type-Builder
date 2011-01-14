@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.Discovery
@@ -12,7 +13,7 @@ namespace PageTypeBuilder.Tests.Discovery
         public void GivenNonAbstractDescendantOfTabInApplicationDomain_GetDefinedTabs_ReturnsListOfTabsWithInstanceOfThatClass()
         {
             Type typeThatShouldBeLocated = typeof(TestTab);
-            TabLocator tabLocator = new TabLocator();
+            TabLocator tabLocator = TabLocatorFactory.Create();
 
             IEnumerable<Tab> definedTabs = tabLocator.GetDefinedTabs();
 

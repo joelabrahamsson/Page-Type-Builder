@@ -5,12 +5,14 @@ using AutoMapper;
 using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class InMemoryTabFactory : ITabFactory
     {
         private int nextId = 1;
         private List<TabDefinition> tabs;
+        private SavesPerIdCounter numberOfSavesPerTabIdCounter = new SavesPerIdCounter();
+
 
         public InMemoryTabFactory()
         {
@@ -21,7 +23,7 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public TabDefinition GetTabDefinition(string name)
         {
-            var record = tabs.Where(t => t.Name == name);
+            var record = tabs.Where(t => t.Name == name).FirstOrDefault();
             if (record == null)
                 return null;
 
@@ -41,6 +43,13 @@ namespace PageTypeBuilder.Specs.Helpers
                 Mapper.Map(tabDefinition, record);
                 tabs.Add(record);
             }
+            else
+            {
+                var existingTabDefinitionRecord = tabs.First(td => td.ID == tabDefinition.ID);
+                Mapper.Map(tabDefinition, existingTabDefinitionRecord);
+            }
+
+            numberOfSavesPerTabIdCounter.IncrementNumberOfSaves(tabDefinition.ID);
         }
 
         public TabDefinitionCollection List()
@@ -62,6 +71,16 @@ namespace PageTypeBuilder.Specs.Helpers
                 Mapper.Map(record, exposed);
                 return exposed;
             });
+        }
+
+        public int GetNumberOfSaves(int pageTypeId)
+        {
+            return numberOfSavesPerTabIdCounter.GetNumberOfSaves(pageTypeId);
+        }
+
+        public void ResetNumberOfSaves()
+        {
+            numberOfSavesPerTabIdCounter.ResetNumberOfSaves();
         }
     }
 }

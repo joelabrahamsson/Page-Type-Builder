@@ -1,10 +1,11 @@
 ﻿using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 
 namespace PageTypeBuilder.Synchronization
 {
     public interface IPageTypeLocator
     {
-        PageType GetExistingPageType(PageTypeDefinition definition);
+        IPageType GetExistingPageType(PageTypeDefinition definition);
     }
 }

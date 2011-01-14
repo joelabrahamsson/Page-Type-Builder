@@ -99,9 +99,18 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Abstractions\FrameFacade.cs" />
+    <Compile Include="Abstractions\IFrameFacade.cs" />
     <Compile Include="Abstractions\IPageDefinitionFactory.cs" />
     <Compile Include="Abstractions\IPageDefinitionTypeFactory.cs" />
+    <Compile Include="Abstractions\IPageType.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Abstractions\IPageTypeValueExtractor.cs" />
+    <Compile Include="Abstractions\NativePageType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Abstractions\WrappedPageType.cs" />
     <Compile Include="Discovery\IPageTypeDefinitionLocator.cs" />
     <Compile Include="Abstractions\IPageTypeFactory.cs" />
     <Compile Include="Abstractions\ITabFactory.cs" />
@@ -112,6 +121,8 @@
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
     <Compile Include="PageTypeBuilderException.cs" />
+    <Compile Include="Reflection\AppDomainAssemblyLocator.cs" />
+    <Compile Include="Reflection\IAssemblyLocator.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Activation\PageTypePropertiesProxyGenerationHook.cs" />
     <Compile Include="Activation\PageTypePropertyInterceptor.cs" />

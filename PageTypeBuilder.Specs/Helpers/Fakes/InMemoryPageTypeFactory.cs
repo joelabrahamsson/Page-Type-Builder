@@ -2,66 +2,66 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 
-namespace PageTypeBuilder.Specs.Helpers
+namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class InMemoryPageTypeFactory : IPageTypeFactory
     {
         private int nextId;
-        private List<PageType> pageTypes;
+        private List<IPageType> pageTypes;
+        private SavesPerIdCounter numberOfSavesPerPageTypeIdCounter = new SavesPerIdCounter();
 
         public InMemoryPageTypeFactory()
         {
-            Mapper.Configuration.CreateMap<PageType, PageType>()
-                .ForMember(x => x.FileName, m => m.Ignore())
-                .ForMember(x => x.DefaultFrameID, m => m.Ignore())
-                .ForMember(x => x.ACL, m => m.Ignore());
+            Mapper.Configuration.CreateMap<IPageType, FakePageType>();
+            Mapper.Configuration.CreateMap<FakePageType, IPageType>();
+            Mapper.Configuration.CreateMap<IPageType, IPageType>();
+
             nextId = 1;
-            pageTypes = new List<PageType>();
+            pageTypes = new List<IPageType>();
         }
 
-        public PageType Load(string name)
+        public IPageType Load(string name)
         {
             var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.Name == name);
-            if(pageTypeRecord == default(PageType))
+            if(pageTypeRecord == null)
                 return pageTypeRecord;
 
-            var pageTypeToReturn = new PageType();
+            var pageTypeToReturn = new FakePageType();
             Mapper.Map(pageTypeRecord, pageTypeToReturn);
             return pageTypeToReturn;
         }
 
-        public PageType Load(Guid guid)
+        public IPageType Load(Guid guid)
         {
             var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.GUID == guid);
-            if (pageTypeRecord == default(PageType))
+            if (pageTypeRecord == null)
                 return pageTypeRecord;
 
-            var pageTypeToReturn = new PageType();
+            var pageTypeToReturn = new FakePageType();
             Mapper.Map(pageTypeRecord, pageTypeToReturn);
             return pageTypeToReturn;
         }
 
-        public PageType Load(int id)
+        public IPageType Load(int id)
         {
             var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.ID == id);
-            if (pageTypeRecord == default(PageType))
+            if (pageTypeRecord == null)
                 return pageTypeRecord;
 
-            var pageTypeToReturn = new PageType();
+            var pageTypeToReturn = new FakePageType();
             Mapper.Map(pageTypeRecord, pageTypeToReturn);
             return pageTypeToReturn;
         }
 
-        public void Save(PageType pageTypeToSave)
+        public void Save(IPageType pageTypeToSave)
         {
             if (pageTypeToSave.IsNew)
             {
                 pageTypeToSave.ID = nextId;
                 nextId++;
-                var pageTypeRecord = new PageType();
+                var pageTypeRecord = new FakePageType();
                 
                 Mapper.Map(pageTypeToSave, pageTypeRecord);
 
@@ -72,11 +72,29 @@ namespace PageTypeBuilder.Specs.Helpers
                 var pageTypeRecord = pageTypes.FirstOrDefault(pageType => pageType.ID == pageTypeToSave.ID);
                 Mapper.Map(pageTypeToSave, pageTypeRecord);
             }
+
+            numberOfSavesPerPageTypeIdCounter.IncrementNumberOfSaves(pageTypeToSave.ID);
         }
 
-        public IEnumerable<PageType> List()
+        
+        public IEnumerable<IPageType> List()
         {
             return pageTypes;
+        }
+
+        public int GetNumberOfSaves(int pageTypeId)
+        {
+            return numberOfSavesPerPageTypeIdCounter.GetNumberOfSaves(pageTypeId);
+        }
+
+        public void ResetNumberOfSaves()
+        {
+            numberOfSavesPerPageTypeIdCounter.ResetNumberOfSaves();
+        }
+
+        public IPageType CreateNew()
+        {
+            return new FakePageType();
         }
     }
 }

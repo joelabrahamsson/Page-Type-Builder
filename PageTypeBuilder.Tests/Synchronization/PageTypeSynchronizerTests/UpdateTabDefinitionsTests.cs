@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -12,14 +12,14 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         [Fact]
         public void UpdateTabDefinitions_CallsTabDefinitionUpdaterWithDefinedTabs()
         {
-            PageTypeSynchronizer pageTypeSynchronizer = new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
+            PageTypeSynchronizer pageTypeSynchronizer = PageTypeSynchronizerFactory.Create();
             MockRepository fakes = new MockRepository();
-            TabLocator fakeTabLocator = fakes.Stub<TabLocator>();
+            TabLocator fakeTabLocator = TabLocatorFactory.Stub(fakes);
             List<Tab> tabs = new List<Tab> { new TestTab() };
             fakeTabLocator.Stub(locator => locator.GetDefinedTabs()).Return(tabs);
             fakeTabLocator.Replay();
             pageTypeSynchronizer.TabLocator = fakeTabLocator;
-            TabDefinitionUpdater fakeTabDefinitionUpdater = fakes.Stub<TabDefinitionUpdater>();
+            TabDefinitionUpdater fakeTabDefinitionUpdater = TabDefinitionUpdaterFactory.Stub(fakes);
             fakeTabDefinitionUpdater.Stub(updater => updater.UpdateTabDefinitions(Arg<List<Tab>>.Is.Anything));
             fakeTabDefinitionUpdater.Replay();
             pageTypeSynchronizer.TabDefinitionUpdater = fakeTabDefinitionUpdater;

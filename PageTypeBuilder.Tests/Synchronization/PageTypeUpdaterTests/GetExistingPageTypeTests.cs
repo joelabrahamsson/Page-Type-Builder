@@ -4,6 +4,7 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -23,21 +24,17 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
                                                             Attribute = new PageTypeAttribute(pageTypeGuid.ToString())
                                                         };
             PageTypeFactory fakePageTypeFactory = mockRepository.Stub<PageTypeFactory>();
-            PageType pageTypeFromFactory = new PageType();
+            IPageType pageTypeFromFactory = new NativePageType();
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeGuid)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Create(
+                PageTypeDefinitionLocatorFactory.Stub(), fakePageTypeFactory);
 
-            PageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
+            IPageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
             fakePageTypeFactory.AssertWasCalled(factory => factory.Load(pageTypeGuid));
             Assert.Equal<int>(pageTypeFromFactory.ID, returnedPageType.ID);
-        }
-
-        private PageTypeUpdater CreatePageTypeUpdater()
-        {
-            return new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, new PageTypeFactory());
         }
 
         [Fact]
@@ -51,13 +48,14 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
                                                             Attribute = new PageTypeAttribute { Name = Guid.NewGuid().ToString() }
                                                         };
             PageTypeFactory fakePageTypeFactory = mockRepository.Stub<PageTypeFactory>();
-            PageType pageTypeFromFactory = new PageType();
+            IPageType pageTypeFromFactory = new NativePageType();
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeDefinition.Attribute.Name)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Create(
+                PageTypeDefinitionLocatorFactory.Stub(), fakePageTypeFactory);
 
-            PageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
+            IPageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
             fakePageTypeFactory.AssertWasCalled(factory => factory.Load(pageTypeDefinition.Attribute.Name));
             Assert.Equal<int>(pageTypeFromFactory.ID, returnedPageType.ID);
@@ -69,13 +67,14 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             MockRepository mockRepository = new MockRepository();
             PageTypeDefinition pageTypeDefinition = PageTypeUpdaterTestsUtility.CreateBasicPageTypeDefinition();
             PageTypeFactory fakePageTypeFactory = mockRepository.Stub<PageTypeFactory>();
-            PageType pageTypeFromFactory = new PageType();
+            IPageType pageTypeFromFactory = new NativePageType();
             pageTypeFromFactory.ID = 1;
             fakePageTypeFactory.Expect(factory => factory.Load(pageTypeDefinition.Type.Name)).Return(pageTypeFromFactory);
             fakePageTypeFactory.Replay();
-            PageTypeUpdater pageTypeUpdater = new PageTypeUpdater(new Mock<PageTypeDefinitionLocator>().Object, fakePageTypeFactory);
+            PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Create(
+                PageTypeDefinitionLocatorFactory.Stub(), fakePageTypeFactory);
 
-            PageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
+            IPageType returnedPageType = pageTypeUpdater.GetExistingPageType(pageTypeDefinition);
 
             fakePageTypeFactory.AssertWasCalled(factory => factory.Load(pageTypeDefinition.Type.Name));
             Assert.Equal<int>(pageTypeFromFactory.ID, returnedPageType.ID);

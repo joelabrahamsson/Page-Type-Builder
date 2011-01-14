@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
+using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
@@ -28,7 +30,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
 
         private PageTypeSynchronizer CreateSynchronizer()
         {
-            return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
+            return PageTypeSynchronizerFactory.Create();
         }
     }
 }

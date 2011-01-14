@@ -6,9 +6,9 @@ namespace PageTypeBuilder.Synchronization
 {
     public class TabDefinitionUpdater
     {
-        public TabDefinitionUpdater()
+        public TabDefinitionUpdater(ITabFactory tabFactory)
         {
-            TabFactory = new TabFactory();
+            TabFactory = tabFactory;
         }
 
         public virtual void UpdateTabDefinitions(IEnumerable<Tab> tabs)

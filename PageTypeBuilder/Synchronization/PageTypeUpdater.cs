@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EPiServer.Core;
-using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 
@@ -20,10 +19,6 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeValueExtractor _pageTypeValueExtractor;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
-            PageTypeFactory pageTypeFactory)
-            : this(pageTypeDefinitionLocator, pageTypeFactory, new PageTypeValueExtractor(), new PageTypeLocator(pageTypeFactory)) { }
-
-        public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeFactory pageTypeFactory, 
             IPageTypeValueExtractor pageTypeValueExtractor,
             IPageTypeLocator pageTypeLocator)
@@ -35,14 +30,14 @@ namespace PageTypeBuilder.Synchronization
             _pageTypeLocator = pageTypeLocator;
         }
 
-        protected internal virtual PageType GetExistingPageType(PageTypeDefinition definition)
+        protected internal virtual IPageType GetExistingPageType(PageTypeDefinition definition)
         {
             return _pageTypeLocator.GetExistingPageType(definition);
         }
 
-        protected internal virtual PageType CreateNewPageType(PageTypeDefinition definition)
+        protected internal virtual IPageType CreateNewPageType(PageTypeDefinition definition)
         {
-            PageType pageType = new PageType();
+            IPageType pageType = PageTypeFactory.CreateNew();
 
             PageTypeAttribute attribute = definition.Attribute;
 
@@ -70,7 +65,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdatePageType(PageTypeDefinition definition)
         {
-            PageType pageType = GetExistingPageType(definition);
+            IPageType pageType = GetExistingPageType(definition);
             PageTypeAttribute attribute = definition.Attribute;
             string oldValueString = SerializeValues(pageType);
             UpdateName(pageType, definition);
@@ -93,7 +88,7 @@ namespace PageTypeBuilder.Synchronization
                 PageTypeFactory.Save(pageType);
         }
 
-        protected internal virtual string SerializeValues(PageType pageType)
+        protected internal virtual string SerializeValues(IPageType pageType)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -132,12 +127,12 @@ namespace PageTypeBuilder.Synchronization
             return builder.ToString();
         }
 
-        protected internal virtual void UpdateName(PageType pageType, PageTypeDefinition definition)
+        protected internal virtual void UpdateName(IPageType pageType, PageTypeDefinition definition)
         {
             pageType.Name = definition.GetPageTypeName();
         }
 
-        protected internal virtual void UpdateFilename(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateFilename(IPageType pageType, PageTypeAttribute attribute)
         {
             string filename = GetFilename(attribute);
             pageType.FileName = filename;
@@ -153,22 +148,22 @@ namespace PageTypeBuilder.Synchronization
             return filename;
         }
 
-        protected internal virtual void UpdateSortOrder(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateSortOrder(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.SortOrder = attribute.SortOrder;
         }
 
-        protected internal virtual void UpdateDescription(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDescription(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.Description = attribute.Description;
         }
 
-        protected internal virtual void UpdateIsAvailable(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateIsAvailable(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.IsAvailable = attribute.AvailableInEditMode;
         }
 
-        protected internal virtual void UpdateDefaultArchivePageLink(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultArchivePageLink(IPageType pageType, PageTypeAttribute attribute)
         {
             if(attribute.DefaultArchiveToPageID != PageTypeAttribute.DefaultDefaultArchiveToPageID)
                 pageType.DefaultArchivePageLink = new PageReference(attribute.DefaultArchiveToPageID);
@@ -176,17 +171,17 @@ namespace PageTypeBuilder.Synchronization
                 pageType.DefaultArchivePageLink = null;
         }
 
-        protected internal virtual void UpdateDefaultChildOrderRule(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultChildOrderRule(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.DefaultChildOrderRule = attribute.DefaultChildSortOrder;
         }
 
-        protected internal virtual void UpdateDefaultPageName(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultPageName(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.DefaultPageName = attribute.DefaultPageName;
         }
 
-        protected internal virtual void UpdateDefaultPeerOrder(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultPeerOrder(IPageType pageType, PageTypeAttribute attribute)
         {
             if (attribute.DefaultSortIndex != PageTypeAttribute.DefaultDefaultSortIndex)
                 pageType.DefaultPeerOrder = attribute.DefaultSortIndex;
@@ -194,17 +189,17 @@ namespace PageTypeBuilder.Synchronization
                 pageType.DefaultPeerOrder = DefaultDefaultPageTypePeerOrder;
         }
 
-        protected internal virtual void UpdateDefaultStartPublishOffset(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultStartPublishOffset(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.DefaultStartPublishOffset = new TimeSpan(0, 0, attribute.DefaultStartPublishOffsetMinutes, 0);
         }
 
-        protected internal virtual void UpdateDefaultStopPublishOffset(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultStopPublishOffset(IPageType pageType, PageTypeAttribute attribute)
         {
             pageType.DefaultStopPublishOffset = new TimeSpan(0, 0, attribute.DefaultStopPublishOffsetMinutes, 0);
         }
 
-        protected internal virtual void UpdateDefaultVisibleInMenu(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateDefaultVisibleInMenu(IPageType pageType, PageTypeAttribute attribute)
         {
             if (attribute.DefaultVisibleInMenu != PageTypeAttribute.DefaultDefaultVisibleInMenu)
                 pageType.DefaultVisibleInMenu = attribute.DefaultVisibleInMenu;
@@ -212,15 +207,13 @@ namespace PageTypeBuilder.Synchronization
                 pageType.DefaultVisibleInMenu = DefaultDefaultVisibleInMenu;
         }
 
-        protected internal virtual void UpdateFrame(PageType pageType, PageTypeAttribute attribute)
+        protected internal virtual void UpdateFrame(IPageType pageType, PageTypeAttribute attribute)
         {
             if (attribute.DefaultFrameID != 0)
-                pageType.Defaults.DefaultFrame = Frame.Load(attribute.DefaultFrameID);
-            else
-                pageType.Defaults.DefaultFrame = null;
+                pageType.DefaultFrameID = attribute.DefaultFrameID;
         }
 
-        protected internal virtual void UpdateAvailablePageTypes(PageType pageType, Type[] availablePageTypes)
+        protected internal virtual void UpdateAvailablePageTypes(IPageType pageType, Type[] availablePageTypes)
         {
             if(availablePageTypes == null)
             {
@@ -233,7 +226,7 @@ namespace PageTypeBuilder.Synchronization
                 Type availablePageTypeType = availablePageTypes[i];
                 PageTypeDefinition availablePageTypeDefinition = _pageTypeDefinitions.First(
                     definitions => definitions.Type.GUID == availablePageTypeType.GUID);
-                PageType availablePageType = GetExistingPageType(availablePageTypeDefinition);
+                IPageType availablePageType = GetExistingPageType(availablePageTypeDefinition);
                 availablePageTypeIDs[i] = availablePageType.ID;
             }
             pageType.AllowedPageTypes = availablePageTypeIDs;

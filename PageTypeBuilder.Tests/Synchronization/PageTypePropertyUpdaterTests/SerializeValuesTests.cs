@@ -1,6 +1,7 @@
 ﻿using EPiServer.DataAbstraction;
 using EPiServer.Editor;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
@@ -10,7 +11,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         [Fact]
         public void GivenPageDefinitionWithSpecifiedLongStringSetting_UpdatePageDefinition_ReturnsDifferentStringThanWhenCalledWithPageDefinitionWithNoLongStringSettings()
         {
-            PageTypePropertyUpdater pageTypePropertyUpdater = new PageTypePropertyUpdater();
+            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.Create();
             PageDefinition pageDefinition = new PageDefinition();
             string valuesWithOutClearAllLongStringSettings = pageTypePropertyUpdater.SerializeValues(pageDefinition);
             pageDefinition.LongStringSettings = EditorToolOption.Bold;

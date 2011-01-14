@@ -2,6 +2,7 @@
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
@@ -13,7 +14,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedPageTypePropertyDefinitionLocatorType = typeof(PageTypePropertyDefinitionLocator);
 
-            PageTypePropertyUpdater updater = new PageTypePropertyUpdater();
+            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
 
             Assert.NotNull(updater.PageTypePropertyDefinitionLocator);
             Assert.Equal<Type>(expectedPageTypePropertyDefinitionLocatorType, updater.PageTypePropertyDefinitionLocator.GetType());
@@ -24,7 +25,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedPageDefinitionFactoryType = typeof(PageDefinitionFactory);
 
-            PageTypePropertyUpdater updater = new PageTypePropertyUpdater();
+            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
 
             Assert.NotNull(updater.PageDefinitionFactory);
             Assert.Equal<Type>(expectedPageDefinitionFactoryType, updater.PageDefinitionFactory.GetType());
@@ -35,7 +36,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedPageDefinitionTypeFactoryType = typeof(PageDefinitionTypeFactory);
 
-            PageTypePropertyUpdater updater = new PageTypePropertyUpdater();
+            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
 
             Assert.NotNull(updater.PageDefinitionTypeFactory);
             Assert.Equal<Type>(expectedPageDefinitionTypeFactoryType, updater.PageDefinitionTypeFactory.GetType());
@@ -46,7 +47,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedType = typeof(PageDefinitionTypeMapper);
 
-            PageTypePropertyUpdater updater = new PageTypePropertyUpdater();
+            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
 
             Assert.NotNull(updater.PageDefinitionTypeMapper);
             Assert.Equal<Type>(expectedType, updater.PageDefinitionTypeMapper.GetType());

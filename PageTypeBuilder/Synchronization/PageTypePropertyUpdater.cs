@@ -13,14 +13,10 @@ namespace PageTypeBuilder.Synchronization
     {
         private ITabFactory _tabFactory;
 
-        public PageTypePropertyUpdater()
-            : this(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()) { }
-
-        public PageTypePropertyUpdater(IPageDefinitionFactory pageDefinitionFactory)
-            : this(pageDefinitionFactory, new PageDefinitionTypeFactory(), new TabFactory()) { }
-
-        public PageTypePropertyUpdater(IPageDefinitionFactory pageDefinitionFactory, 
-            IPageDefinitionTypeFactory pageDefinitionTypeFactory, ITabFactory tabFactory)
+        public PageTypePropertyUpdater(
+            IPageDefinitionFactory pageDefinitionFactory, 
+            IPageDefinitionTypeFactory pageDefinitionTypeFactory, 
+            ITabFactory tabFactory)
         {
             PageDefinitionFactory = pageDefinitionFactory;
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;
@@ -29,7 +25,7 @@ namespace PageTypeBuilder.Synchronization
             _tabFactory = tabFactory;
         }
 
-        protected internal virtual void UpdatePageTypePropertyDefinitions(PageType pageType, PageTypeDefinition pageTypeDefinition)
+        protected internal virtual void UpdatePageTypePropertyDefinitions(IPageType pageType, PageTypeDefinition pageTypeDefinition)
         {
             IEnumerable<PageTypePropertyDefinition> definitions = 
                 PageTypePropertyDefinitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeDefinition.Type);
@@ -44,7 +40,7 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        protected internal virtual PageDefinition GetExistingPageDefinition(PageType pageType, PageTypePropertyDefinition propertyDefinition)
+        protected internal virtual PageDefinition GetExistingPageDefinition(IPageType pageType, PageTypePropertyDefinition propertyDefinition)
         {
             return pageType.Definitions.FirstOrDefault(definition => definition.Name == propertyDefinition.Name);
         }
@@ -135,7 +131,7 @@ namespace PageTypeBuilder.Synchronization
             if (propertyAttribute.Tab != null)
             {
                 Tab definedTab = (Tab) Activator.CreateInstance(propertyAttribute.Tab);
-                tab = TabDefinition.Load(definedTab.Name);
+                tab = _tabFactory.GetTabDefinition(definedTab.Name);
             }
             pageDefinition.Tab = tab;
         }

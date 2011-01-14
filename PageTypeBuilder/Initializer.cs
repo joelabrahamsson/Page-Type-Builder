@@ -4,6 +4,7 @@ using EPiServer.Framework.Initialization;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
 using InitializationModule=EPiServer.Web.InitializationModule;
@@ -16,21 +17,33 @@ namespace PageTypeBuilder
         public void Initialize(InitializationEngine context)
         {
             var pageTypeLocator = new PageTypeLocator(new PageTypeFactory());
-            var pageTypeDefinitionLocator = new PageTypeDefinitionLocator();
+            var pageTypeDefinitionLocator = new PageTypeDefinitionLocator(
+                new AppDomainAssemblyLocator());
             var pageTypeUpdater = new PageTypeUpdater(
                 pageTypeDefinitionLocator,
                 new PageTypeFactory(), 
                 new PageTypeValueExtractor(),
                 pageTypeLocator);
 
+            var pageTypePropertyUpdater = new PageTypePropertyUpdater(
+                new PageDefinitionFactory(),
+                new PageDefinitionTypeFactory(), 
+                new TabFactory());
+
+            var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
+
+            var tabLocator = new TabLocator(new AppDomainAssemblyLocator());
+
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 pageTypeDefinitionLocator, 
                 Configuration,
-                new PageTypePropertyUpdater(new PageDefinitionFactory()),
+                pageTypePropertyUpdater,
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
                 PageTypeResolver.Instance,
                 pageTypeLocator,
-                pageTypeUpdater);
+                pageTypeUpdater,
+                tabDefinitionUpdater,
+                tabLocator);
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

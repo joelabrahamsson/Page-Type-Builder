@@ -1,6 +1,7 @@
 ﻿using System;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
@@ -10,7 +11,7 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
         [Fact]
         public void Constructor_SetsTabFactoryPropertyValue()
         {
-            TabDefinitionUpdater tabUpdater = new TabDefinitionUpdater();
+            TabDefinitionUpdater tabUpdater = TabDefinitionUpdaterFactory.Create();
 
             Assert.NotNull(tabUpdater.TabFactory);
             Assert.Equal<Type>(typeof(TabFactory), tabUpdater.TabFactory.GetType());

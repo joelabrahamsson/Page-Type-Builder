@@ -1,6 +1,8 @@
 ﻿using System;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Synchronization.Validation;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
@@ -21,7 +23,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
 
         private PageTypeSynchronizer CreatePageTypeSynchronizer()
         {
-            return new PageTypeSynchronizer(new PageTypeDefinitionLocator(), new PageTypeBuilderConfiguration());
+            return PageTypeSynchronizerFactory.Create();
         }
 
         [Fact]

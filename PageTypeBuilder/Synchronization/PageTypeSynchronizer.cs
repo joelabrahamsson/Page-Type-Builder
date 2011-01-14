@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
@@ -14,21 +13,20 @@ namespace PageTypeBuilder.Synchronization
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
 
-        public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, PageTypeBuilderConfiguration configuration)
-            : this(pageTypeDefinitionLocator, configuration, new PageTypePropertyUpdater(), new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), PageTypeResolver.Instance, new PageTypeLocator(new PageTypeFactory()), new PageTypeUpdater(pageTypeDefinitionLocator, new PageTypeFactory())) { }
-
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
             PageTypePropertyUpdater pageTypePropertyUpdater,
             PageTypeDefinitionValidator pageTypeDefinitionValidator,
             PageTypeResolver pageTypeResolver,
             IPageTypeLocator pageTypeLocator,
-            PageTypeUpdater pageTypeUpdater)
+            PageTypeUpdater pageTypeUpdater,
+            TabDefinitionUpdater tabDefinitionUpdater,
+            TabLocator tabLocator)
         {
             _configuration = configuration;
             PageTypeResolver = pageTypeResolver;
-            TabLocator = new TabLocator();
-            TabDefinitionUpdater = new TabDefinitionUpdater();
+            TabLocator = tabLocator;
+            TabDefinitionUpdater = tabDefinitionUpdater;
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeUpdater = pageTypeUpdater;
             PageTypePropertyUpdater = pageTypePropertyUpdater;
@@ -92,7 +90,7 @@ namespace PageTypeBuilder.Synchronization
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                PageType pageType = _pageTypeLocator.GetExistingPageType(definition);
+                IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
                 PageTypeResolver.AddPageType(pageType.ID, definition.Type);
             }
         }
@@ -109,7 +107,7 @@ namespace PageTypeBuilder.Synchronization
         {
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                PageType pageType = _pageTypeLocator.GetExistingPageType(definition);
+                IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
                 PageTypePropertyUpdater.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }

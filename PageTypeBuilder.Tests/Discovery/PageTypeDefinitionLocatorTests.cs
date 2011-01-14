@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.Discovery
@@ -10,7 +11,7 @@ namespace PageTypeBuilder.Tests.Discovery
         [Fact]
         public void GetPageTypeDefinitions_ReturnsListOfNonAbstractTypesWithAttributeInApplicationDomain()
         {
-            PageTypeDefinitionLocator definitionLocator = new PageTypeDefinitionLocator();
+            PageTypeDefinitionLocator definitionLocator = PageTypeDefinitionLocatorFactory.Create();
 
             IEnumerable<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
 
@@ -20,7 +21,7 @@ namespace PageTypeBuilder.Tests.Discovery
         [Fact]
         public void GetPageTypeDefinition_IncludesTypesWithAttributeThatIsSubtypeOfPageTypeAttribute()
         {
-            PageTypeDefinitionLocator definitionLocator = new PageTypeDefinitionLocator();
+            PageTypeDefinitionLocator definitionLocator = PageTypeDefinitionLocatorFactory.Create();
 
             IEnumerable<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
 

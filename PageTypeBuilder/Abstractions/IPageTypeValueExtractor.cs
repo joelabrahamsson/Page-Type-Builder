@@ -4,7 +4,7 @@ namespace PageTypeBuilder.Abstractions
 {
     public interface IPageTypeValueExtractor
     {
-        int GetDefaultFrameId(PageType pageType);
-        string GetFileName(PageType pageType);
+        int GetDefaultFrameId(IPageType pageType);
+        string GetFileName(IPageType pageType);
     }
 }
