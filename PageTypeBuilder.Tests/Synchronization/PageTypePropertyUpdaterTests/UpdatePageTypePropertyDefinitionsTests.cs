@@ -32,6 +32,11 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         {
             MockRepository fakes = new MockRepository();
             PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
+            pageTypePropertyUpdater.Stub(
+                u =>
+                u.UpdatePropertySettings(Arg<PageTypeDefinition>.Is.Anything,
+                                         Arg<PageTypePropertyDefinition>.Is.Anything, Arg<PageDefinition>.Is.Anything));
+
             PageTypePropertyDefinitionLocator definitionLocator = fakes.Stub<PageTypePropertyDefinitionLocator>();
             definitionLocator.Stub(
                 locator => locator.GetPageTypePropertyDefinitions(

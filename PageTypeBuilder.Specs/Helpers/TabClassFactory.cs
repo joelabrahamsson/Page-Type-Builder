@@ -13,6 +13,11 @@ namespace PageTypeBuilder.Specs.Helpers
     {
         public static Type CreateTabClass(string className, string tabName, AccessLevel requiredAccess, int sortIndex)
         {
+            return CreateTabClass(className, tabName, requiredAccess, sortIndex, TypeAttributes.Public);
+        }
+
+        public static Type CreateTabClass(string className, string tabName, AccessLevel requiredAccess, int sortIndex, TypeAttributes typeAttributes)
+        {
             var moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("AssemblyWithTab");
 
             var nameProperty = new PropertySpecification();
@@ -70,6 +75,7 @@ namespace PageTypeBuilder.Specs.Helpers
                 type.Properties.Add(nameProperty);
                 type.Properties.Add(requiredAccessProperty);
                 type.Properties.Add(sortIndexProperty);
+                type.TypeAttributes = typeAttributes;
             });
         }
     }

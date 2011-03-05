@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EPiServer.Core.PropertySettings;
 using EPiServer.DataAbstraction;
 using EPiServer.Editor;
 using PageTypeBuilder.Abstractions;
@@ -12,24 +13,27 @@ namespace PageTypeBuilder.Synchronization
     public class PageTypePropertyUpdater
     {
         private ITabFactory _tabFactory;
+        private IPropertySettingsRepository _propertySettingsRepository;
 
         public PageTypePropertyUpdater(
             IPageDefinitionFactory pageDefinitionFactory, 
             IPageDefinitionTypeFactory pageDefinitionTypeFactory, 
-            ITabFactory tabFactory)
+            ITabFactory tabFactory,
+            IPropertySettingsRepository propertySettingsRepository)
         {
             PageDefinitionFactory = pageDefinitionFactory;
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;
             PageTypePropertyDefinitionLocator = new PageTypePropertyDefinitionLocator();
             PageDefinitionTypeMapper = new PageDefinitionTypeMapper(PageDefinitionTypeFactory);
             _tabFactory = tabFactory;
+            _propertySettingsRepository = propertySettingsRepository;
         }
 
         protected internal virtual void UpdatePageTypePropertyDefinitions(IPageType pageType, PageTypeDefinition pageTypeDefinition)
         {
             IEnumerable<PageTypePropertyDefinition> definitions = 
                 PageTypePropertyDefinitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeDefinition.Type);
-            
+
             foreach (PageTypePropertyDefinition propertyDefinition in definitions)
             {
                 PageDefinition pageDefinition = GetExistingPageDefinition(pageType, propertyDefinition);
@@ -37,6 +41,51 @@ namespace PageTypeBuilder.Synchronization
                     pageDefinition = CreateNewPageDefinition(propertyDefinition);
 
                 UpdatePageDefinition(pageDefinition, propertyDefinition);
+
+                //Settings dev
+                UpdatePropertySettings(pageTypeDefinition, propertyDefinition, pageDefinition);
+
+                //End settings dev
+            }
+        }
+
+        protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
+        {
+            var prop =
+                pageTypeDefinition.Type.GetProperties().Where(p => p.Name == propertyDefinition.Name).FirstOrDefault
+                    ();
+                
+            var attributes = prop.GetCustomAttributes(typeof(IPropertySettingsAttribute), true);
+            foreach (var attribute in attributes)
+            {
+                PropertySettingsContainer container;
+
+                if (pageDefinition.SettingsID == Guid.Empty)
+                {
+                    pageDefinition.SettingsID = Guid.NewGuid();
+                    PageDefinitionFactory.Save(pageDefinition);
+                    container = new PropertySettingsContainer(pageDefinition.SettingsID);
+                }
+                else
+                {
+                    if (!_propertySettingsRepository.TryGetContainer(pageDefinition.SettingsID, out container))
+                    {
+                        container = new PropertySettingsContainer(pageDefinition.SettingsID);
+                    }
+                }
+                var settingsAttribute = (IPropertySettingsAttribute) attribute;
+                var wrapper = container.GetSetting(settingsAttribute.SettingType);
+                if (wrapper == null)
+                {
+                    wrapper = new PropertySettingsWrapper();
+                    container.Settings.Add(settingsAttribute.SettingType.FullName, wrapper);
+                }
+                if (wrapper.PropertySettings == null)
+                {
+                    wrapper.PropertySettings = (IPropertySettings) Activator.CreateInstance(settingsAttribute.SettingType);
+                }
+                settingsAttribute.UpdateSettings(wrapper.PropertySettings);
+                _propertySettingsRepository.Save(container);
             }
         }
 

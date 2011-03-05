@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection.Emit;
+using EPiServer.Core.PropertySettings;
+using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Reflection;
@@ -42,6 +45,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             }
         }
 
+        public InMemoryPageDefinitionTypeFactory PageDefinitionTypeFactory
+        {
+            get
+            {
+                return (InMemoryPageDefinitionTypeFactory) Container.GetInstance<IPageDefinitionTypeFactory>();
+            }
+        }
+
         public PageTypeSynchronizer PageTypeSynchronizer
         {
             get
@@ -55,6 +66,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             get
             {
                 return (InMemoryTabFactory) Container.GetInstance<ITabFactory>();
+            }
+        }
+
+        public InMemoryPropertySettingsRepository PropertySettingsRepository
+        {
+            get
+            {
+                return (InMemoryPropertySettingsRepository) Container.GetInstance<IPropertySettingsRepository>();
             }
         }
 
@@ -106,6 +125,39 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                 type.AddAttributeTemplate(attribute);
             });
             AssemblyLocator.Add(pageTypeClass.Assembly);
+        }
+
+        public PageDefinition GetPageDefinition(string name, string pageTypeName)
+        {
+            var pageType = PageTypeFactory.Load(pageTypeName);
+            return PageDefinitionFactory.List(pageType.ID)
+                .Where(def => def.Name == name)
+                .FirstOrDefault();
+        }
+
+        public PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer(PageDefinition pageDefinition)
+        {
+            PropertySettingsContainer container;
+            PropertySettingsRepository.TryGetContainer(pageDefinition.SettingsID, out container);
+            return container;
+        }
+
+        public PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer(string pageDefinitionName, string pageTypeName)
+        {
+            return GetPageDefinitionsPropertySettingsContainer(GetPageDefinition(pageDefinitionName, pageTypeName));
+        }
+
+        public TSettings GetPageDefinitionsPropertySettings<TSettings>(string pageDefinitionName, string pageTypeName)
+            where TSettings : class
+        {
+            var container = GetPageDefinitionsPropertySettingsContainer(GetPageDefinition(pageDefinitionName, pageTypeName));
+            
+            if (container.Settings.ContainsKey(typeof(TSettings).FullName))
+            {
+                return container.Settings[typeof (TSettings).FullName].PropertySettings as TSettings;
+            }
+
+            return default(TSettings);
         }
     }
 }
