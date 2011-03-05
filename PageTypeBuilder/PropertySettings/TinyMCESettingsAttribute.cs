@@ -7,7 +7,7 @@ using EPiServer.Editor.TinyMCE;
 
 namespace PageTypeBuilder.PropertySettings
 {
-    public class TinyMceSettingsAttribute : Attribute, IPropertySettingsAttribute
+    public class TinyMceSettingsAttribute : PropertySettingsAttribute
     {
         //Factory method?
         public TinyMceSettingsAttribute()
@@ -17,7 +17,7 @@ namespace PageTypeBuilder.PropertySettings
             ContentCss = string.Empty;
         }
 
-        public bool UpdateSettings(IPropertySettings settings)
+        public override bool UpdateSettings(IPropertySettings settings)
         {
             var tinyMceSettings = (TinyMCESettings) settings;
 
@@ -87,7 +87,7 @@ namespace PageTypeBuilder.PropertySettings
             return allRows.Where(row => row != null);
         }
 
-        public Type SettingType
+        public override Type SettingType
         {
             get { return typeof (TinyMCESettings); }
         }
@@ -108,6 +108,6 @@ namespace PageTypeBuilder.PropertySettings
 
         public string[] FifthToolbarRow { get; set; }
 
-        public bool OverWriteExistingSettings { get; set; }
+        public override bool OverWriteExistingSettings { get; set; }
     }
 }

@@ -55,7 +55,7 @@ namespace PageTypeBuilder.Synchronization
                 pageTypeDefinition.Type.GetProperties().Where(p => p.Name == propertyDefinition.Name).FirstOrDefault
                     ();
                 
-            var attributes = prop.GetCustomAttributes(typeof(IPropertySettingsAttribute), true);
+            var attributes = prop.GetCustomAttributes(typeof(PropertySettingsAttribute), true);
             foreach (var attribute in attributes)
             {
                 PropertySettingsContainer container;
@@ -73,7 +73,7 @@ namespace PageTypeBuilder.Synchronization
                         container = new PropertySettingsContainer(pageDefinition.SettingsID);
                     }
                 }
-                var settingsAttribute = (IPropertySettingsAttribute) attribute;
+                var settingsAttribute = (PropertySettingsAttribute) attribute;
                 var wrapper = container.GetSetting(settingsAttribute.SettingType);
                 if (wrapper == null)
                 {
