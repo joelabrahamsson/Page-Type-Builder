@@ -58,6 +58,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
                 .ToolbarRows.Count.ShouldEqual(0);
 
+        It should_create_TinyMCESettings_with_no_NonVisualPlugins =
+            () =>
+                SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
+                .NonVisualPlugins.Count.ShouldEqual(0);
+
         static PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer()
         {
             PropertySettingsContainer container;
