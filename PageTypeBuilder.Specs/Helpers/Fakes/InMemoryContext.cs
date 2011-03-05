@@ -151,7 +151,10 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             where TSettings : class
         {
             var container = GetPageDefinitionsPropertySettingsContainer(GetPageDefinition(pageDefinitionName, pageTypeName));
-            
+
+            if (container == null)
+                return default(TSettings);
+
             if (container.Settings.ContainsKey(typeof(TSettings).FullName))
             {
                 return container.Settings[typeof (TSettings).FullName].PropertySettings as TSettings;

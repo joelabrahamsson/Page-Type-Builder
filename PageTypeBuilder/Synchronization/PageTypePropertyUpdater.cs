@@ -80,12 +80,19 @@ namespace PageTypeBuilder.Synchronization
                     wrapper = new PropertySettingsWrapper();
                     container.Settings.Add(settingsAttribute.SettingType.FullName, wrapper);
                 }
+
+                bool settingsAlreadyExists = true;
                 if (wrapper.PropertySettings == null)
                 {
                     wrapper.PropertySettings = (IPropertySettings) Activator.CreateInstance(settingsAttribute.SettingType);
+                    settingsAlreadyExists = false;
                 }
-                settingsAttribute.UpdateSettings(wrapper.PropertySettings);
-                _propertySettingsRepository.Save(container);
+
+                if(settingsAlreadyExists && !settingsAttribute.OverWriteExistingSettings)
+                    return;
+
+                if(settingsAttribute.UpdateSettings(wrapper.PropertySettings) || !settingsAlreadyExists)
+                    _propertySettingsRepository.Save(container);
             }
         }
 

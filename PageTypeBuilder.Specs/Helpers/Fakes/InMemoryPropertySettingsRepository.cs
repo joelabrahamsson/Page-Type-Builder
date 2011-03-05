@@ -94,5 +94,10 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         {
             return numberOfSavesPerGuidCounter.GetNumberOfSaves(settingsId);
         }
+
+        public void ResetNumberOfSaves()
+        {
+            numberOfSavesPerGuidCounter.ResetNumberOfSaves();
+        }
     }
 }

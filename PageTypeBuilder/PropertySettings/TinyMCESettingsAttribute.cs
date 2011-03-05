@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using EPiServer.Core.PropertySettings;
 using EPiServer.Editor.TinyMCE;
 
@@ -19,6 +20,9 @@ namespace PageTypeBuilder.PropertySettings
         public bool UpdateSettings(IPropertySettings settings)
         {
             var tinyMceSettings = (TinyMCESettings) settings;
+
+            string preUpdate = SerializeValues(tinyMceSettings);
+            
             tinyMceSettings.ToolbarRows = new List<ToolbarRow>();
             IEnumerable<string[]> toolbarRowSpecifications = GetToolBarRows();
             foreach (var rowSpecification in toolbarRowSpecifications)
@@ -30,9 +34,43 @@ namespace PageTypeBuilder.PropertySettings
                 }
                 tinyMceSettings.ToolbarRows.Add(row);
             }
+
+            string afterUpdate = SerializeValues(tinyMceSettings);
             
+            return !afterUpdate.Equals(preUpdate);
+        }
+
+        private string SerializeValues(TinyMCESettings tinyMceSettings)
+        {
+            var buffer = new StringBuilder();
+
+            buffer.Append("ContentCss:");
+            buffer.Append(tinyMceSettings.ContentCss);
+
+            buffer.Append("Width:");
+            buffer.Append(tinyMceSettings.Width);
+
+            buffer.Append("Height:");
+            buffer.Append(tinyMceSettings.Height);
             
-            return true;
+            buffer.Append("Toolbars:");
+            foreach (var toolbarRow in tinyMceSettings.ToolbarRows)
+            {
+                buffer.Append("ToolbarRow:");
+                foreach (var button in toolbarRow.Buttons)
+                {
+                    buffer.Append(button);
+                    buffer.Append("|");
+                }
+            }
+
+            buffer.Append("NonVisualPlugins:");
+            foreach (var nonVisualPlugin in tinyMceSettings.NonVisualPlugins)
+            {
+                buffer.Append(nonVisualPlugin);
+                buffer.Append("|");
+            }
+            return buffer.ToString();
         }
 
         IEnumerable<string[]> GetToolBarRows()

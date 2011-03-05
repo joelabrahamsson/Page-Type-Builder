@@ -12,6 +12,7 @@ using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization.PropertySettingsSynchronization
 {
+    //Test width, height, ContentCss, NonVisualPlugins, OverWriteExistingSettings
     [Subject("Synchronization")]
     public class when_a_page_type_property_is_annotated_with_TinyMceSettingsAttribute
         : SynchronizationSpecs
@@ -138,7 +139,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     }
 
     [Subject("Synchronization")]
-    public class when_a_page_type_property_annotated_with_TinyMceSettingsAttribute_with_one_ToolbarRow_already_has_TinyMceSettings_with_two_ToolbarRows
+    public class when_a_page_type_property_annotated_with_TinyMceSettingsAttribute_with_one_ToolbarRow_and_OverWriteExistingSettings_set_to_true_already_has_TinyMceSettings_with_two_ToolbarRows
         : SynchronizationSpecs
     {
         static string propertyName = "MainBody";
@@ -149,6 +150,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             var propertyAttribute = new PageTypePropertyAttribute();
             var settingsAttribute = new TinyMceSettingsAttribute();
             settingsAttribute.FirstToolbarRow = new[] { "bold" };
+            settingsAttribute.OverWriteExistingSettings = true;
             SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
                 {
                     type.Name = pageTypeName;
@@ -171,6 +173,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             existingPageDefinition.PageTypeID = existingPageType.ID;
             existingPageDefinition.Name = propertyName;
             existingPageDefinition.EditCaption = propertyName;
+            existingPageDefinition.SettingsID = Guid.NewGuid();
             SyncContext.PageDefinitionFactory.Save(existingPageDefinition);
 
             existingPageType.Definitions.Add(existingPageDefinition);
@@ -179,17 +182,21 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             
             var existingSettings = new TinyMCESettings();
             existingSettings.ToolbarRows = new List<ToolbarRow>();
+
             var existingFirstToolbarRow = new ToolbarRow();
             existingFirstToolbarRow.Buttons.Add("unlink");
             existingSettings.ToolbarRows.Add(existingFirstToolbarRow);
+            
             var existingSecondToolbarRow = new ToolbarRow();
             existingSecondToolbarRow.Buttons.Add("separator");
             existingSettings.ToolbarRows.Add(existingSecondToolbarRow);
+            
             var existingPropertySettingsWrapper = new PropertySettingsWrapper();
             existingPropertySettingsWrapper.PropertySettings = existingSettings;
 
             var existingContainer = new PropertySettingsContainer(existingPageDefinition.SettingsID);
             existingContainer.Settings.Add(typeof(TinyMCESettings).FullName, existingPropertySettingsWrapper);
+            
             SyncContext.PropertySettingsRepository.Save(existingContainer);
         };
 
@@ -205,5 +212,137 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () =>
                 SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
                 .ToolbarRows.First().Buttons.ShouldContainOnly("bold");
+    }
+
+    [Subject("Synchronization")]
+    public class when_a_page_type_property_annotated_with_TinyMceSettingsAttribute_already_has_TinyMceSettings_settings_matching_the_attribute
+        : SynchronizationSpecs
+    {
+        static string propertyName = "MainBody";
+        static string pageTypeName = "NameOfPageType";
+
+        Establish context = () =>
+        {
+            var propertyAttribute = new PageTypePropertyAttribute();
+            var settingsAttribute = new TinyMceSettingsAttribute();
+            settingsAttribute.FirstToolbarRow = new[] { "bold" };
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+            {
+                type.Name = pageTypeName;
+
+                type.AddProperty(prop =>
+                {
+                    prop.Name = propertyName;
+                    prop.Type = typeof(string);
+                    prop.AddAttributeTemplate(propertyAttribute);
+                    prop.AddAttributeTemplate(settingsAttribute);
+                });
+            });
+
+            var existingPageType = new FakePageType();
+            existingPageType.Name = pageTypeName;
+            SyncContext.PageTypeFactory.Save(existingPageType);
+
+            var existingPageDefinition = new PageDefinition();
+            existingPageDefinition.Type = SyncContext.PageDefinitionTypeFactory.GetPageDefinitionType<PropertyXhtmlString>();
+            existingPageDefinition.PageTypeID = existingPageType.ID;
+            existingPageDefinition.Name = propertyName;
+            existingPageDefinition.EditCaption = propertyName;
+            existingPageDefinition.SettingsID = Guid.NewGuid();
+            SyncContext.PageDefinitionFactory.Save(existingPageDefinition);
+
+            existingPageType.Definitions.Add(existingPageDefinition);
+            SyncContext.PageTypeFactory.Save(existingPageType);
+
+            var existingSettings = new TinyMCESettings();
+            existingSettings.ToolbarRows = new List<ToolbarRow>();
+
+            var existingFirstToolbarRow = new ToolbarRow();
+            existingFirstToolbarRow.Buttons.Add("bold");
+            existingSettings.ToolbarRows.Add(existingFirstToolbarRow);
+
+            var existingPropertySettingsWrapper = new PropertySettingsWrapper();
+            existingPropertySettingsWrapper.PropertySettings = existingSettings;
+
+            var existingContainer = new PropertySettingsContainer(existingPageDefinition.SettingsID);
+            existingContainer.Settings.Add(typeof(TinyMCESettings).FullName, existingPropertySettingsWrapper);
+
+            SyncContext.PropertySettingsRepository.Save(existingContainer);
+            SyncContext.PropertySettingsRepository.ResetNumberOfSaves();
+        };
+
+        Because of =
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        It should_not_save_the_settings =
+            () =>
+            SyncContext.PropertySettingsRepository.GetNumberOfSaves(
+                SyncContext.GetPageDefinition(propertyName, pageTypeName).SettingsID).ShouldEqual(0);
+    }
+
+    [Subject("Synchronization")]
+    public class when_a_page_type_property_annotated_with_TinyMceSettingsAttribute_with_OverWriteExistingSettings_set_to_false_already_has_TinyMceSettings_with_different_values
+        : SynchronizationSpecs
+    {
+        static string propertyName = "MainBody";
+        static string pageTypeName = "NameOfPageType";
+
+        Establish context = () =>
+        {
+            var propertyAttribute = new PageTypePropertyAttribute();
+            var settingsAttribute = new TinyMceSettingsAttribute();
+            settingsAttribute.FirstToolbarRow = new[] { "bold" };
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+            {
+                type.Name = pageTypeName;
+
+                type.AddProperty(prop =>
+                {
+                    prop.Name = propertyName;
+                    prop.Type = typeof(string);
+                    prop.AddAttributeTemplate(propertyAttribute);
+                    prop.AddAttributeTemplate(settingsAttribute);
+                });
+            });
+
+            var existingPageType = new FakePageType();
+            existingPageType.Name = pageTypeName;
+            SyncContext.PageTypeFactory.Save(existingPageType);
+
+            var existingPageDefinition = new PageDefinition();
+            existingPageDefinition.Type = SyncContext.PageDefinitionTypeFactory.GetPageDefinitionType<PropertyXhtmlString>();
+            existingPageDefinition.PageTypeID = existingPageType.ID;
+            existingPageDefinition.Name = propertyName;
+            existingPageDefinition.EditCaption = propertyName;
+            existingPageDefinition.SettingsID = Guid.NewGuid();
+            SyncContext.PageDefinitionFactory.Save(existingPageDefinition);
+
+            existingPageType.Definitions.Add(existingPageDefinition);
+            SyncContext.PageTypeFactory.Save(existingPageType);
+
+            var existingSettings = new TinyMCESettings();
+            existingSettings.ToolbarRows = new List<ToolbarRow>();
+
+            var existingFirstToolbarRow = new ToolbarRow();
+            existingFirstToolbarRow.Buttons.Add("unlink");
+            existingSettings.ToolbarRows.Add(existingFirstToolbarRow);
+
+            var existingPropertySettingsWrapper = new PropertySettingsWrapper();
+            existingPropertySettingsWrapper.PropertySettings = existingSettings;
+
+            var existingContainer = new PropertySettingsContainer(existingPageDefinition.SettingsID);
+            existingContainer.Settings.Add(typeof(TinyMCESettings).FullName, existingPropertySettingsWrapper);
+
+            SyncContext.PropertySettingsRepository.Save(existingContainer);
+            SyncContext.PropertySettingsRepository.ResetNumberOfSaves();
+        };
+
+        Because of =
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        It should_not_save_the_settings =
+            () =>
+            SyncContext.PropertySettingsRepository.GetNumberOfSaves(
+                SyncContext.GetPageDefinition(propertyName, pageTypeName).SettingsID).ShouldEqual(0);
     }
 }
