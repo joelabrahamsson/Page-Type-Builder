@@ -9,12 +9,11 @@ namespace PageTypeBuilder.PropertySettings
 {
     public class TinyMceSettingsAttribute : PropertySettingsAttribute
     {
-        //Factory method?
+        private const int IntegerNotSetValue = -1;
         public TinyMceSettingsAttribute()
         {
-            Width = 500;
-            Height = 300;
-            ContentCss = string.Empty;
+            Width = IntegerNotSetValue;
+            Height = IntegerNotSetValue;
         }
 
         public override bool UpdateSettings(IPropertySettings settings)
@@ -34,6 +33,16 @@ namespace PageTypeBuilder.PropertySettings
                 }
                 tinyMceSettings.ToolbarRows.Add(row);
             }
+
+            if (Width == IntegerNotSetValue)
+                tinyMceSettings.Width = ((TinyMCESettings)tinyMceSettings.GetDefaultValues()).Width;
+            else
+                tinyMceSettings.Width = Width;
+
+            if (Height == IntegerNotSetValue)
+                tinyMceSettings.Height = ((TinyMCESettings)tinyMceSettings.GetDefaultValues()).Height;
+            else
+                tinyMceSettings.Height = Height;
 
             string afterUpdate = SerializeValues(tinyMceSettings);
             

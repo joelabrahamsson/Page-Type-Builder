@@ -58,6 +58,21 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
                 .ToolbarRows.Count.ShouldEqual(0);
 
+        It should_create_TinyMCESettings_with_no_NonVisualPlugins =
+            () =>
+                SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
+                .NonVisualPlugins.Count.ShouldEqual(0);
+
+        It should_create_TinyMCESettings_with_Width_set_to_the_default_for_TinyMCESettings =
+            () =>
+                SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
+                .Width.ShouldEqual(GetDefaultTinyMCESettings().Width);
+
+        It should_create_TinyMCESettings_with_Height_set_to_the_default_for_TinyMCESettings =
+            () =>
+                SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
+                .Height.ShouldEqual(GetDefaultTinyMCESettings().Height);
+
         static PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer()
         {
             PropertySettingsContainer container;
@@ -68,6 +83,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         static Guid GetPageDefinitionsPropertySettingsId()
         {
             return SyncContext.PageDefinitionFactory.List().First().SettingsID;
+        }
+
+        static TinyMCESettings GetDefaultTinyMCESettings()
+        {
+            return (TinyMCESettings) new TinyMCESettings().GetDefaultValues();
         }
     }
 
