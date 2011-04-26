@@ -44,6 +44,12 @@ namespace PageTypeBuilder.PropertySettings
             else
                 tinyMceSettings.Height = Height;
 
+            if (NonVisualPlugins == null)
+                tinyMceSettings.NonVisualPlugins =
+                    ((TinyMCESettings)tinyMceSettings.GetDefaultValues()).NonVisualPlugins;
+            else
+                tinyMceSettings.NonVisualPlugins = NonVisualPlugins;
+
             string afterUpdate = SerializeValues(tinyMceSettings);
             
             return !afterUpdate.Equals(preUpdate);
@@ -116,6 +122,8 @@ namespace PageTypeBuilder.PropertySettings
         public string[] FourthToolbarRow { get; set; }
 
         public string[] FifthToolbarRow { get; set; }
+
+        public string[] NonVisualPlugins { get; set; }
 
         public override bool OverWriteExistingSettings { get; set; }
     }

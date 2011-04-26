@@ -58,10 +58,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
                 .ToolbarRows.Count.ShouldEqual(0);
 
-        It should_create_TinyMCESettings_with_no_NonVisualPlugins =
+        It should_create_TinyMCESettings_with_NonVisualPlugins_set_to_the_default_for_TinyMCESettings =
             () =>
                 SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
-                .NonVisualPlugins.Count.ShouldEqual(0);
+                .NonVisualPlugins.ShouldContainOnly(GetDefaultTinyMCESettings().NonVisualPlugins);
 
         It should_create_TinyMCESettings_with_Width_set_to_the_default_for_TinyMCESettings =
             () =>
