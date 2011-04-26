@@ -286,7 +286,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         }
 
         [Fact]
-        public void GivePropertyDefinitionWithNoLongStringSettings_UpdatePageDefinitionValues_SetLongStringSettingsToAll()
+        public void GivePropertyDefinitionWithNoLongStringSettings_UpdatePageDefinitionValues_SetLongStringSettingsToUndefined()
         {
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
@@ -295,22 +295,22 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<EditorToolOption>(
-                EditorToolOption.All,
+                EditorToolOption.Undefined,
                 pageDefinitionToUpdate.LongStringSettings);
         }
 
         [Fact]
-        public void GivePropertyDefinitionWithNoLongStringSettingsAndClearAllLongStringSettings_UpdatePageDefinitionValues_SetLongStringSettingsToDefault()
+        public void GivePropertyDefinitionWithNoLongStringSettingsAndMatchingPageDefinitionWithSetting_UpdatePageDefinitionValues_DoesNotUpdateLongStringSettings()
         {
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            pageDefinitionToUpdate.LongStringSettings = EditorToolOption.SpellCheck;
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-            propertyDefinition.PageTypePropertyAttribute.ClearAllLongStringSettings = true;
 
             pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<EditorToolOption>(
-                default(EditorToolOption),
+                EditorToolOption.SpellCheck,
                 pageDefinitionToUpdate.LongStringSettings);
         }
 

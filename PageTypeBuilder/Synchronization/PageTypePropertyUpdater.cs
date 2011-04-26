@@ -133,6 +133,11 @@ namespace PageTypeBuilder.Synchronization
         private void UpdateLongStringSettings(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
         {
             EditorToolOption longStringSettings = propertyAttribute.LongStringSettings;
+            if (longStringSettings == EditorToolOption.Undefined)
+            {
+                return;
+            }
+
             if (longStringSettings == default(EditorToolOption) && !propertyAttribute.ClearAllLongStringSettings)
             {
                 longStringSettings = EditorToolOption.All;

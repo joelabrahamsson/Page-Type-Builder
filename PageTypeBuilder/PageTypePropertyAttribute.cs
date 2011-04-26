@@ -11,7 +11,8 @@ namespace PageTypeBuilder
 
         public PageTypePropertyAttribute()
         {
-            DisplayInEditMode = DefaultDisplayInEditMode;    
+            DisplayInEditMode = DefaultDisplayInEditMode;
+            LongStringSettings = EditorToolOption.Undefined;
         }
 
         public virtual Type Type { get; set; }
