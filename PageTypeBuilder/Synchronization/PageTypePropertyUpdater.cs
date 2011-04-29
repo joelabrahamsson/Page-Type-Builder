@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EPiServer.DataAbstraction;
 using EPiServer.Editor;
+using log4net;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 
@@ -11,6 +12,8 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageTypePropertyUpdater
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(PageTypePropertyUpdater));
+
         public PageTypePropertyUpdater()
         {
             PageDefinitionFactory = new PageDefinitionFactory();
@@ -68,34 +71,49 @@ namespace PageTypeBuilder.Synchronization
 
             UpdatePageDefinitionValues(pageDefinition, pageTypePropertyDefinition);
 
-            if(SerializeValues(pageDefinition) != oldValues)
+            string updatedValues = SerializeValues(pageDefinition);
+            if (updatedValues != oldValues)
+            {
+                log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
                 PageDefinitionFactory.Save(pageDefinition);
+            }
         }
 
         protected internal virtual string SerializeValues(PageDefinition pageDefinition)
         {
             StringBuilder builder = new StringBuilder();
 
+            builder.Append("EditCaption:");
             builder.Append(pageDefinition.EditCaption);
             builder.Append("|");
+            builder.Append("HelpText:");
             builder.Append(pageDefinition.HelpText);
             builder.Append("|");
+            builder.Append("Required:");
             builder.Append(pageDefinition.Required);
             builder.Append("|");
+            builder.Append("Searchable:");
             builder.Append(pageDefinition.Searchable);
             builder.Append("|");
+            builder.Append("DefaultValue:");
             builder.Append(pageDefinition.DefaultValue);
             builder.Append("|");
+            builder.Append("DefaultValueType:");
             builder.Append(pageDefinition.DefaultValueType);
             builder.Append("|");
+            builder.Append("LanguageSpecific:");
             builder.Append(pageDefinition.LanguageSpecific);
             builder.Append("|");
+            builder.Append("DisplayEditUI:");
             builder.Append(pageDefinition.DisplayEditUI);
             builder.Append("|");
+            builder.Append("FieldOrder:");
             builder.Append(pageDefinition.FieldOrder);
             builder.Append("|");
+            builder.Append("LongStringSettings:");
             builder.Append(pageDefinition.LongStringSettings);
             builder.Append("|");
+            builder.Append("Tab.ID:");
             builder.Append(pageDefinition.Tab.ID);
             builder.Append("|");
 

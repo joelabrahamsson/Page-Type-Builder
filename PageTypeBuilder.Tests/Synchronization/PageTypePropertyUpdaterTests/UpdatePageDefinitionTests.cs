@@ -286,20 +286,6 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
         }
 
         [Fact]
-        public void GivePropertyDefinitionWithNoLongStringSettings_UpdatePageDefinitionValues_SetLongStringSettingsToUndefined()
-        {
-            PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-
-            pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-            Assert.Equal<EditorToolOption>(
-                EditorToolOption.Undefined,
-                pageDefinitionToUpdate.LongStringSettings);
-        }
-
-        [Fact]
         public void GivePropertyDefinitionWithNoLongStringSettingsAndMatchingPageDefinitionWithSetting_UpdatePageDefinitionValues_DoesNotUpdateLongStringSettings()
         {
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
