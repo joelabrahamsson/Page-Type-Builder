@@ -8,11 +8,13 @@ namespace PageTypeBuilder
     public class PageTypePropertyAttribute : Attribute
     {
         private const bool DefaultDisplayInEditMode = true;
+        internal const int SortOrderNoValue = -1;
 
         public PageTypePropertyAttribute()
         {
             DisplayInEditMode = DefaultDisplayInEditMode;
             LongStringSettings = EditorToolOption.Undefined;
+            SortOrder = -1;
         }
 
         public virtual Type Type { get; set; }

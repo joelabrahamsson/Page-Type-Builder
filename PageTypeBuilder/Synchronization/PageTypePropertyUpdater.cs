@@ -132,9 +132,23 @@ namespace PageTypeBuilder.Synchronization
             pageDefinition.DefaultValueType = propertyAttribute.DefaultValueType;
             pageDefinition.LanguageSpecific = propertyAttribute.UniqueValuePerLanguage;
             pageDefinition.DisplayEditUI = propertyAttribute.DisplayInEditMode;
-            pageDefinition.FieldOrder = propertyAttribute.SortOrder;
+            pageDefinition.FieldOrder = GetFieldOrder(pageDefinition, propertyAttribute);
             UpdateLongStringSettings(pageDefinition, propertyAttribute);
             UpdatePageDefinitionTab(pageDefinition, propertyAttribute);
+        }
+
+        private int GetFieldOrder(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
+        {
+            int fieldOrder = propertyAttribute.SortOrder;
+            if(fieldOrder == PageTypePropertyAttribute.SortOrderNoValue)
+            {
+                fieldOrder = 0;
+                if(pageDefinition.FieldOrder != 0)
+                {
+                    fieldOrder = pageDefinition.FieldOrder;
+                }
+            }
+            return fieldOrder;
         }
 
         protected internal virtual void UpdatePageDefinitionTab(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
