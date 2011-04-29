@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.0.0")]
-[assembly: AssemblyFileVersion("1.3.0.0")]
+[assembly: AssemblyVersion("1.3.1.0")]
+[assembly: AssemblyFileVersion("1.3.1.0")]
 [assembly: InternalsVisibleTo("PageTypeBuilder.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100134b9a2c2c0dce416e54848eaf631f5a36814bbb34d3a680e78c241cc811e94f39560b0cc7410d0b48842740371c4ee2d9f41f3c349a1f79f4d1aaf42180bb9c0aebf23aff01e827b7da0e889f78005c17ee970feb470baaf130d1f943a1bf5d64b84221cee502220c9e31fb48c363ee997a9051f4908df2f76bd471015c1dac")]
 [assembly: CLSCompliant(true)]
