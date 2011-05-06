@@ -31,5 +31,14 @@ namespace PageTypeBuilder.Configuration
                 return "http://PageTypeBuilder.Configuration.PageTypeBuilderConfiguration";
             }
         }
+
+		[ConfigurationProperty("enablePageTypeAlphabeticSortOverride", IsRequired = false)]
+		public virtual bool EnablePageTypeAlphabeticSortOverride
+		{
+			get
+			{
+				return (bool)this["enablePageTypeAlphabeticSortOverride"];
+			}
+		}
     }
 }

@@ -56,6 +56,11 @@ namespace PageTypeBuilder.Synchronization
                 UpdatePageTypes(pageTypeDefinitions);
 
                 UpdatePageTypePropertyDefinitions(pageTypeDefinitions);
+
+				if (_configuration.EnablePageTypeAlphabeticSortOverride)
+				{
+					SortPageTypesAlphabetically();
+				}
             }
 
             AddPageTypesToResolver(pageTypeDefinitions);
@@ -111,7 +116,12 @@ namespace PageTypeBuilder.Synchronization
                 PageTypePropertyUpdater.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }
-        
+
+		protected internal virtual void SortPageTypesAlphabetically()
+		{
+			PageTypeUpdater.SortPageTypesAlphabetically();
+		}
+
         protected internal virtual PageTypeResolver PageTypeResolver { get; set; }
 
         protected internal virtual TabLocator TabLocator { get; set; }

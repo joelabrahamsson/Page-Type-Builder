@@ -57,5 +57,9 @@ namespace PageTypeBuilder
         public virtual int DefaultFrameID { get; set; }
 
         public virtual Type[] AvailablePageTypes { get; set; }
+
+		public virtual Type[] AvailablePageTypesIncludeSubclasses { get; set; }
+
+		public virtual Type[] ExcludePageTypes { get; set; }
     }
 }

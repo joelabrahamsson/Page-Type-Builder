@@ -82,6 +82,8 @@ namespace PageTypeBuilder.Synchronization
             UpdateDefaultVisibleInMenu(pageType, attribute);
             UpdateFrame(pageType, attribute);
             UpdateAvailablePageTypes(pageType, attribute.AvailablePageTypes);
+			UpdateAvailablePageTypesIncludeSubclasses(pageType, attribute.AvailablePageTypesIncludeSubclasses);
+			UpdateExcludePageTypes(pageType, attribute.ExcludePageTypes);
             
             string newValuesString = SerializeValues(pageType);
             if (newValuesString != oldValueString)
@@ -231,6 +233,78 @@ namespace PageTypeBuilder.Synchronization
             }
             pageType.AllowedPageTypes = availablePageTypeIDs;
         }
+
+		protected internal virtual void UpdateAvailablePageTypesIncludeSubclasses(IPageType pageType, Type[] availablePageTypesIncludeSubclasses)
+		{
+			if (availablePageTypesIncludeSubclasses == null)
+			{
+				return;
+			}
+			var availablePageTypeIDs = new List<int>();
+			for (int i = 0; i < _pageTypeDefinitions.Count(); i++)
+			{
+				PageTypeDefinition availablePageTypeDefinition = _pageTypeDefinitions.ElementAt(i);
+				for (int j = 0; j < availablePageTypesIncludeSubclasses.Count(); j++)
+				{
+					if (!availablePageTypeDefinition.Type.IsSubclassOf(availablePageTypesIncludeSubclasses[j]) &&
+						(availablePageTypeDefinition.Type != availablePageTypesIncludeSubclasses[j])) continue;
+					IPageType availablePageType = GetExistingPageType(availablePageTypeDefinition);
+					availablePageTypeIDs.Add(availablePageType.ID);
+				}
+			}
+			pageType.AllowedPageTypes = availablePageTypeIDs.ToArray();
+		}
+
+		protected internal virtual void UpdateExcludePageTypes(IPageType pageType, Type[] excludePageTypes)
+		{
+			if (excludePageTypes == null)
+			{
+				return;
+			}
+
+			int[] excludePageTypeIDs = new int[excludePageTypes.Length];
+			for (int i = 0; i < excludePageTypes.Length; i++)
+			{
+				Type excludePageTypeType = excludePageTypes[i];
+				PageTypeDefinition excludePageTypeDefinition = _pageTypeDefinitions.First(
+					definitions => definitions.Type == excludePageTypeType);
+				IPageType excludePageType = GetExistingPageType(excludePageTypeDefinition);
+				excludePageTypeIDs[i] = excludePageType.ID;
+			}
+
+			List<int> allowedPageTypesIDs = new List<int>();
+			if (pageType.AllowedPageTypes == null)
+			{
+				for (int i = 0; i < _pageTypeDefinitions.Count(); i++)
+				{
+					allowedPageTypesIDs.Add(GetExistingPageType(_pageTypeDefinitions.ElementAt(i)).ID);
+				}
+			}
+			else
+			{
+				allowedPageTypesIDs = pageType.AllowedPageTypes.ToList();
+			}
+
+			foreach (int t in excludePageTypeIDs)
+			{
+				if (allowedPageTypesIDs.Contains(t))
+				{
+					allowedPageTypesIDs.Remove(t);
+				}
+			}
+			pageType.AllowedPageTypes = allowedPageTypesIDs.ToArray();
+		}
+
+		protected internal virtual void SortPageTypesAlphabetically()
+		{
+			_pageTypeDefinitions = _pageTypeDefinitions.OrderBy(p => p.GetPageTypeName());
+			for (int i = 0; i < _pageTypeDefinitions.Count(); i++)
+			{
+				IPageType pageType = GetExistingPageType(_pageTypeDefinitions.ElementAt(i));
+				pageType.SortOrder = i;
+				PageTypeFactory.Save(pageType);
+			}
+		}
 
         public IPageTypeFactory PageTypeFactory { get; set; }
 
