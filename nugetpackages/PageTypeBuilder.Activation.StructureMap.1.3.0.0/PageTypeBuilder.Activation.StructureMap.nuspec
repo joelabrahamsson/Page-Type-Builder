@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<package> 
+  <metadata> 
+    <id>PageTypeBuilder.Activation.StructureMap</id> 
+    <version>1.3.0</version> 
+    <authors>Joel Abrahamsson</authors> 
+    <owners>Stefan Forsberg</owners>
+    <description>StructureMap definiton to be used as an activator i PageTypeBuilder.</description> 
+    <projectUrl>http://pagetypebuilder.codeplex.com/</projectUrl>
+    <licenseUrl>http://noidea.com</licenseUrl>
+    <dependencies>
+	    <dependency id="PageTypeBuilder" version="(1.3,2.0)" />
+      <dependency id="StructureMap" version="2.6.1" />
+	  </dependencies>
+	<tags>EPiServer, PageTypeBuilder, StructureMap</tags>
+    <language>en-US</language> 
+  </metadata> 
+</package>
