@@ -19,6 +19,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             DefaultStartPublishOffset = template.DefaultStartPublishOffset;
             DefaultStopPublishOffset = template.DefaultStopPublishOffset;
             DefaultVisibleInMenu = template.DefaultVisibleInMenu;
+            Definitions = template.Definitions;
             Description = template.Description;
             IsAvailable = template.IsAvailable;
             Name = template.Name;

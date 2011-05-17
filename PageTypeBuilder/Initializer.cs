@@ -1,4 +1,5 @@
 ﻿using EPiServer;
+using EPiServer.Core.PropertySettings;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using PageTypeBuilder.Abstractions;
@@ -28,7 +29,8 @@ namespace PageTypeBuilder
             var pageTypePropertyUpdater = new PageTypePropertyUpdater(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(), 
-                new TabFactory());
+                new TabFactory(),
+                new PropertySettingsRepository());
 
             var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
 

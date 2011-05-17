@@ -121,6 +121,11 @@
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
     <Compile Include="PageTypeBuilderException.cs" />
+    <Compile Include="PropertySettingsAttribute.cs" />
+    <Compile Include="PropertySettingsUpdateResult.cs" />
+    <Compile Include="PropertySettings\TinyMCEButtons.cs" />
+    <Compile Include="PropertySettings\TinyMCENonVisualPlugins.cs" />
+    <Compile Include="PropertySettings\TinyMCESettingsAttribute.cs" />
     <Compile Include="Reflection\AppDomainAssemblyLocator.cs" />
     <Compile Include="Reflection\IAssemblyLocator.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />

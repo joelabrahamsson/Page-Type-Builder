@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
@@ -65,6 +66,13 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         public PageDefinitionType GetPageDefinitionType(string typeName, string assemblyName)
         {
             return pageDefinitions.FirstOrDefault(def => def.TypeName == typeName && def.AssemblyName == assemblyName);
+        }
+
+        public PageDefinitionType GetPageDefinitionType<T>()
+        {
+            string typeName = typeof (T).FullName;
+            string assemblyName = typeof (T).Assembly.GetName().Name;
+            return GetPageDefinitionType(typeName, assemblyName);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PageTypeBuilder.Abstractions;
+﻿using EPiServer.Core.PropertySettings;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Synchronization;
 using Rhino.Mocks;
 
@@ -11,7 +12,8 @@ namespace PageTypeBuilder.Tests.Helpers
             return new PageTypePropertyUpdater(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
-                new TabFactory());
+                new TabFactory(),
+                new PropertySettingsRepository());
         }
 
         public static PageTypePropertyUpdater PartialMock(MockRepository fakesRepository)
@@ -19,7 +21,8 @@ namespace PageTypeBuilder.Tests.Helpers
             return fakesRepository.PartialMock<PageTypePropertyUpdater>(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
-                new TabFactory());
+                new TabFactory(),
+                new PropertySettingsRepository());
         }
 
         public static PageTypePropertyUpdater Stub(MockRepository fakesRepository)
@@ -27,7 +30,8 @@ namespace PageTypeBuilder.Tests.Helpers
             return fakesRepository.Stub<PageTypePropertyUpdater>(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
-                new TabFactory());
+                new TabFactory(),
+                new PropertySettingsRepository());
         }
     }
 }
