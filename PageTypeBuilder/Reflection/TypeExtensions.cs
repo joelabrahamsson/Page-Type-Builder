@@ -36,15 +36,23 @@ namespace PageTypeBuilder.Reflection
                 .Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyAttribute)));
         }
 
+        internal static IEnumerable<PropertyInfo> GetPageTypePropertyGroupProperties(this Type pageTypeType)
+        {
+            return pageTypeType.GetPublicOrPrivateProperties().Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyGroupAttribute)));
+        }
+
         internal static IEnumerable<PropertyInfo> GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces(this Type pageTypeType)
         {
             var pageTypeProperties = pageTypeType.GetPageTypePropertiesOnClass().ToList();
+            
             IEnumerable<PropertyInfo> propertiesFromInterfaces = pageTypeType.GetPageTypePropertiesFromInterfaces();
+            
             foreach (var interfaceProperty in propertiesFromInterfaces)
             {
                 if (pageTypeProperties.Count(p => p.Name.Equals(interfaceProperty.Name)) == 0)
-                    pageTypeProperties.Add(interfaceProperty);
+                    pageTypeProperties.Add(interfaceProperty); 
             }
+
             return pageTypeProperties;
         }
 

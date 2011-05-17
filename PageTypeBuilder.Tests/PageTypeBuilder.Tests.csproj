@@ -124,6 +124,7 @@
     <Compile Include="Synchronization\TabDefinitionUpdaterTests\UpdateTabDefinitionTests.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionValidatorTests.cs" />
     <Compile Include="TestPageTypesWithInterfaces.cs" />
+    <Compile Include="TestPageTypeWithPropertyGroups.cs" />
     <Compile Include="TestTab.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensionsTests.cs" />
     <Compile Include="Synchronization\PageTypePropertyUpdaterTests\CreateNewPageDefitionTests.cs" />
