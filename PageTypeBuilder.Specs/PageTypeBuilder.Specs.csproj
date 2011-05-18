@@ -83,6 +83,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ExampleImplementations\TinyMceSettingsAttribute.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\Fakes\SavesPerGuidCounter.cs" />
     <Compile Include="Helpers\Fakes\FakePageType.cs" />
@@ -112,7 +113,7 @@
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\DefaultValues.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\Inheritance.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\NoSaving.cs" />
-    <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\TinyMceSettingsSynchronization.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\PropertySettingsSynchronization.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\ValueSetting.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\ValueSetting.cs" />
     <Compile Include="Synchronization\TabSynchronization\Creation.cs" />

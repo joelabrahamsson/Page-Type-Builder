@@ -49,14 +49,62 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
+        private class PropertySettingsUpdater
+        {
+            private object invokationTarget;
+
+            public PropertySettingsUpdater(Type settingsType, object invokationTarget)
+            {
+                SettingsType = settingsType;
+                this.invokationTarget = invokationTarget;
+            }
+
+            public Type SettingsType { get; private set; }
+
+            public void UpdateSettings(IPropertySettings settings)
+            {
+                var updateMethod = typeof(IPropertySettingsUpdater<>).MakeGenericType(SettingsType).GetMethod("UpdateSettings", new[] { SettingsType });
+                updateMethod.Invoke(invokationTarget, new object[] { settings });
+            }
+            
+            public int GetSettingsHashCode(IPropertySettings settings)
+            {
+                var hashCodeMethod = typeof(IPropertySettingsUpdater<>).MakeGenericType(SettingsType).GetMethod("GetSettingsHashCode", new[] { SettingsType });
+                return (int) hashCodeMethod.Invoke(invokationTarget, new object[] { settings });
+            }
+
+            public bool OverWriteExisting()
+            {
+                var overWriteExistingMethod = typeof(IPropertySettingsUpdater<>).MakeGenericType(SettingsType).GetMethod("OverWriteExistingSettings", new Type[] { }).MakeGenericMethod(new Type[] { SettingsType});
+                return (bool) overWriteExistingMethod.Invoke(invokationTarget, new object[] { });
+            }
+
+        }
+
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
             var prop =
                 pageTypeDefinition.Type.GetProperties().Where(p => p.Name == propertyDefinition.Name).FirstOrDefault
                     ();
-                
-            var attributes = prop.GetCustomAttributes(typeof(PropertySettingsAttribute), true);
-            foreach (var attribute in attributes)
+            
+            var allAttributes = prop.GetCustomAttributes(true);
+            var settingsUpdaters = new List<PropertySettingsUpdater>();
+            foreach (var attribute in allAttributes)
+            {
+                foreach (var interfaceType in attribute.GetType().GetInterfaces())
+                {
+                    if (!interfaceType.IsGenericType)
+                        continue;
+
+                    if(!typeof (IPropertySettingsUpdater<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition()))
+                        continue;
+                    var settingsType = interfaceType.GetGenericArguments().First();
+                    var settingsUpdater = new PropertySettingsUpdater(settingsType, attribute);
+                    settingsUpdaters.Add(settingsUpdater);
+                }
+            }
+            
+            foreach (var updater in settingsUpdaters)
             {
                 PropertySettingsContainer container;
 
@@ -73,25 +121,28 @@ namespace PageTypeBuilder.Synchronization
                         container = new PropertySettingsContainer(pageDefinition.SettingsID);
                     }
                 }
-                var settingsAttribute = (PropertySettingsAttribute) attribute;
-                var wrapper = container.GetSetting(settingsAttribute.SettingType);
+
+                var wrapper = container.GetSetting(updater.SettingsType);
                 if (wrapper == null)
                 {
                     wrapper = new PropertySettingsWrapper();
-                    container.Settings.Add(settingsAttribute.SettingType.FullName, wrapper);
+                    container.Settings.Add(updater.SettingsType.FullName, wrapper);
                 }
 
                 bool settingsAlreadyExists = true;
                 if (wrapper.PropertySettings == null)
                 {
-                    wrapper.PropertySettings = (IPropertySettings) Activator.CreateInstance(settingsAttribute.SettingType);
+                    wrapper.PropertySettings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
                     settingsAlreadyExists = false;
                 }
 
-                if(settingsAlreadyExists && !settingsAttribute.OverWriteExistingSettings)
+                if (settingsAlreadyExists && !updater.OverWriteExisting())
                     return;
-
-                if(settingsAttribute.UpdateSettings(wrapper.PropertySettings) || !settingsAlreadyExists)
+                
+                int hashBeforeUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                updater.UpdateSettings(wrapper.PropertySettings);
+                int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
                     _propertySettingsRepository.Save(container);
             }
         }

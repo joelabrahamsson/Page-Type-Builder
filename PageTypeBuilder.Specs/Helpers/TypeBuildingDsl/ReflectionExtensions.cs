@@ -114,6 +114,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 
                     propertiesWithValues.Add(properties[i]);
                     nonNullPropertyValues.Add(propertyValues[i]);
+                    
                 }
             }
 
@@ -149,9 +150,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             object[] propertyValues = new object[properties.Length];
             for (int i = 0; i < properties.Length; i++)
             {
-                propertyValues[i] = attributeTemplate.GetType()
-                    .InvokeMember(properties[i].Name, BindingFlags.GetProperty, null,
-                        attributeTemplate, new object[0]);
+                propertyValues[i] = properties[i].GetValue(attributeTemplate, BindingFlags.GetProperty, null, null, null);
             }
             return propertyValues;
         }
