@@ -15,7 +15,7 @@ namespace PageTypeBuilder.Tests.Discovery
 
             IEnumerable<PageTypeDefinition> definitions = definitionLocator.GetPageTypeDefinitions();
 
-            Assert.Equal<int>(6, definitions.Count());
+            Assert.Equal<int>(7, definitions.Count());
         }
 
         [Fact]

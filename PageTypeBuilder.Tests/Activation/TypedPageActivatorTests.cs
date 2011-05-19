@@ -47,5 +47,39 @@ namespace PageTypeBuilder.Tests.Activation
 
             Assert.Equal<string>(propertyValue, returnedPropertyValue);
         }
+
+        [Fact]
+        public void GivenPageWithPropertyValueAndPropertyGroups_CreateAndPopulateTypedInstance_ReturnsTypedInstanceWithPropertyValues()
+        {
+            PageData sourcePage = new PageData();
+
+            sourcePage.Property.Add("LongStringProperty", new PropertyString());
+            sourcePage.SetValue("LongStringProperty", "one");
+            sourcePage.Property.Add("ImageOne-ImageUrl", new PropertyString());
+            sourcePage.SetValue("ImageOne-ImageUrl", "two");
+            sourcePage.Property.Add("ImageOne-AltText", new PropertyString());
+            sourcePage.SetValue("ImageOne-AltText", "three");
+            sourcePage.Property.Add("ImageTwo-ImageUrl", new PropertyString());
+            sourcePage.SetValue("ImageTwo-ImageUrl", "four");
+            sourcePage.Property.Add("ImageTwo-AltText", new PropertyString());
+            sourcePage.SetValue("ImageTwo-AltText", "five");
+            sourcePage.Property.Add("ImageThree-ImageUrl", new PropertyString());
+            sourcePage.SetValue("ImageThree-ImageUrl", "six");
+            sourcePage.Property.Add("ImageThree-AltText", new PropertyString());
+            sourcePage.SetValue("ImageThree-AltText", "seven");
+
+            TypedPageActivator activator = new TypedPageActivator();
+
+            TestPageTypeWithPropertyGroups page = activator.CreateAndPopulateTypedInstance(sourcePage, typeof(TestPageTypeWithPropertyGroups)) as TestPageTypeWithPropertyGroups;
+
+            Assert.Equal("one", page.LongStringProperty);
+            Assert.Equal("two", page.ImageOne.ImageUrl);
+            Assert.Equal("three", page.ImageOne.AltText);
+            Assert.Equal("four", page.ImageTwo.ImageUrl);
+            Assert.Equal("five", page.ImageTwo.AltText);
+            Assert.Equal("six", page.ImageThree.ImageUrl);
+            Assert.Equal("seven", page.ImageThree.AltText);
+
+        }
     }
 }

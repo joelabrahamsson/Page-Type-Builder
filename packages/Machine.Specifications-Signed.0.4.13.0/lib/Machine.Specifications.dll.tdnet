@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 <TestRunner>
        <FriendlyName>Machine.Specifications 0.4.13-2780e33</FriendlyName>
        <AssemblyPath>Machine.Specifications.TDNetRunner.dll</AssemblyPath>
        <TypeName>Machine.Specifications.TDNetRunner.SpecificationRunner</TypeName>
 </TestRunner>
+=======
+<TestRunner>
+       <FriendlyName>Machine.Specifications 0.4.13-2780e33</FriendlyName>
+       <AssemblyPath>Machine.Specifications.TDNetRunner.dll</AssemblyPath>
+       <TypeName>Machine.Specifications.TDNetRunner.SpecificationRunner</TypeName>
+</TestRunner>
+>>>>>>> ab435e82fdb1379b17fada9630f0cdaf3d6bbb3f

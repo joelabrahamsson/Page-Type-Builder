@@ -267,73 +267,20 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
             Assert.Equal<int>(propertyDefinition.PageTypePropertyAttribute.SortOrder, pageDefinitionToUpdate.FieldOrder);
         }
 
-        [Theory]
-        [InlineData(EditorToolOption.All)]
-        [InlineData(EditorToolOption.Bold)]
-        [InlineData(EditorToolOption.Bold | EditorToolOption.Bullets)]
-        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionLongStringSettings(
-            EditorToolOption longStringSettings)
-        {
-            PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-            propertyDefinition.PageTypePropertyAttribute.LongStringSettings = longStringSettings;
-
-            pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-            Assert.Equal<EditorToolOption>(
-                propertyDefinition.PageTypePropertyAttribute.LongStringSettings, 
-                pageDefinitionToUpdate.LongStringSettings);
-        }
-
         [Fact]
-        public void GivePropertyDefinitionWithNoLongStringSettings_UpdatePageDefinitionValues_SetLongStringSettingsToAll()
+        public void GivePropertyDefinitionWithNoLongStringSettingsAndMatchingPageDefinitionWithSetting_UpdatePageDefinitionValues_DoesNotUpdateLongStringSettings()
         {
             PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            pageDefinitionToUpdate.LongStringSettings = EditorToolOption.SpellCheck;
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
 
             pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<EditorToolOption>(
-                EditorToolOption.All,
+                EditorToolOption.SpellCheck,
                 pageDefinitionToUpdate.LongStringSettings);
         }
-
-        [Fact]
-        public void GivePropertyDefinitionWithNoLongStringSettingsAndClearAllLongStringSettings_UpdatePageDefinitionValues_SetLongStringSettingsToDefault()
-        {
-            PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-            propertyDefinition.PageTypePropertyAttribute.ClearAllLongStringSettings = true;
-
-            pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-            Assert.Equal<EditorToolOption>(
-                default(EditorToolOption),
-                pageDefinitionToUpdate.LongStringSettings);
-        }
-
-        [Theory]
-        [InlineData(EditorToolOption.All)]
-        [InlineData(EditorToolOption.Bold)]
-        [InlineData(EditorToolOption.Bold | EditorToolOption.Bullets)]
-        public void GivePropertyDefinitionWithLongStringSettingsAndClearAllLongStringSettings_UpdatePageDefinitionValues_SetsPageDefinitionLongStringSettings(
-            EditorToolOption longStringSettings)
-        {
-            PageTypePropertyUpdater pageTypePropertyUpdater = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-            propertyDefinition.PageTypePropertyAttribute.LongStringSettings = longStringSettings;
-            propertyDefinition.PageTypePropertyAttribute.ClearAllLongStringSettings = true;
-
-            pageTypePropertyUpdater.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-            Assert.Equal<EditorToolOption>(
-                propertyDefinition.PageTypePropertyAttribute.LongStringSettings,
-                pageDefinitionToUpdate.LongStringSettings);
-        }        
 
         [Fact]
         public void GivenPropertyDefinition_UpdatePageDefinitionValues_CallsUpdatePageDefinitionTab()
