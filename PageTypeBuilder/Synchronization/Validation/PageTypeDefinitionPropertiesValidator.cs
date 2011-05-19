@@ -18,12 +18,26 @@ namespace PageTypeBuilder.Synchronization.Validation
         protected internal virtual void ValidatePageTypeProperties(PageTypeDefinition definition)
         {
             ValidateNoClashingPropertiesFromInterfaces(definition.Type);
-            IEnumerable<PropertyInfo> propertiesForPageType = definition.Type.GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces();
+            List<PropertyInfo> propertiesForPageType = definition.Type.GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces().ToList();
 
             foreach (PropertyInfo propertyInfo in propertiesForPageType)
-            {
                 ValidatePageTypeProperty(propertyInfo);
-            }
+
+            // validate any page type property group propery defininitions
+            foreach (PropertyInfo propertyGroupProperty in definition.Type.GetPageTypePropertyGroupProperties())
+            {
+                PropertyInfo[] propertyGroupProperties = propertyGroupProperty.PropertyType.GetPublicOrPrivateProperties();
+
+                foreach (PropertyInfo property in propertyGroupProperties)
+                {
+                    PageTypePropertyAttribute attribute = property.GetCustomAttributes<PageTypePropertyAttribute>().FirstOrDefault();
+
+                    if (attribute == null)
+                        continue;
+
+                    ValidatePageTypeProperty(property);
+                }
+            }            
         }
 
         public virtual void ValidateNoClashingPropertiesFromInterfaces(Type pageTypeType)

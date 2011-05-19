@@ -23,7 +23,7 @@ namespace PageTypeBuilder.Synchronization.Validation
             
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                ValidatePageTypeDefinition(definition, pageTypeDefinitions);
+                ValidatePageTypeDefinition(definition, pageTypeDefinitions); 
             }
         }
 

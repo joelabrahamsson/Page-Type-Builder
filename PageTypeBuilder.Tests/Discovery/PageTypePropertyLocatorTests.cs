@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Discovery;
-using Xunit;
-
-namespace PageTypeBuilder.Tests.Discovery
+﻿namespace PageTypeBuilder.Tests.Discovery
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Reflection.Emit;
+    using Abstractions;
+    using PageTypeBuilder.Discovery;
+    using Xunit;
+
     public class PageTypePropertyLocatorTests
     {
         [Fact]
@@ -91,6 +91,45 @@ namespace PageTypeBuilder.Tests.Discovery
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
             IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
             Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions.First().PageTypePropertyAttribute.EditCaption);
+        }
+
+        [Fact]
+        public void GivenTypeWithNestedPropertyGroups_GetPageTypePropertyDefinitions_ReturnsListWithSevenPropertyDefinitions()
+        {
+            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
+            IPageType pageType = new NativePageType();
+            Type pageTypeType = typeof(TestPageTypeWithPropertyGroups);
+            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeType);
+
+            Assert.Equal(7, propertyDefinitions.Count());
+
+            List<Defintion> defintions = new List<Defintion>
+             {
+                 new Defintion { EditCaption = "Property one", SortOrder = 100, Name = "LongStringProperty" },
+                 new Defintion { EditCaption = "Image one - Image Url", SortOrder = 400, Name = "ImageOne-ImageUrl" },
+                 new Defintion { EditCaption = "Image one - Alt text", SortOrder = 410, Name = "ImageOne-AltText" },
+                 new Defintion { EditCaption = "Image two - Image Url", SortOrder = 500, Name = "ImageTwo-ImageUrl" },
+                 new Defintion { EditCaption = "Image two - Alt text", SortOrder = 510, Name = "ImageTwo-AltText" },
+                 new Defintion { EditCaption = "Image three - Image Url", SortOrder = 600, Name = "ImageThree-ImageUrl" },
+                 new Defintion { EditCaption = "Image three - Alt text", SortOrder = 610, Name = "ImageThree-AltText" }
+             };
+
+            foreach (PageTypePropertyDefinition pageTypePropertyDefinition in propertyDefinitions)
+            {
+                Defintion defintion = defintions.Where(current => string.Equals(current.Name, pageTypePropertyDefinition.Name)).FirstOrDefault();
+
+                Assert.True(defintion != null);
+
+                Assert.Equal(pageTypePropertyDefinition.PageTypePropertyAttribute.SortOrder, defintion.SortOrder);
+                Assert.Equal(pageTypePropertyDefinition.PageTypePropertyAttribute.EditCaption, defintion.EditCaption);
+            }
+        }
+
+        private class Defintion
+        {
+            public string EditCaption;
+            public int SortOrder;
+            public string Name;
         }
     }
 }

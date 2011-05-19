@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using EPiServer.Core.PropertySettings;
 using EPiServer.DataAbstraction;
@@ -36,15 +37,14 @@ namespace PageTypeBuilder.Synchronization
 
             foreach (PageTypePropertyDefinition propertyDefinition in definitions)
             {
-                PageDefinition pageDefinition = GetExistingPageDefinition(pageType, propertyDefinition);
-                if (pageDefinition == null)
-                    pageDefinition = CreateNewPageDefinition(propertyDefinition);
+                PageDefinition pageDefinition = GetExistingPageDefinition(pageType, propertyDefinition) ??
+                                                CreateNewPageDefinition(propertyDefinition);
 
-                UpdatePageDefinition(pageDefinition, propertyDefinition);
+                UpdatePageDefinition(pageDefinition, propertyDefinition); 
 
-                //Settings dev
+                //Settings dev 
                 UpdatePropertySettings(pageTypeDefinition, propertyDefinition, pageDefinition);
-
+                 
                 //End settings dev
             }
         }
@@ -83,13 +83,24 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
-            var prop =
-                pageTypeDefinition.Type.GetProperties().Where(p => p.Name == propertyDefinition.Name).FirstOrDefault
-                    ();
-            
-            var allAttributes = prop.GetCustomAttributes(true);
-            var settingsUpdaters = new List<PropertySettingsUpdater>();
-            foreach (var attribute in allAttributes)
+            PropertyInfo prop;
+
+            if (propertyDefinition.Name.Contains("-"))
+            {
+                // the property definition is a property belonging to a property group
+                int index = propertyDefinition.Name.IndexOf("-");
+                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
+                string propertyName = propertyDefinition.Name.Substring(index + 1);
+
+                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
+                prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => string.Equals(p.Name, propertyName)).FirstOrDefault();
+            }
+            else
+                prop = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyDefinition.Name)).FirstOrDefault();
+
+            object[] attributes = prop.GetCustomAttributes(true);   
+
+            foreach (var attribute in attributes)
             {
                 foreach (var interfaceType in attribute.GetType().GetInterfaces())
                 {
@@ -210,7 +221,7 @@ namespace PageTypeBuilder.Synchronization
             builder.Append(pageDefinition.LongStringSettings);
             builder.Append("|");
             builder.Append(pageDefinition.Tab.ID);
-            builder.Append("|");
+            builder.Append("|"); 
 
             return builder.ToString();
         }

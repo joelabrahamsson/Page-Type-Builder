@@ -122,6 +122,9 @@
     <Compile Include="Discovery\TabLocator.cs" />
     <Compile Include="IPropertySettingsUpdater.cs" />
     <Compile Include="PageTypeBuilderException.cs" />
+    <Compile Include="PageTypePropertyGroup.cs" />
+    <Compile Include="PageTypePropertyGroupAttribute.cs" />
+    <Compile Include="PageTypePropertyGroupHierarchy.cs" />
     <Compile Include="PropertySettingsUpdateResult.cs" />
     <Compile Include="Reflection\AppDomainAssemblyLocator.cs" />
     <Compile Include="Reflection\IAssemblyLocator.cs" />
