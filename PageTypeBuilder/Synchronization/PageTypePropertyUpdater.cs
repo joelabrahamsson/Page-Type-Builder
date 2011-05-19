@@ -6,6 +6,7 @@ using System.Text;
 using EPiServer.Core.PropertySettings;
 using EPiServer.DataAbstraction;
 using EPiServer.Editor;
+using log4net;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 
@@ -13,6 +14,7 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageTypePropertyUpdater
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(PageTypePropertyUpdater));
         private ITabFactory _tabFactory;
         private IPropertySettingsRepository _propertySettingsRepository;
 
@@ -151,34 +153,49 @@ namespace PageTypeBuilder.Synchronization
 
             UpdatePageDefinitionValues(pageDefinition, pageTypePropertyDefinition);
 
-            if(SerializeValues(pageDefinition) != oldValues)
+            string updatedValues = SerializeValues(pageDefinition);
+            if (updatedValues != oldValues)
+            {
+                log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
                 PageDefinitionFactory.Save(pageDefinition);
+            }
         }
 
         protected internal virtual string SerializeValues(PageDefinition pageDefinition)
         {
             StringBuilder builder = new StringBuilder();
 
+            builder.Append("EditCaption:");
             builder.Append(pageDefinition.EditCaption);
             builder.Append("|");
+            builder.Append("HelpText:");
             builder.Append(pageDefinition.HelpText);
             builder.Append("|");
+            builder.Append("Required:");
             builder.Append(pageDefinition.Required);
             builder.Append("|");
+            builder.Append("Searchable:");
             builder.Append(pageDefinition.Searchable);
             builder.Append("|");
+            builder.Append("DefaultValue:");
             builder.Append(pageDefinition.DefaultValue);
             builder.Append("|");
+            builder.Append("DefaultValueType:");
             builder.Append(pageDefinition.DefaultValueType);
             builder.Append("|");
+            builder.Append("LanguageSpecific:");
             builder.Append(pageDefinition.LanguageSpecific);
             builder.Append("|");
+            builder.Append("DisplayEditUI:");
             builder.Append(pageDefinition.DisplayEditUI);
             builder.Append("|");
+            builder.Append("FieldOrder:");
             builder.Append(pageDefinition.FieldOrder);
             builder.Append("|");
+            builder.Append("LongStringSettings:");
             builder.Append(pageDefinition.LongStringSettings);
             builder.Append("|");
+            builder.Append("Tab.ID:");
             builder.Append(pageDefinition.Tab.ID);
             builder.Append("|"); 
 
@@ -197,9 +214,22 @@ namespace PageTypeBuilder.Synchronization
             pageDefinition.DefaultValueType = propertyAttribute.DefaultValueType;
             pageDefinition.LanguageSpecific = propertyAttribute.UniqueValuePerLanguage;
             pageDefinition.DisplayEditUI = propertyAttribute.DisplayInEditMode;
-            pageDefinition.FieldOrder = propertyAttribute.SortOrder;
-            UpdateLongStringSettings(pageDefinition, propertyAttribute);
+            pageDefinition.FieldOrder = GetFieldOrder(pageDefinition, propertyAttribute);
             UpdatePageDefinitionTab(pageDefinition, propertyAttribute);
+        }
+
+        private int GetFieldOrder(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
+        {
+            int fieldOrder = propertyAttribute.SortOrder;
+            if(fieldOrder == PageTypePropertyAttribute.SortOrderNoValue)
+            {
+                fieldOrder = 0;
+                if(pageDefinition.FieldOrder != 0)
+                {
+                    fieldOrder = pageDefinition.FieldOrder;
+                }
+            }
+            return fieldOrder;
         }
 
         protected internal virtual void UpdatePageDefinitionTab(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
@@ -211,16 +241,6 @@ namespace PageTypeBuilder.Synchronization
                 tab = _tabFactory.GetTabDefinition(definedTab.Name);
             }
             pageDefinition.Tab = tab;
-        }
-
-        private void UpdateLongStringSettings(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
-        {
-            EditorToolOption longStringSettings = propertyAttribute.LongStringSettings;
-            if (longStringSettings == default(EditorToolOption) && !propertyAttribute.ClearAllLongStringSettings)
-            {
-                longStringSettings = EditorToolOption.All;
-            }
-            pageDefinition.LongStringSettings = longStringSettings;
         }
 
         internal PageTypePropertyDefinitionLocator PageTypePropertyDefinitionLocator { get; set; }

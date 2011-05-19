@@ -23,7 +23,6 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             propertyAttribute.DisplayInEditMode = false;
             propertyAttribute.EditCaption = "Property's Edit Caption";
             propertyAttribute.HelpText = "Property's help text";
-            propertyAttribute.LongStringSettings = EditorToolOption.Bold;
             propertyAttribute.Required = true;
             propertyAttribute.Searchable = true;
             propertyAttribute.SortOrder = 123;
@@ -72,10 +71,6 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         It should_create_a_PageDefinition_whose_DisplayEditUI_equals_the_attributes_DisplayInEditMode =
             () => SyncContext.PageDefinitionFactory.List().First()
                 .DisplayEditUI.ShouldEqual(propertyAttribute.DisplayInEditMode);
-
-        It should_create_a_PageDefinition_whose_LongStringSettings_equals_the_attributes_LongStringSettings =
-            () => SyncContext.PageDefinitionFactory.List().First()
-                .LongStringSettings.ShouldEqual(propertyAttribute.LongStringSettings);
 
         It should_create_a_PageDefinition_whose_Required_property_equals_the_attributes_Required_property =
             () => SyncContext.PageDefinitionFactory.List().First()
