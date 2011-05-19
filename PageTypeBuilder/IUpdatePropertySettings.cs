@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder
 {
-    public interface IPropertySettingsUpdater<T> where T : IPropertySettings, new()
+    public interface IUpdatePropertySettings<T> where T : IPropertySettings, new()
     {
         void UpdateSettings(T settings);
         int GetSettingsHashCode(T settings);

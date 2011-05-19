@@ -49,38 +49,6 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        private class PropertySettingsUpdater
-        {
-            private object invokationTarget;
-
-            public PropertySettingsUpdater(Type settingsType, object invokationTarget)
-            {
-                SettingsType = settingsType;
-                this.invokationTarget = invokationTarget;
-            }
-
-            public Type SettingsType { get; private set; }
-
-            public void UpdateSettings(IPropertySettings settings)
-            {
-                var updateMethod = typeof(IPropertySettingsUpdater<>).MakeGenericType(SettingsType).GetMethod("UpdateSettings", new[] { SettingsType });
-                updateMethod.Invoke(invokationTarget, new object[] { settings });
-            }
-            
-            public int GetSettingsHashCode(IPropertySettings settings)
-            {
-                var hashCodeMethod = typeof(IPropertySettingsUpdater<>).MakeGenericType(SettingsType).GetMethod("GetSettingsHashCode", new[] { SettingsType });
-                return (int) hashCodeMethod.Invoke(invokationTarget, new object[] { settings });
-            }
-
-            public bool OverWriteExisting()
-            {
-                var overWriteExistingMethod = typeof(IPropertySettingsUpdater<>).MakeGenericType(SettingsType).GetMethod("OverWriteExistingSettings", new Type[] { }).MakeGenericMethod(new Type[] { SettingsType});
-                return (bool) overWriteExistingMethod.Invoke(invokationTarget, new object[] { });
-            }
-
-        }
-
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
             PropertyInfo prop;
@@ -107,7 +75,7 @@ namespace PageTypeBuilder.Synchronization
                     if (!interfaceType.IsGenericType)
                         continue;
 
-                    if(!typeof (IPropertySettingsUpdater<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition()))
+                    if(!typeof (IUpdatePropertySettings<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition()))
                         continue;
                     var settingsType = interfaceType.GetGenericArguments().First();
                     var settingsUpdater = new PropertySettingsUpdater(settingsType, attribute);

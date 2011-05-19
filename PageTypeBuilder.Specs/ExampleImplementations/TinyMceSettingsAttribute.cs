@@ -3,7 +3,7 @@ using EPiServer.Editor.TinyMCE;
 
 namespace PageTypeBuilder.Specs.ExampleImplementations
 {
-    public class TinyMceSettingsAttribute : Attribute, IPropertySettingsUpdater<TinyMCESettings>
+    public class TinyMceSettingsAttribute : Attribute, IUpdatePropertySettings<TinyMCESettings>
     {
         public bool ModifyPropertySettings { get; set; }
         public void UpdateSettings(TinyMCESettings settings)

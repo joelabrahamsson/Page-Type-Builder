@@ -120,7 +120,7 @@
     <Compile Include="Abstractions\TabFactory.cs" />
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
-    <Compile Include="IPropertySettingsUpdater.cs" />
+    <Compile Include="IUpdatePropertySettings.cs" />
     <Compile Include="PageTypeBuilderException.cs" />
     <Compile Include="PageTypePropertyGroup.cs" />
     <Compile Include="PageTypePropertyGroupAttribute.cs" />
@@ -141,6 +141,7 @@
     <Compile Include="Synchronization\IPageTypeLocator.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapper.cs" />
     <Compile Include="Synchronization\PageTypeLocator.cs" />
+    <Compile Include="Synchronization\PropertySettingsUpdater.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionValidator.cs.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensions.cs" />
