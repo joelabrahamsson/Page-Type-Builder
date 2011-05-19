@@ -51,22 +51,58 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
-            PropertyInfo prop;
-
-            if (propertyDefinition.Name.Contains("-"))
+            object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
+            List<PropertySettingsUpdater> settingsUpdaters = GetSettingsUpdaters(attributes);
+            PropertySettingsContainer container = GetPropertySettingsContainer(pageDefinition);
+            foreach (var updater in settingsUpdaters)
             {
-                // the property definition is a property belonging to a property group
-                int index = propertyDefinition.Name.IndexOf("-");
-                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
-                string propertyName = propertyDefinition.Name.Substring(index + 1);
+                var wrapper = container.GetSetting(updater.SettingsType);
+                if (wrapper == null)
+                {
+                    wrapper = new PropertySettingsWrapper();
+                    container.Settings.Add(updater.SettingsType.FullName, wrapper);
+                }
 
-                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
-                prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => string.Equals(p.Name, propertyName)).FirstOrDefault();
+                bool settingsAlreadyExists = true;
+                if (wrapper.PropertySettings == null)
+                {
+                    wrapper.PropertySettings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
+                    settingsAlreadyExists = false;
+                }
+
+                if (settingsAlreadyExists && !updater.OverWriteExisting)
+                    return;
+                
+                int hashBeforeUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                updater.UpdateSettings(wrapper.PropertySettings);
+                int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
+                    _propertySettingsRepository.Save(container);
+            }
+        }
+
+        private PropertySettingsContainer GetPropertySettingsContainer(PageDefinition pageDefinition)
+        {
+            PropertySettingsContainer container;
+
+            if (pageDefinition.SettingsID == Guid.Empty)
+            {
+                pageDefinition.SettingsID = Guid.NewGuid();
+                PageDefinitionFactory.Save(pageDefinition);
+                container = new PropertySettingsContainer(pageDefinition.SettingsID);
             }
             else
-                prop = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyDefinition.Name)).FirstOrDefault();
+            {
+                if (!_propertySettingsRepository.TryGetContainer(pageDefinition.SettingsID, out container))
+                {
+                    container = new PropertySettingsContainer(pageDefinition.SettingsID);
+                }
+            }
+            return container;
+        }
 
-            object[] attributes = prop.GetCustomAttributes(true);
+        private List<PropertySettingsUpdater> GetSettingsUpdaters(object[] attributes)
+        {
             var settingsUpdaters = new List<PropertySettingsUpdater>();
             foreach (var attribute in attributes)
             {
@@ -82,48 +118,27 @@ namespace PageTypeBuilder.Synchronization
                     settingsUpdaters.Add(settingsUpdater);
                 }
             }
-            
-            foreach (var updater in settingsUpdaters)
+            return settingsUpdaters;
+        }
+
+        private object[] GetPropertyAttributes(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition)
+        {
+            PropertyInfo prop;
+
+            if (propertyDefinition.Name.Contains("-"))
             {
-                PropertySettingsContainer container;
+                // the property definition is a property belonging to a property group
+                int index = propertyDefinition.Name.IndexOf("-");
+                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
+                string propertyName = propertyDefinition.Name.Substring(index + 1);
 
-                if (pageDefinition.SettingsID == Guid.Empty)
-                {
-                    pageDefinition.SettingsID = Guid.NewGuid();
-                    PageDefinitionFactory.Save(pageDefinition);
-                    container = new PropertySettingsContainer(pageDefinition.SettingsID);
-                }
-                else
-                {
-                    if (!_propertySettingsRepository.TryGetContainer(pageDefinition.SettingsID, out container))
-                    {
-                        container = new PropertySettingsContainer(pageDefinition.SettingsID);
-                    }
-                }
-
-                var wrapper = container.GetSetting(updater.SettingsType);
-                if (wrapper == null)
-                {
-                    wrapper = new PropertySettingsWrapper();
-                    container.Settings.Add(updater.SettingsType.FullName, wrapper);
-                }
-
-                bool settingsAlreadyExists = true;
-                if (wrapper.PropertySettings == null)
-                {
-                    wrapper.PropertySettings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
-                    settingsAlreadyExists = false;
-                }
-
-                if (settingsAlreadyExists && !updater.OverWriteExisting())
-                    return;
-                
-                int hashBeforeUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
-                updater.UpdateSettings(wrapper.PropertySettings);
-                int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
-                if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
-                    _propertySettingsRepository.Save(container);
+                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
+                prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => string.Equals(p.Name, propertyName)).FirstOrDefault();
             }
+            else
+                prop = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyDefinition.Name)).FirstOrDefault();
+
+            return prop.GetCustomAttributes(true);
         }
 
         protected internal virtual PageDefinition GetExistingPageDefinition(IPageType pageType, PageTypePropertyDefinition propertyDefinition)

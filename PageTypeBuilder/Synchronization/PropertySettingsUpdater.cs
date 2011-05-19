@@ -27,10 +27,15 @@ namespace PageTypeBuilder.Synchronization
             return (int) hashCodeMethod.Invoke(invokationTarget, new object[] { settings });
         }
 
-        public bool OverWriteExisting()
+        public bool OverWriteExisting
         {
-            var overWriteExistingMethod = typeof(IUpdatePropertySettings<>).MakeGenericType(SettingsType).GetMethod("OverWriteExistingSettings", new Type[] { }).MakeGenericMethod(new Type[] { SettingsType});
-            return (bool) overWriteExistingMethod.Invoke(invokationTarget, new object[] { });
+            get
+            {
+                var overWriteExistingMethod =
+                    typeof (IUpdatePropertySettings<>).MakeGenericType(SettingsType).GetMethod(
+                        "OverWriteExistingSettings", new Type[] {}).MakeGenericMethod(new Type[] {SettingsType});
+                return (bool) overWriteExistingMethod.Invoke(invokationTarget, new object[] {});
+            }
         }
 
     }
