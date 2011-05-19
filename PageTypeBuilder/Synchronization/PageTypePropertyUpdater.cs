@@ -98,8 +98,8 @@ namespace PageTypeBuilder.Synchronization
             else
                 prop = pageTypeDefinition.Type.GetProperties().Where(p => string.Equals(p.Name, propertyDefinition.Name)).FirstOrDefault();
 
-            object[] attributes = prop.GetCustomAttributes(true);   
-
+            object[] attributes = prop.GetCustomAttributes(true);
+            var settingsUpdaters = new List<PropertySettingsUpdater>();
             foreach (var attribute in attributes)
             {
                 foreach (var interfaceType in attribute.GetType().GetInterfaces())
