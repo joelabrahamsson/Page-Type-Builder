@@ -141,7 +141,7 @@
     <Compile Include="Synchronization\IPageTypeLocator.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapper.cs" />
     <Compile Include="Synchronization\PageTypeLocator.cs" />
-    <Compile Include="Synchronization\PropertySettingsUpdater.cs" />
+    <Compile Include="Synchronization\PropertySettingsUpdateCommand.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionValidator.cs.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensions.cs" />
