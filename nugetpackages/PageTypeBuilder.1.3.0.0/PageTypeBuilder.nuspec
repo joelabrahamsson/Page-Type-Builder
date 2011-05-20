@@ -9,7 +9,7 @@
     <projectUrl>http://pagetypebuilder.codeplex.com/</projectUrl>
     <licenseUrl>http://noidea.com</licenseUrl>
     <dependencies>
-	  <dependency id="Castle.Core" version="(2.5,3.0)" />
+	  <dependency id="Castle.Core" version="2.5.1" />
 	</dependencies>
 	<tags>EPiServer, PageTypeBuilder, PTB</tags>
     <language>en-US</language> 
