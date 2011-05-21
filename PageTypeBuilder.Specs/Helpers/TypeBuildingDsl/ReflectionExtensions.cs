@@ -67,7 +67,8 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             return moduleBuilder.DefineType(
                 typeSpec.Name,
                 typeSpec.TypeAttributes,
-                typeSpec.ParentType);
+                typeSpec.ParentType,
+                typeSpec.Interfaces.ToArray());
         }
 
         private static void AddTypeAttributes(TypeBuilder typeBuilder, TypeSpecification typeSpec)

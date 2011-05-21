@@ -10,6 +10,7 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
         {
             Attributes = new List<AttributeSpecification>();
             Properties = new List<PropertySpecification>();
+            Interfaces = new List<Type>();
         }
 
         public void AddAttributeTemplate(Attribute template)
@@ -26,6 +27,8 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
         public List<AttributeSpecification> Attributes { get; set; }
 
         public List<PropertySpecification> Properties { get; set; }
+
+        public List<Type> Interfaces { get; set; }
 
         public Action<Attribute, Type> BeforeAttributeIsAddedToType { get; set; }
     }
