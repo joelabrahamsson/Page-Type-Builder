@@ -49,7 +49,7 @@ target deploy:
 desc "Generating specifications"
 target generate_specs:
   mkdir(release_versiondir)
-  exec(mspec_path, "--html ${release_versiondir}/specifications.html PageTypeBuilder.Specs/bin/${configuration}/PageTypeBuilder.Specs.dll")
+  exec(mspec_path, "--html ${release_versiondir}/specifications.html --silent PageTypeBuilder.Specs/bin/${configuration}/PageTypeBuilder.Specs.dll")
   rmdir("${release_versiondir}/resources")
 
 desc "Creates zip package"
