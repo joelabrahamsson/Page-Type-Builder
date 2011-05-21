@@ -124,6 +124,7 @@
     <Compile Include="Abstractions\TabFactory.cs" />
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
+    <Compile Include="IUpdateGlobalPropertySettings.cs" />
     <Compile Include="IUpdatePropertySettings.cs" />
     <Compile Include="PageDataCollectionExtensions.cs" />
     <Compile Include="PageTypeBuilderException.cs" />

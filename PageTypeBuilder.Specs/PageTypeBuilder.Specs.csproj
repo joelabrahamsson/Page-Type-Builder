@@ -106,6 +106,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
+    <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AbstractClasses.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AvailablePageTypes.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\ClassToPageTypeMapping.cs" />
