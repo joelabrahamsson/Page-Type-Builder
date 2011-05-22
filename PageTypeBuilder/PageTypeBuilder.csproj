@@ -115,6 +115,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Abstractions\WrappedPageType.cs" />
+    <Compile Include="Discovery\GlobalPropertySettingsLocator.cs" />
+    <Compile Include="Discovery\GlobalPropertySettingsUpdater.cs" />
+    <Compile Include="Discovery\IGlobalPropertySettingsLocator.cs" />
     <Compile Include="Discovery\IPageTypeDefinitionLocator.cs" />
     <Compile Include="Abstractions\IPageTypeFactory.cs" />
     <Compile Include="Abstractions\ITabFactory.cs" />
@@ -123,6 +126,7 @@
     <Compile Include="Abstractions\PageTypeValueExtractor.cs" />
     <Compile Include="Abstractions\TabFactory.cs" />
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
+    <Compile Include="Discovery\PropertySettingsUpdater.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
     <Compile Include="IUpdateGlobalPropertySettings.cs" />
     <Compile Include="IUpdatePropertySettings.cs" />
@@ -131,7 +135,6 @@
     <Compile Include="PageTypePropertyGroup.cs" />
     <Compile Include="PageTypePropertyGroupAttribute.cs" />
     <Compile Include="PageTypePropertyGroupHierarchy.cs" />
-    <Compile Include="PropertySettingsUpdateResult.cs" />
     <Compile Include="Reflection\AppDomainAssemblyLocator.cs" />
     <Compile Include="Reflection\IAssemblyLocator.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
@@ -144,10 +147,10 @@
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Reflection\TypeExtensions.cs" />
     <Compile Include="Discovery\PageTypeDefinitionLocator.cs" />
+    <Compile Include="Synchronization\GlobalPropertySettingsSynchronizer.cs" />
     <Compile Include="Synchronization\IPageTypeLocator.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapper.cs" />
     <Compile Include="Synchronization\PageTypeLocator.cs" />
-    <Compile Include="Synchronization\PropertySettingsUpdateCommand.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionValidator.cs.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensions.cs" />

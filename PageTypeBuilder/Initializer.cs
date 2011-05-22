@@ -17,24 +17,26 @@ namespace PageTypeBuilder
     {
         public void Initialize(InitializationEngine context)
         {
+            var assemblyLocator = new AppDomainAssemblyLocator();
             var pageTypeLocator = new PageTypeLocator(new PageTypeFactory());
             var pageTypeDefinitionLocator = new PageTypeDefinitionLocator(
-                new AppDomainAssemblyLocator());
+                assemblyLocator);
             var pageTypeUpdater = new PageTypeUpdater(
                 pageTypeDefinitionLocator,
                 new PageTypeFactory(), 
                 new PageTypeValueExtractor(),
                 pageTypeLocator);
 
+            var propertySettingsRepository = new PropertySettingsRepository();
             var pageTypePropertyUpdater = new PageTypePropertyUpdater(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(), 
                 new TabFactory(),
-                new PropertySettingsRepository());
+                propertySettingsRepository);
 
             var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
 
-            var tabLocator = new TabLocator(new AppDomainAssemblyLocator());
+            var tabLocator = new TabLocator(assemblyLocator);
 
             PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
                 pageTypeDefinitionLocator, 
@@ -45,7 +47,8 @@ namespace PageTypeBuilder
                 pageTypeLocator,
                 pageTypeUpdater,
                 tabDefinitionUpdater,
-                tabLocator);
+                tabLocator,
+                new GlobalPropertySettingsSynchronizer(propertySettingsRepository, new GlobalPropertySettingsLocator(assemblyLocator)));
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

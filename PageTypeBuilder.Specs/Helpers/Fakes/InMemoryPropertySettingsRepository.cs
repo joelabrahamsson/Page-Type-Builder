@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using EPiServer.Core.PropertySettings;
 
@@ -49,7 +50,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public IEnumerable<PropertySettingsWrapper> GetGlobals(Type settingsType)
         {
-            throw new NotImplementedException();
+            return wrappers.Values.Where(w => w.TypeFullName.Equals(settingsType.FullName) && w.IsGlobal);
         }
 
         public PropertySettingsWrapper GetDefault(Type propertyType)
@@ -72,7 +73,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public void SaveGlobal(PropertySettingsWrapper global)
         {
-            throw new NotImplementedException();
+            wrappers.Add(global.Id, global);
         }
 
         public void Delete(PropertySettingsContainer propertySetting)

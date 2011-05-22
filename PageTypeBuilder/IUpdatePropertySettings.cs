@@ -6,6 +6,6 @@ namespace PageTypeBuilder
     {
         void UpdateSettings(T settings);
         int GetSettingsHashCode(T settings);
-        bool OverWriteExistingSettings<T>();
+        bool OverWriteExistingSettings { get; }
     }
 }

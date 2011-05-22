@@ -1,6 +1,8 @@
-﻿using PageTypeBuilder.Abstractions;
+﻿using EPiServer.Core.PropertySettings;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.Validation;
 using Rhino.Mocks;
@@ -20,7 +22,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 pageTypeLocator,
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
-                TabLocatorFactory.Create());
+                TabLocatorFactory.Create(),
+                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())));
         }
 
         public static PageTypeSynchronizer Create(IPageTypeLocator pageTypeLocator)

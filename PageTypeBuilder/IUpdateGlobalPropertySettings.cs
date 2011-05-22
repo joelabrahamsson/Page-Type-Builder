@@ -5,6 +5,8 @@ namespace PageTypeBuilder
     interface IUpdateGlobalPropertySettings<T> : IUpdatePropertySettings<T>
         where T : IPropertySettings, new()
     {
-        string DisplayName<T>();
+        string DisplayName { get; }
+        string Description { get; }
+        bool? IsDefault { get; }
     }
 }

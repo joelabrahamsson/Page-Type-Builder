@@ -12,6 +12,7 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
+        private GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
@@ -21,7 +22,8 @@ namespace PageTypeBuilder.Synchronization
             IPageTypeLocator pageTypeLocator,
             PageTypeUpdater pageTypeUpdater,
             TabDefinitionUpdater tabDefinitionUpdater,
-            TabLocator tabLocator)
+            TabLocator tabLocator,
+            GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer)
         {
             _configuration = configuration;
             PageTypeResolver = pageTypeResolver;
@@ -32,12 +34,16 @@ namespace PageTypeBuilder.Synchronization
             PageTypePropertyUpdater = pageTypePropertyUpdater;
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
             _pageTypeLocator = pageTypeLocator;
+            this.globalPropertySettingsSynchronizer = globalPropertySettingsSynchronizer;
         }
 
         internal void SynchronizePageTypes()
         {
             if (!_configuration.DisablePageTypeUpdation)
+            {
                 UpdateTabDefinitions();
+                globalPropertySettingsSynchronizer.Synchronize();
+            }
 
             IEnumerable<PageTypeDefinition> pageTypeDefinitions = _pageTypeDefinitions;
 

@@ -53,8 +53,35 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
-            List<PropertySettingsUpdateCommand> settingsUpdaters = GetPropertySettingsUpdateCommands(pageTypeDefinition, propertyDefinition, pageDefinition);
-            settingsUpdaters.ForEach(u => u.Update());
+            List<PropertySettingsUpdater> settingsUpdaters = GetPropertySettingsUpdaters(pageTypeDefinition, propertyDefinition, pageDefinition);
+            PropertySettingsContainer container = GetPropertySettingsContainer(pageDefinition);
+            settingsUpdaters.ForEach(updater =>
+                {
+                    var wrapper = container.GetSetting(updater.SettingsType);
+                    if (wrapper == null)
+                    {
+                        wrapper = new PropertySettingsWrapper();
+                        container.Settings.Add(updater.SettingsType.FullName, wrapper);
+                    }
+
+                    bool settingsAlreadyExists = true;
+                    if (wrapper.PropertySettings == null)
+                    {
+                        wrapper.PropertySettings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
+                        settingsAlreadyExists = false;
+                    }
+
+                    if (settingsAlreadyExists && !updater.OverWriteExisting)
+                        return;
+
+                    int hashBeforeUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                    updater.UpdateSettings(wrapper.PropertySettings);
+                    int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                    if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
+                    {
+                        _propertySettingsRepository.Save(container);
+                    }
+                });
         }
 
         private PropertySettingsContainer GetPropertySettingsContainer(PageDefinition pageDefinition)
@@ -77,11 +104,10 @@ namespace PageTypeBuilder.Synchronization
             return container;
         }
 
-        private List<PropertySettingsUpdateCommand> GetPropertySettingsUpdateCommands(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
+        private List<PropertySettingsUpdater> GetPropertySettingsUpdaters(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
-            PropertySettingsContainer container = GetPropertySettingsContainer(pageDefinition);
             object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
-            var settingsUpdaters = new List<PropertySettingsUpdateCommand>();
+            var settingsUpdaters = new List<PropertySettingsUpdater>();
             foreach (var attribute in attributes)
             {
                 foreach (var interfaceType in attribute.GetType().GetInterfaces())
@@ -92,8 +118,8 @@ namespace PageTypeBuilder.Synchronization
                     if(!typeof (IUpdatePropertySettings<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition()))
                         continue;
                     var settingsType = interfaceType.GetGenericArguments().First();
-                    var settingsUpdater = new PropertySettingsUpdateCommand(settingsType, attribute, container, _propertySettingsRepository);
-                    settingsUpdaters.Add(settingsUpdater);
+                    var updater = new PropertySettingsUpdater(settingsType, attribute);
+                    settingsUpdaters.Add(updater);
                 }
             }
             return settingsUpdaters;

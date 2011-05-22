@@ -26,9 +26,9 @@ namespace PageTypeBuilder.Specs.ExampleImplementations
 
         public bool OverWriteExisting { get; set; }
 
-        public bool OverWriteExistingSettings<TinyMCESettings>()
+        public bool OverWriteExistingSettings
         {
-            return OverWriteExisting;
+            get { return OverWriteExisting; }
         }
     }
 }
