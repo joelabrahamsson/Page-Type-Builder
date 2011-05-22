@@ -73,7 +73,14 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public void SaveGlobal(PropertySettingsWrapper global)
         {
-            wrappers.Add(global.Id, global);
+            var record = new PropertySettingsWrapper();
+            Mapper.Map(global, record);
+            if(!wrappers.ContainsKey(global.Id))
+            {
+                wrappers.Add(global.Id, null);
+            }
+            wrappers[global.Id] = global;
+            numberOfSavesPerGuidCounter.IncrementNumberOfSaves(global.Id);
         }
 
         public void Delete(PropertySettingsContainer propertySetting)

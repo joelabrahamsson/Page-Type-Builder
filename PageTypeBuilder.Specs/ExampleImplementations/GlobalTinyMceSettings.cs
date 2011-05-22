@@ -19,11 +19,9 @@ namespace PageTypeBuilder.Specs.ExampleImplementations
             return tinyMceSettings.Width;
         }
 
-        public bool OverWriteExisting { get; set; }
-
-        public bool OverWriteExistingSettings
+        public virtual bool OverWriteExistingSettings
         {
-            get { return OverWriteExisting; }
+            get { return true; }
         }
 
         public virtual string DisplayName
@@ -41,7 +39,7 @@ namespace PageTypeBuilder.Specs.ExampleImplementations
 
         public bool Match(EPiServer.Core.PropertySettings.PropertySettingsWrapper propertySettingsWrapper)
         {
-            throw new System.NotImplementedException();
+            return DisplayName.Equals(propertySettingsWrapper.DisplayName);
         }
     }
 }

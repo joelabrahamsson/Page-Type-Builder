@@ -26,13 +26,14 @@ namespace PageTypeBuilder
                 new PageTypeFactory(), 
                 new PageTypeValueExtractor(),
                 pageTypeLocator);
-
+            var globalPropertySettingsLocator = new GlobalPropertySettingsLocator(assemblyLocator);
             var propertySettingsRepository = new PropertySettingsRepository();
             var pageTypePropertyUpdater = new PageTypePropertyUpdater(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(), 
                 new TabFactory(),
-                propertySettingsRepository);
+                propertySettingsRepository,
+                globalPropertySettingsLocator);
 
             var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
 
@@ -48,7 +49,7 @@ namespace PageTypeBuilder
                 pageTypeUpdater,
                 tabDefinitionUpdater,
                 tabLocator,
-                new GlobalPropertySettingsSynchronizer(propertySettingsRepository, new GlobalPropertySettingsLocator(assemblyLocator)));
+                new GlobalPropertySettingsSynchronizer(propertySettingsRepository, globalPropertySettingsLocator));
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;

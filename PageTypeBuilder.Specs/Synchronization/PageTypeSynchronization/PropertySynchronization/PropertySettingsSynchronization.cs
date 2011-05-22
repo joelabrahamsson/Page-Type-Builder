@@ -230,4 +230,56 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             SyncContext.PropertySettingsRepository.GetNumberOfSaves(
                 SyncContext.GetPageDefinition(propertyName, pageTypeName).SettingsID).ShouldEqual(0);
     }
+
+    [Subject("Synchronization")]
+    public class when_a_page_type_property_is_annotated_with_UseGlobalSettingsAttribute
+        : SynchronizationSpecs
+    {
+        static string propertyName = "MainBody";
+        static string pageTypeName = "PageTypeName";
+
+        Establish context = () =>
+        {
+            SyncContext.AssemblyLocator.Add(typeof(GlobalTinyMceSettings).Assembly);
+
+            var propertyAttribute = new PageTypePropertyAttribute();
+            var useGlobalSettingsAttribute = new UseGlobalSettingsAttribute(typeof(GlobalTinyMceSettings));
+            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+            {
+                type.Name = pageTypeName;
+                type.AddProperty(prop =>
+                {
+                    prop.Name = propertyName;
+                    prop.Type = typeof(string);
+                    prop.AddAttributeTemplate(propertyAttribute);
+                    prop.Attributes.Add(new AttributeSpecification(useGlobalSettingsAttribute)
+                        {
+                            Constructor = typeof(UseGlobalSettingsAttribute).GetConstructor(new [] { typeof(Type)}),
+                            ConstructorParameters = new object[] {typeof (GlobalTinyMceSettings)}
+                        });
+                });
+            });
+        };
+
+        Because of =
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        It should_set_the_propertys_PropertySettingsContainer_to_use_matching_global_settings_for_the_type =
+            () =>
+            GetPageDefinitionsPropertySettingsContainer().Settings[typeof(TinyMCESettings).FullName]
+            .Id.ShouldEqual(SyncContext.PropertySettingsRepository.GetGlobals(typeof(TinyMCESettings))
+            .Where(w => w.DisplayName.Equals(new GlobalTinyMceSettings().DisplayName)).First().Id);
+
+        static PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer()
+        {
+            PropertySettingsContainer container;
+            SyncContext.PropertySettingsRepository.TryGetContainer(GetPageDefinitionsPropertySettingsId(), out container);
+            return container;
+        }
+
+        static Guid GetPageDefinitionsPropertySettingsId()
+        {
+            return SyncContext.PageDefinitionFactory.List().First().SettingsID;
+        }
+    }
 }

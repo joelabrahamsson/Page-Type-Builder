@@ -86,6 +86,8 @@
     </Compile>
     <Compile Include="ExampleImplementations\GlobalTinyMceSettings.cs" />
     <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithIsDefaultReturningTrue.cs" />
+    <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithNullValues.cs" />
+    <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithOverwriteExistingSettingsReturningFalse.cs" />
     <Compile Include="ExampleImplementations\TinyMceSettingsAttribute.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\Fakes\SavesPerGuidCounter.cs" />

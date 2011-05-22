@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EPiServer.Core.PropertySettings;
 using PageTypeBuilder.Discovery;
 
@@ -23,16 +21,39 @@ namespace PageTypeBuilder.Synchronization
             var updaters = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters();
             foreach (var updater in updaters)
             {
-                //TODO: Check existing
                 var existingWrappers = propertySettingsRepository.GetGlobals(updater.SettingsType);
-                foreach (var existingWrapper in existingWrappers)
+                var matchingWrappers = existingWrappers.Where(wrapper => updater.Match(wrapper)).ToList();
+
+                matchingWrappers.ForEach(wrapper =>
                 {
-                    
+                    if (updater.OverWriteExisting)
+                    {
+                        updater.UpdateSettings(wrapper.PropertySettings);
+                    }
+                    UpdateWrapperValues(updater, wrapper);
+                    propertySettingsRepository.SaveGlobal(wrapper);
+                });
+
+                if (matchingWrappers.Count() == 0)
+                {
+                    var settings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
+                    updater.UpdateSettings(settings);
+                    var newWrapper = new PropertySettingsWrapper(updater.DisplayName, updater.Description, updater.IsDefault.GetValueOrDefault(), true, settings);
+                    UpdateWrapperValues(updater, newWrapper);
+                    propertySettingsRepository.SaveGlobal(newWrapper);
                 }
-                var settings = (IPropertySettings) Activator.CreateInstance(updater.SettingsType);
-                updater.UpdateSettings(settings);
-                var wrapper = new PropertySettingsWrapper(updater.DisplayName, updater.Description, updater.IsDefault.GetValueOrDefault(), true, settings);
-                propertySettingsRepository.SaveGlobal(wrapper);
+            }
+        }
+
+        private void UpdateWrapperValues(GlobalPropertySettingsUpdater updater, PropertySettingsWrapper wrapper)
+        {
+            if (updater.Description != null)
+            {
+                wrapper.Description = updater.Description;
+            }
+            if (updater.IsDefault.HasValue)
+            {
+                wrapper.IsDefault = updater.IsDefault.Value;
             }
         }
     }

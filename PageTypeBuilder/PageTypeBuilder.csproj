@@ -187,6 +187,7 @@
     <Compile Include="UI\UserControlBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="UseGlobalSettingsAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PageTypeBuilder.snk" />

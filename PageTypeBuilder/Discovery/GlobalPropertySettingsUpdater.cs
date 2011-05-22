@@ -1,4 +1,5 @@
 ﻿using System;
+using EPiServer.Core.PropertySettings;
 
 namespace PageTypeBuilder.Discovery
 {
@@ -39,6 +40,20 @@ namespace PageTypeBuilder.Discovery
                     typeof(IUpdateGlobalPropertySettings<>).MakeGenericType(SettingsType).GetProperty(
                         "IsDefault").GetGetMethod();
                 return (bool?)getter.Invoke(invokationTarget, new object[] { });
+            }
+        }
+
+        public bool Match(PropertySettingsWrapper propertySettingsWrapper)
+        {
+            var matchMethod = typeof(IUpdateGlobalPropertySettings<>).MakeGenericType(SettingsType).GetMethod("Match", new[] { typeof(PropertySettingsWrapper) });
+            return (bool)matchMethod.Invoke(invokationTarget, new object[] { propertySettingsWrapper });
+        }
+
+        public Type WrappedInstanceType
+        {
+            get
+            {
+                return invokationTarget.GetType();
             }
         }
     }
