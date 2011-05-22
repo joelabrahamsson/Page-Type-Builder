@@ -9,6 +9,10 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
     public class FakePageType : IPageType
     {
         public FakePageType()
+            : this(new PageDefinitionCollection())
+        {}
+
+        public FakePageType(PageDefinitionCollection pageDefinitions)
         {
             var template = new PageType();
             AllowedPageTypes = template.AllowedPageTypes;
@@ -19,7 +23,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             DefaultStartPublishOffset = template.DefaultStartPublishOffset;
             DefaultStopPublishOffset = template.DefaultStopPublishOffset;
             DefaultVisibleInMenu = template.DefaultVisibleInMenu;
-            Definitions = template.Definitions;
+            Definitions = pageDefinitions;
             Description = template.Description;
             IsAvailable = template.IsAvailable;
             Name = template.Name;

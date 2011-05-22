@@ -64,7 +64,9 @@ namespace PageTypeBuilder.Synchronization
                 var wrapper =_propertySettingsRepository.GetGlobals(globalSettingsUpdater.SettingsType)
                     .Where(w => globalSettingsUpdater.Match(w))
                     .First();
-                container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
+                container.Settings[globalSettingsUpdater.SettingsType.FullName] = wrapper;
+                //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
+                //container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
                 _propertySettingsRepository.Save(container);
             }
 
@@ -75,13 +77,15 @@ namespace PageTypeBuilder.Synchronization
                     if (wrapper == null)
                     {
                         wrapper = new PropertySettingsWrapper();
-                        container.Settings.Add(updater.SettingsType.FullName, wrapper);
+                        container.Settings[updater.SettingsType.FullName] = wrapper;
+                        //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
+                        //container.Settings.Add(updater.SettingsType.FullName, wrapper);
                     }
 
                     bool settingsAlreadyExists = true;
                     if (wrapper.PropertySettings == null)
                     {
-                        wrapper.PropertySettings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
+                        wrapper.PropertySettings = ((IPropertySettings)Activator.CreateInstance(updater.SettingsType)).GetDefaultValues();
                         settingsAlreadyExists = false;
                     }
 

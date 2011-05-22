@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder
 {
-    interface IUpdateGlobalPropertySettings<T> : IUpdatePropertySettings<T>
+    public interface IUpdateGlobalPropertySettings<T> : IUpdatePropertySettings<T>
         where T : IPropertySettings, new()
     {
         string DisplayName { get; }

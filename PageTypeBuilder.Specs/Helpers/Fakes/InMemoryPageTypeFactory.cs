@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
@@ -11,9 +12,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         private int nextId;
         private List<IPageType> pageTypes;
         private SavesPerIdCounter numberOfSavesPerPageTypeIdCounter = new SavesPerIdCounter();
+        private InMemoryPageDefinitionFactory pageDefinitionFactory;
 
-        public InMemoryPageTypeFactory()
+        public InMemoryPageTypeFactory(InMemoryPageDefinitionFactory pageDefinitionFactory)
         {
+            this.pageDefinitionFactory = pageDefinitionFactory;
             Mapper.Configuration.CreateMap<IPageType, FakePageType>();
             Mapper.Configuration.CreateMap<FakePageType, IPageType>();
             Mapper.Configuration.CreateMap<IPageType, IPageType>();
@@ -28,7 +31,15 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             if(pageTypeRecord == null)
                 return pageTypeRecord;
 
-            var pageTypeToReturn = new FakePageType();
+            var pageTypeToReturn = GetPageTypeToReturn(pageTypeRecord);
+            return pageTypeToReturn;
+        }
+
+        private FakePageType GetPageTypeToReturn(IPageType pageTypeRecord)
+        {
+            var definitions = new PageDefinitionCollection();
+            definitions.AddRange(pageDefinitionFactory.List(pageTypeRecord.ID));
+            var pageTypeToReturn = new FakePageType(definitions);
             Mapper.Map(pageTypeRecord, pageTypeToReturn);
             return pageTypeToReturn;
         }
@@ -39,8 +50,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             if (pageTypeRecord == null)
                 return pageTypeRecord;
 
-            var pageTypeToReturn = new FakePageType();
-            Mapper.Map(pageTypeRecord, pageTypeToReturn);
+            var pageTypeToReturn = GetPageTypeToReturn(pageTypeRecord);
             return pageTypeToReturn;
         }
 
@@ -50,8 +60,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             if (pageTypeRecord == null)
                 return pageTypeRecord;
 
-            var pageTypeToReturn = new FakePageType();
-            Mapper.Map(pageTypeRecord, pageTypeToReturn);
+            var pageTypeToReturn = GetPageTypeToReturn(pageTypeRecord);
             return pageTypeToReturn;
         }
 
@@ -79,7 +88,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         
         public IEnumerable<IPageType> List()
         {
-            return pageTypes;
+            return pageTypes.Select(r => GetPageTypeToReturn(r)).Cast<IPageType>();
         }
 
         public int GetNumberOfSaves(int pageTypeId)

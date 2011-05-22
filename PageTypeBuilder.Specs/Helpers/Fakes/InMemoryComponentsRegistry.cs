@@ -2,6 +2,7 @@
 using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
+using PageTypeBuilder.Synchronization;
 using StructureMap;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;

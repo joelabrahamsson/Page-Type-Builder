@@ -36,7 +36,7 @@ namespace PageTypeBuilder.Synchronization
 
                 if (matchingWrappers.Count() == 0)
                 {
-                    var settings = (IPropertySettings)Activator.CreateInstance(updater.SettingsType);
+                    var settings = ((IPropertySettings)Activator.CreateInstance(updater.SettingsType)).GetDefaultValues();
                     updater.UpdateSettings(settings);
                     var newWrapper = new PropertySettingsWrapper(updater.DisplayName, updater.Description, updater.IsDefault.GetValueOrDefault(), true, settings);
                     UpdateWrapperValues(updater, newWrapper);
