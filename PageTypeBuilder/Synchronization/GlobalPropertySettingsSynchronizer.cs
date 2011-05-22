@@ -24,7 +24,13 @@ namespace PageTypeBuilder.Synchronization
             foreach (var updater in updaters)
             {
                 //TODO: Check existing
+                var existingWrappers = propertySettingsRepository.GetGlobals(updater.SettingsType);
+                foreach (var existingWrapper in existingWrappers)
+                {
+                    
+                }
                 var settings = (IPropertySettings) Activator.CreateInstance(updater.SettingsType);
+                updater.UpdateSettings(settings);
                 var wrapper = new PropertySettingsWrapper(updater.DisplayName, updater.Description, updater.IsDefault.GetValueOrDefault(), true, settings);
                 propertySettingsRepository.SaveGlobal(wrapper);
             }

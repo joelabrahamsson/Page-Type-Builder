@@ -8,5 +8,6 @@ namespace PageTypeBuilder
         string DisplayName { get; }
         string Description { get; }
         bool? IsDefault { get; }
+        bool Match(PropertySettingsWrapper propertySettingsWrapper);
     }
 }

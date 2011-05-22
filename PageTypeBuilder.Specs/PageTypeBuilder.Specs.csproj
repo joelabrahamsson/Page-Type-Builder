@@ -84,6 +84,8 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ExampleImplementations\GlobalTinyMceSettings.cs" />
+    <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithIsDefaultReturningTrue.cs" />
     <Compile Include="ExampleImplementations\TinyMceSettingsAttribute.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\Fakes\SavesPerGuidCounter.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
+    <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Updating.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AbstractClasses.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AvailablePageTypes.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\ClassToPageTypeMapping.cs" />

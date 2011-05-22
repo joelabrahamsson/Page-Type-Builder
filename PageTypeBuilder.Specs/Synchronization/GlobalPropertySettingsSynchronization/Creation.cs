@@ -4,6 +4,7 @@ using System.Linq;
 using EPiServer.Core.PropertySettings;
 using EPiServer.Editor.TinyMCE;
 using Machine.Specifications;
+using PageTypeBuilder.Specs.ExampleImplementations;
 
 namespace PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchronization.Creation
 {
@@ -34,7 +35,8 @@ namespace PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchroniz
 
         It should_create_settings_modified_by_the_classes_Update_method =
             () =>
-            GlobalTinyMceSettings.MatchesUpdatedSettings((TinyMCESettings) GetGlobalWrappers(typeof(TinyMCESettings), new GlobalTinyMceSettings().DisplayName).First().PropertySettings);
+            GlobalTinyMceSettings.MatchesUpdatedSettings((TinyMCESettings) GetGlobalWrappers(typeof(TinyMCESettings), new GlobalTinyMceSettings().DisplayName).First().PropertySettings)
+            .ShouldBeTrue();
     }
 
     [Subject("Synchronization")]
@@ -57,70 +59,6 @@ namespace PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchroniz
             return
                 SyncContext.PropertySettingsRepository.GetGlobals(settingsType).Where(
                     w => w.DisplayName.Equals(displayName));
-        }
-    }
-
-    public class GlobalTinyMceSettings : IUpdateGlobalPropertySettings<TinyMCESettings>
-    {
-        public bool ModifyPropertySettings { get; set; }
-        public void UpdateSettings(TinyMCESettings settings)
-        {
-            if(ModifyPropertySettings)
-            {
-                settings.Width = int.MaxValue;
-            }
-        }
-
-        public static bool MatchesUpdatedSettings(TinyMCESettings settings)
-        {
-            return settings.Width == int.MaxValue;
-        }
-
-        public int GetSettingsHashCode(TinyMCESettings tinyMceSettings)
-        {
-            return tinyMceSettings.Width;
-        }
-
-        public bool OverWriteExisting { get; set; }
-
-        public bool OverWriteExistingSettings
-        {
-            get { return OverWriteExisting; }
-        }
-
-        public virtual string DisplayName
-        {
-            get { return "Global TinyMCE settings"; }
-        }
-
-        public string Description
-        {
-            get { return "Description for the settings"; }
-        }
-
-        public virtual bool? IsDefault { get; set; }
-    }
-
-    public class GlobalTinyMceSettingsWithIsDefaultReturningTrue : GlobalTinyMceSettings
-    {
-        public override string DisplayName
-        {
-            get
-            {
-                return "Global TinyMCE settings with IsDefault returning true";
-            }
-        }
-
-        public override bool? IsDefault
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-                base.IsDefault = value;
-            }
         }
     }
 }
