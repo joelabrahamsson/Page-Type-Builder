@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using EPiServer.Security;
+using Microsoft.CSharp;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
 
 namespace PageTypeBuilder.Specs.Helpers
@@ -15,7 +16,7 @@ namespace PageTypeBuilder.Specs.Helpers
         {
             return CreateTabClass(className, tabName, requiredAccess, sortIndex, TypeAttributes.Public);
         }
-
+        
         public static Type CreateTabClass(string className, string tabName, AccessLevel requiredAccess, int sortIndex, TypeAttributes typeAttributes)
         {
             var moduleBuilder = ReflectionExtensions.CreateModuleWithReferenceToPageTypeBuilder("AssemblyWithTab");
@@ -25,13 +26,8 @@ namespace PageTypeBuilder.Specs.Helpers
             nameProperty.Type = typeof(string);
             nameProperty.GetterImplementation = (typeBuilder) =>
             {
-                MethodBuilder getMethodBuilder =
-                    typeBuilder.DefineMethod("get_Name", MethodAttributes.Public | MethodAttributes.Virtual, typeof(string), Type.EmptyTypes);
-
-                ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
-                ilGenerator.Emit(OpCodes.Ldstr, tabName);
-                ilGenerator.Emit(OpCodes.Ret);
-                return getMethodBuilder;
+                return typeBuilder.DefineMethodReturningString("get_Name", tabName,
+                                                               MethodAttributes.Public | MethodAttributes.Virtual);
             };
 
             var requiredAccessProperty = new PropertySpecification();
@@ -39,16 +35,8 @@ namespace PageTypeBuilder.Specs.Helpers
             requiredAccessProperty.Type = typeof(AccessLevel);
             requiredAccessProperty.GetterImplementation = (typeBuilder) =>
             {
-                MethodBuilder getMethodBuilder =
-                    typeBuilder.DefineMethod("get_RequiredAccess", MethodAttributes.Public | MethodAttributes.Virtual, typeof(AccessLevel), Type.EmptyTypes);
-
-                ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
-                ilGenerator.DeclareLocal(typeof(AccessLevel));
-                ilGenerator.Emit(OpCodes.Ldc_I4, (int)requiredAccess);
-                ilGenerator.Emit(OpCodes.Stloc_0);
-                ilGenerator.Emit(OpCodes.Ldloc_0);
-                ilGenerator.Emit(OpCodes.Ret);
-                return getMethodBuilder;
+                return typeBuilder.DefineMethodReturningEnum("get_RequiredAccess", requiredAccess,
+                                                             MethodAttributes.Public | MethodAttributes.Virtual);
             };
 
             var sortIndexProperty = new PropertySpecification();
@@ -56,16 +44,8 @@ namespace PageTypeBuilder.Specs.Helpers
             sortIndexProperty.Type = typeof(int);
             sortIndexProperty.GetterImplementation = (typeBuilder) =>
             {
-                MethodBuilder getMethodBuilder =
-                    typeBuilder.DefineMethod("get_SortIndex", MethodAttributes.Public | MethodAttributes.Virtual, typeof(int), Type.EmptyTypes);
-
-                ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
-                ilGenerator.DeclareLocal(typeof(int));
-                ilGenerator.Emit(OpCodes.Ldc_I4, sortIndex);
-                ilGenerator.Emit(OpCodes.Stloc_0);
-                ilGenerator.Emit(OpCodes.Ldloc_0);
-                ilGenerator.Emit(OpCodes.Ret);
-                return getMethodBuilder;
+                return typeBuilder.DefineMethodReturningInt("get_SortIndex", sortIndex,
+                                                            MethodAttributes.Public | MethodAttributes.Virtual);
             };
 
             return moduleBuilder.CreateClass(type =>

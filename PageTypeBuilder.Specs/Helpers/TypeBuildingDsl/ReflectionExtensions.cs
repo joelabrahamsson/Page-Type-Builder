@@ -250,5 +250,44 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             propertySpecExpression(property);
             typeSpec.Properties.Add(property);
         }
+
+        public static MethodBuilder DefineMethodReturningString(this TypeBuilder typeBuilder, string methodName, string returnValue, MethodAttributes methodAttributes)
+        {
+            MethodBuilder getMethodBuilder =
+                    typeBuilder.DefineMethod(methodName, methodAttributes, typeof(string), Type.EmptyTypes);
+
+            ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Ldstr, returnValue);
+            ilGenerator.Emit(OpCodes.Ret);
+            return getMethodBuilder;
+        }
+
+        public static MethodBuilder DefineMethodReturningEnum(this TypeBuilder typeBuilder, string methodName, Enum returnValue, MethodAttributes methodAttributes)
+        {
+            MethodBuilder getMethodBuilder =
+                    typeBuilder.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Virtual, returnValue.GetType(), Type.EmptyTypes);
+
+            ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
+            ilGenerator.DeclareLocal(returnValue.GetType());
+            ilGenerator.Emit(OpCodes.Ldc_I4, (int)(object)returnValue);
+            ilGenerator.Emit(OpCodes.Stloc_0);
+            ilGenerator.Emit(OpCodes.Ldloc_0);
+            ilGenerator.Emit(OpCodes.Ret);
+            return getMethodBuilder;
+        }
+
+        public static MethodBuilder DefineMethodReturningInt(this TypeBuilder typeBuilder, string methodName, int returnValue, MethodAttributes methodAttributes)
+        {
+            MethodBuilder getMethodBuilder =
+                    typeBuilder.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Virtual, typeof(int), Type.EmptyTypes);
+
+            ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
+            ilGenerator.DeclareLocal(typeof(int));
+            ilGenerator.Emit(OpCodes.Ldc_I4, returnValue);
+            ilGenerator.Emit(OpCodes.Stloc_0);
+            ilGenerator.Emit(OpCodes.Ldloc_0);
+            ilGenerator.Emit(OpCodes.Ret);
+            return getMethodBuilder;
+        }
     }
 }
