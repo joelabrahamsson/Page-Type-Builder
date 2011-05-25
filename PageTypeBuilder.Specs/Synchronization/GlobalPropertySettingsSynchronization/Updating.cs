@@ -6,6 +6,7 @@ using EPiServer.Core.PropertySettings;
 using EPiServer.Editor.TinyMCE;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.ExampleImplementations;
+using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchronization.Creation;
 
 namespace PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchronization.Updating
@@ -27,26 +28,19 @@ namespace PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchroniz
         Because of =
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
-        static IEnumerable<PropertySettingsWrapper> GetGlobalWrappers(Type settingsType, string displayName)
-        {
-            return
-                SyncContext.PropertySettingsRepository.GetGlobals(settingsType).Where(
-                    w => w.DisplayName.Equals(displayName));
-        }
-
         It should_update_settings_using_the_classes_Update_method =
             () =>
-            GlobalTinyMceSettings.MatchesUpdatedSettings((TinyMCESettings)GetGlobalWrappers(typeof(TinyMCESettings), new GlobalTinyMceSettingsWithIsDefaultReturningTrue().DisplayName).First().PropertySettings)
+            GlobalTinyMceSettings.MatchesUpdatedSettings((TinyMCESettings)SyncContext.PropertySettingsRepository.GetGlobalWrappers<TinyMCESettings>(new GlobalTinyMceSettingsWithIsDefaultReturningTrue().DisplayName).First().PropertySettings)
             .ShouldBeTrue();
 
         It should_update_the_PropertySettingsWrappers_description =
             () =>
-            GetGlobalWrappers(typeof(TinyMCESettings), new GlobalTinyMceSettingsWithIsDefaultReturningTrue().DisplayName).First()
+            SyncContext.PropertySettingsRepository.GetGlobalWrappers<TinyMCESettings>(new GlobalTinyMceSettingsWithIsDefaultReturningTrue().DisplayName).First()
                 .Description.ShouldEqual(new GlobalTinyMceSettingsWithIsDefaultReturningTrue().Description);
 
         It should_update_the_PropertySettingsWrappers_IsDefault =
             () =>
-            GetGlobalWrappers(typeof(TinyMCESettings), new GlobalTinyMceSettingsWithIsDefaultReturningTrue().DisplayName).First()
+            SyncContext.PropertySettingsRepository.GetGlobalWrappers<TinyMCESettings>(new GlobalTinyMceSettingsWithIsDefaultReturningTrue().DisplayName).First()
                 .IsDefault.ShouldEqual(new GlobalTinyMceSettingsWithIsDefaultReturningTrue().IsDefault.Value);
     }
 

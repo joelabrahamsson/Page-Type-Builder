@@ -104,6 +104,7 @@
     <Compile Include="Helpers\Fakes\InMemoryTabFactory.cs" />
     <Compile Include="Helpers\Fakes\SavesPerIdCounter.cs" />
     <Compile Include="Helpers\PageTypeMother.cs" />
+    <Compile Include="Helpers\PropertySettingsRepositoryExtensions.cs" />
     <Compile Include="Helpers\TabClassFactory.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\AssemblySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\AttributeSpecification.cs" />

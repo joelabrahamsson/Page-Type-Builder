@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using Mono.Cecil;
 using FieldAttributes = System.Reflection.FieldAttributes;
 using MethodAttributes = System.Reflection.MethodAttributes;
 using PropertyAttributes = System.Reflection.PropertyAttributes;

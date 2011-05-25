@@ -50,7 +50,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 new PageTypeLocator(new PageTypeFactory()),
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
-                TabLocatorFactory.Create());
+                TabLocatorFactory.Create(),
+                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())));
         }
     }
 }

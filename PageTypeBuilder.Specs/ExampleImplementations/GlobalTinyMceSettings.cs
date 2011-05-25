@@ -1,4 +1,5 @@
-﻿using EPiServer.Editor.TinyMCE;
+﻿using System.Text;
+using EPiServer.Editor.TinyMCE;
 
 namespace PageTypeBuilder.Specs.ExampleImplementations
 {
@@ -40,6 +41,44 @@ namespace PageTypeBuilder.Specs.ExampleImplementations
         public bool Match(EPiServer.Core.PropertySettings.PropertySettingsWrapper propertySettingsWrapper)
         {
             return DisplayName.Equals(propertySettingsWrapper.DisplayName);
+        }
+
+        public static bool HasDefaultValuesExceptUpdated(TinyMCESettings settings)
+        {
+            var defaultValues = (TinyMCESettings)new TinyMCESettings().GetDefaultValues();
+            
+            return Serialize(settings).Equals(Serialize(defaultValues));
+        }
+
+        public static string Serialize(TinyMCESettings settings)
+        {
+            var buffer = new StringBuilder();
+            buffer.Append(settings.ContentCss);
+            AppendDelimiter(buffer);
+            buffer.Append(settings.Height);
+            AppendDelimiter(buffer);
+            buffer.Append("NonVisualPlugins");
+            foreach (var nonVisualPlugin in settings.NonVisualPlugins)
+            {
+                buffer.Append(nonVisualPlugin);
+                AppendDelimiter(buffer);
+            }
+            buffer.Append("ToolbarRows");
+            foreach (var toolbarRow in settings.ToolbarRows)
+            {
+                buffer.Append("Row");
+                foreach (var button in toolbarRow.Buttons)
+                {
+                    buffer.Append(button);
+                    AppendDelimiter(buffer);
+                }
+            }
+            return buffer.ToString();
+        }
+
+        private static void AppendDelimiter(StringBuilder buffer)
+        {
+            buffer.Append("|");
         }
     }
 }

@@ -25,7 +25,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
                 new TabFactory(),
-                new PropertySettingsRepository());
+                new PropertySettingsRepository(),
+                new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
 
         public static PageTypePropertyUpdater Stub(MockRepository fakesRepository)
@@ -34,7 +35,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
                 new TabFactory(),
-                new PropertySettingsRepository());
+                new PropertySettingsRepository(),
+                new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
     }
 }
