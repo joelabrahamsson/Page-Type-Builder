@@ -9,8 +9,6 @@ using PageTypeBuilder.Specs.Helpers;
 
 namespace PageTypeBuilder.Specs.Synchronization.GlobalPropertySettingsSynchronization.Creation
 {
-    //TODO: Add spec for validating that new settings are created with GetDefaultValues
-
     [Subject("Synchronization")]
     public class when_a_new_class_implementing_IUpdateGlobalPropertySettings_has_been_added
         : SynchronizationSpecs

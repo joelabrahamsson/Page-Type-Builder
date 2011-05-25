@@ -1,4 +1,5 @@
-﻿using EPiServer;
+﻿using Autofac;
+using EPiServer;
 using EPiServer.Core.PropertySettings;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
@@ -17,39 +18,12 @@ namespace PageTypeBuilder
     {
         public void Initialize(InitializationEngine context)
         {
-            var assemblyLocator = new AppDomainAssemblyLocator();
-            var pageTypeLocator = new PageTypeLocator(new PageTypeFactory());
-            var pageTypeDefinitionLocator = new PageTypeDefinitionLocator(
-                assemblyLocator);
-            var pageTypeUpdater = new PageTypeUpdater(
-                pageTypeDefinitionLocator,
-                new PageTypeFactory(), 
-                new PageTypeValueExtractor(),
-                pageTypeLocator);
-            var globalPropertySettingsLocator = new GlobalPropertySettingsLocator(assemblyLocator);
-            var propertySettingsRepository = new PropertySettingsRepository();
-            var pageTypePropertyUpdater = new PageTypePropertyUpdater(
-                new PageDefinitionFactory(),
-                new PageDefinitionTypeFactory(), 
-                new TabFactory(),
-                propertySettingsRepository,
-                globalPropertySettingsLocator);
-
-            var tabDefinitionUpdater = new TabDefinitionUpdater(new TabFactory());
-
-            var tabLocator = new TabLocator(assemblyLocator);
-
-            PageTypeSynchronizer synchronizer = new PageTypeSynchronizer(
-                pageTypeDefinitionLocator, 
-                Configuration,
-                pageTypePropertyUpdater,
-                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())), 
-                PageTypeResolver.Instance,
-                pageTypeLocator,
-                pageTypeUpdater,
-                tabDefinitionUpdater,
-                tabLocator,
-                new GlobalPropertySettingsSynchronizer(propertySettingsRepository, globalPropertySettingsLocator));
+            var containerBuilder = new ContainerBuilder();
+            var defaultBootstrapper = new DefaultBootstrapper();
+            defaultBootstrapper.Configure(containerBuilder);
+            var container = containerBuilder.Build();
+            
+            PageTypeSynchronizer synchronizer = container.Resolve<PageTypeSynchronizer>();
             synchronizer.SynchronizePageTypes();
 
             DataFactory.Instance.LoadedPage += DataFactory_LoadedPage;
