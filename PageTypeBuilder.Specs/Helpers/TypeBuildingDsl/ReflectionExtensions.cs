@@ -4,6 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using Mono.Cecil;
+using FieldAttributes = System.Reflection.FieldAttributes;
+using MethodAttributes = System.Reflection.MethodAttributes;
+using PropertyAttributes = System.Reflection.PropertyAttributes;
 
 namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
 {
@@ -257,7 +261,12 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
                     typeBuilder.DefineMethod(methodName, methodAttributes, typeof(string), Type.EmptyTypes);
 
             ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
+            ilGenerator.DeclareLocal(returnValue.GetType());
+            ilGenerator.Emit(OpCodes.Nop);
             ilGenerator.Emit(OpCodes.Ldstr, returnValue);
+            ilGenerator.Emit(OpCodes.Stloc_0);
+            ilGenerator.Emit(OpCodes.Br_S, 2);
+            ilGenerator.Emit(OpCodes.Ldloc_0);
             ilGenerator.Emit(OpCodes.Ret);
             return getMethodBuilder;
         }
@@ -276,18 +285,29 @@ namespace PageTypeBuilder.Specs.Helpers.TypeBuildingDsl
             return getMethodBuilder;
         }
 
-        public static MethodBuilder DefineMethodReturningInt(this TypeBuilder typeBuilder, string methodName, int returnValue, MethodAttributes methodAttributes)
+        public static MethodBuilder DefineMethodReturningValueType<TValue>(this TypeBuilder typeBuilder, string methodName, TValue returnValue, MethodAttributes methodAttributes)
+            where TValue : struct
         {
             MethodBuilder getMethodBuilder =
                     typeBuilder.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Virtual, typeof(int), Type.EmptyTypes);
-
             ILGenerator ilGenerator = getMethodBuilder.GetILGenerator();
             ilGenerator.DeclareLocal(typeof(int));
-            ilGenerator.Emit(OpCodes.Ldc_I4, returnValue);
+            ilGenerator.Emit(OpCodes.Nop);
+            var returnType = typeof (TValue);
+            if(returnType == typeof(int) || typeof(Enum).IsAssignableFrom(returnType))
+            {
+                ilGenerator.Emit(OpCodes.Ldc_I4, (int) (object) returnValue);    
+            }
             ilGenerator.Emit(OpCodes.Stloc_0);
+            ilGenerator.Emit(OpCodes.Br_S, 2);
             ilGenerator.Emit(OpCodes.Ldloc_0);
             ilGenerator.Emit(OpCodes.Ret);
             return getMethodBuilder;
+        }
+
+        public static MethodBuilder DefineMethodReturningInt(this TypeBuilder typeBuilder, string methodName, int returnValue, MethodAttributes methodAttributes)
+        {
+            return typeBuilder.DefineMethodReturningValueType(methodName, returnValue, methodAttributes);
         }
     }
 }
