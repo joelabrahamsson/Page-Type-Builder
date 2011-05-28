@@ -1,265 +1,229 @@
-﻿//using System;
-//using EPiServer.DataAbstraction;
-//using EPiServer.Editor;
-//using PageTypeBuilder.Abstractions;
-//using PageTypeBuilder.Discovery;
-//using PageTypeBuilder.Synchronization;
-//using PageTypeBuilder.Tests.Helpers;
-//using Rhino.Mocks;
-//using Xunit;
-//using Xunit.Extensions;
+﻿using System.Collections.Generic;
+using EPiServer.DataAbstraction;
+using Moq;
+using PageTypeBuilder.Abstractions;
+using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Tests.Helpers;
+using Rhino.Mocks;
+using Xunit;
+using Xunit.Extensions;
 
-//namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
-//{
-//    public class UpdatePageDefinitionTests
-//    {
-//        [Fact]
-//        public void GivenUpdatedPropertyDefinition_UpdatePageDefinition_CallsPageDefinitionFactorySave()
-//        {
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            MockRepository fakes = new MockRepository();
-//            PageDefinitionFactory fakeFactory = fakes.Stub<PageDefinitionFactory>();
-//            fakeFactory.Stub(factory => factory.Save(Arg<PageDefinition>.Is.Anything));
-//            fakeFactory.Replay();
-//            var pageDefinitionUpdater = new PageDefinitionUpdater(
-//                fakeFactory, 
-//                new PageDefinitionTypeFactory(),
-//                new TabFactory());
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
+{
+    public class UpdatePageDefinitionTests
+    {
+        [Fact]
+        public void GivenPropertyDefinitionWithNoEditCaptionAndNameOtherThanPageDefinitionEditCaption_UpdatedPageDefinitionEditCaption()
+        {
+            PageDefinitionUpdater pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            pageDefinitionToUpdate.EditCaption = TestValueUtility.CreateRandomString();
+            string newEditCaption = TestValueUtility.CreateRandomString();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.Name = newEditCaption;
 
-//            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//            fakeFactory.AssertWasCalled(factory => factory.Save(pageDefinitionToUpdate));
-//        }
+            Assert.Equal<string>(newEditCaption, pageDefinitionToUpdate.EditCaption);
+        }
 
-//        [Fact]
-//        public void GivenPropertyDefinitionWithNoEditCaptionAndNameOtherThanPageDefinitionEditCaption_UpdatedPageDefinitionEditCaption()
-//        {
-//            var pageDefinitionUpdater = PageDefinitionUpdaterFactory.Create();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            pageDefinitionToUpdate.EditCaption = TestValueUtility.CreateRandomString();
-//            string newEditCaption = TestValueUtility.CreateRandomString();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.Name = newEditCaption;
+        private PageDefinitionUpdater GetPageDefinitionUpdater()
+        {
+            var pageDefinitionFactory = new Mock<IPageDefinitionFactory>();
+            var tabFactory = new Mock<ITabFactory>();
+            tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection {new TabDefinition(1, "Tab")});
+            return new PageDefinitionUpdater(
+                pageDefinitionFactory.Object,
+                new PageDefinitionTypeFactory(),
+                tabFactory.Object);
+        }
 
-//            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+        [Fact]
+        public void GivenPropertyDefinitionWithNewEditCaption_UpdatePageDefinitionValues_UpdatedPageDefinitionEditCaption()
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            pageDefinitionToUpdate.EditCaption = TestValueUtility.CreateRandomString();
+            string newEditCaption = TestValueUtility.CreateRandomString();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.EditCaption = newEditCaption;
 
-//            Assert.Equal<string>(newEditCaption, pageDefinitionToUpdate.EditCaption);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Fact]
-//        public void GivenPropertyDefinitionWithNewEditCaption_UpdatePageDefinitionValues_UpdatedPageDefinitionEditCaption()
-//        {
-//            var pageDefinitionUpdater = PageDefinitionUpdaterFactory.Create();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            pageDefinitionToUpdate.EditCaption = TestValueUtility.CreateRandomString();
-//            string newEditCaption = TestValueUtility.CreateRandomString();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.EditCaption = newEditCaption;
+            Assert.Equal<string>(newEditCaption, pageDefinitionToUpdate.EditCaption);
+        }
 
-//            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+        [Fact]
+        public void GivenPropertyDefinitionWithNoHelpText_UpdatePageDefinition_SetsHelpTextToEmptyString()
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
 
-//            Assert.Equal<string>(newEditCaption, pageDefinitionToUpdate.EditCaption);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Fact]
-//        public void GivenPropertyDefinitionWithNoHelpText_UpdatePageDefinitionValues_SetsHelpTextToEmptyString()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            Assert.Equal<string>(string.Empty, pageDefinitionToUpdate.HelpText);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        //private pageDefinitionUpdater GetPageDefinitionUpdater()
+        //{
+        //    MockRepository fakes = new MockRepository();
+        //    pageDefinitionUpdater pageDefinitionUpdater = PageTypePropertyUpdaterFactory.PartialMock(fakes);
+        //    pageDefinitionUpdater.Stub(
+        //        utility => utility.UpdatePageDefinitionTab(Arg<PageDefinition>.Is.Anything,
+        //                                                   Arg<PageTypePropertyAttribute>.Is.Anything));
+        //    pageDefinitionUpdater.Replay();
+        //    return pageDefinitionUpdater;
+        //}
 
-//            Assert.Equal<string>(string.Empty, pageDefinitionToUpdate.HelpText);
-//        }
+        private PageTypePropertyDefinition CreatePageTypePropertyDefinition()
+        {
+            PageTypePropertyDefinition propertyDefinition = PageDefinitionSynchronizationEngineTests.PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
+            return propertyDefinition;
+        }
 
-//        private PageDefinitionSynchronizationEngine CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod()
-//        {
-//            MockRepository fakes = new MockRepository();
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = PageTypePropertyUpdaterFactory.PartialMock(fakes);
-//            pageDefinitionSynchronizationEngine.Stub(
-//                utility => utility.UpdatePageDefinitionTab(Arg<PageDefinition>.Is.Anything, 
-//                                                           Arg<PageTypePropertyAttribute>.Is.Anything));
-//            pageDefinitionSynchronizationEngine.Replay();
-//            return pageDefinitionSynchronizationEngine;
-//        }
+        [Fact]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionEditCaption()
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.EditCaption = TestValueUtility.CreateRandomString();
 
-//        private PageTypePropertyDefinition CreatePageTypePropertyDefinition()
-//        {
-//            PageTypePropertyDefinition propertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
-//            return propertyDefinition;
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Fact]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionEditCaption()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.EditCaption = TestValueUtility.CreateRandomString();
+            Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.EditCaption, pageDefinitionToUpdate.EditCaption);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Fact]
+        public void GivePropertyDefinitionWithNoEditCaption_UpdatePageDefinition_SetsPageDefinitionEditCaptionToName()
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.EditCaption = null;
 
-//            Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.EditCaption, pageDefinitionToUpdate.EditCaption);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Fact]
-//        public void GivePropertyDefinitionWithNoEditCaption_UpdatePageDefinitionValues_SetsPageDefinitionEditCaptionToName()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.EditCaption = null;
+            Assert.Equal<string>(propertyDefinition.Name, pageDefinitionToUpdate.EditCaption);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Fact]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionHelpText()
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.HelpText = TestValueUtility.CreateRandomString();
 
-//            Assert.Equal<string>(propertyDefinition.Name, pageDefinitionToUpdate.EditCaption);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Fact]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionHelpText()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.HelpText = TestValueUtility.CreateRandomString();
+            Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.HelpText, pageDefinitionToUpdate.HelpText);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionRequired(bool required)
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.Required = required;
 
-//            Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.HelpText, pageDefinitionToUpdate.HelpText);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Theory]
-//        [InlineData(false)]
-//        [InlineData(true)]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionRequired(bool required)
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.Required = required;
+            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.Required, pageDefinitionToUpdate.Required);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionSearchable(bool searchable)
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.Searchable = searchable;
 
-//            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.Required, pageDefinitionToUpdate.Required);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Theory]
-//        [InlineData(false)]
-//        [InlineData(true)]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionSearchable(bool searchable)
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.Searchable = searchable;
+            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.Searchable, pageDefinitionToUpdate.Searchable);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Fact]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionDefaultValue()
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.DefaultValue = TestValueUtility.CreateRandomString();
 
-//            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.Searchable, pageDefinitionToUpdate.Searchable);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Fact]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionDefaultValue()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.DefaultValue = TestValueUtility.CreateRandomString();
+            Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.DefaultValue.ToString(), pageDefinitionToUpdate.DefaultValue);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Theory]
+        [InlineData(DefaultValueType.Inherit)]
+        [InlineData(DefaultValueType.None)]
+        [InlineData(DefaultValueType.Value)]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionDefaultValueType(DefaultValueType defaultValueType)
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.DefaultValueType = defaultValueType;
 
-//            Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.DefaultValue.ToString(), pageDefinitionToUpdate.DefaultValue);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Theory]
-//        [InlineData(DefaultValueType.Inherit)]
-//        [InlineData(DefaultValueType.None)]
-//        [InlineData(DefaultValueType.Value)]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionDefaultValueType(DefaultValueType defaultValueType)
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.DefaultValueType = defaultValueType;
+            Assert.Equal<DefaultValueType>(propertyDefinition.PageTypePropertyAttribute.DefaultValueType, pageDefinitionToUpdate.DefaultValueType);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionLanguageSpecific(bool uniqueValuePerLanguage)
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.UniqueValuePerLanguage = uniqueValuePerLanguage;
 
-//            Assert.Equal<DefaultValueType>(propertyDefinition.PageTypePropertyAttribute.DefaultValueType, pageDefinitionToUpdate.DefaultValueType);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Theory]
-//        [InlineData(false)]
-//        [InlineData(true)]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionLanguageSpecific(bool uniqueValuePerLanguage)
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.UniqueValuePerLanguage = uniqueValuePerLanguage;
+            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.UniqueValuePerLanguage, pageDefinitionToUpdate.LanguageSpecific);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionDisplayEditMode(bool displayInEditMode)
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.DisplayInEditMode = displayInEditMode;
 
-//            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.UniqueValuePerLanguage, pageDefinitionToUpdate.LanguageSpecific);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Theory]
-//        [InlineData(false)]
-//        [InlineData(true)]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionDisplayEditMode(bool displayInEditMode)
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.DisplayInEditMode = displayInEditMode;
+            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.DisplayInEditMode, pageDefinitionToUpdate.DisplayEditUI);
+        }
 
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void GivePropertyDefinition_UpdatePageDefinition_UpdatesPageDefinitionFieldOrder(int sortOrder)
+        {
+            var pageDefinitionUpdater = GetPageDefinitionUpdater();
+            PageDefinition pageDefinitionToUpdate = new PageDefinition();
+            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.SortOrder = sortOrder;
 
-//            Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.DisplayInEditMode, pageDefinitionToUpdate.DisplayEditUI);
-//        }
+            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
-//        [Theory]
-//        [InlineData(0)]
-//        [InlineData(1)]
-//        public void GivePropertyDefinition_UpdatePageDefinitionValues_UpdatesPageDefinitionFieldOrder(int sortOrder)
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-//            propertyDefinition.PageTypePropertyAttribute.SortOrder = sortOrder;
-
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-//            Assert.Equal<int>(propertyDefinition.PageTypePropertyAttribute.SortOrder, pageDefinitionToUpdate.FieldOrder);
-//        }
-
-//        [Fact]
-//        public void GivePropertyDefinitionWithNoLongStringSettingsAndMatchingPageDefinitionWithSetting_UpdatePageDefinitionValues_DoesNotUpdateLongStringSettings()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            pageDefinitionToUpdate.LongStringSettings = EditorToolOption.SpellCheck;
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-//            Assert.Equal<EditorToolOption>(
-//                EditorToolOption.SpellCheck,
-//                pageDefinitionToUpdate.LongStringSettings);
-//        }
-
-//        [Fact]
-//        public void GivenPropertyDefinition_UpdatePageDefinitionValues_CallsUpdatePageDefinitionTab()
-//        {
-//            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = CreatePageTypePropertyUpdaterWithFakeUpdatePageDefinitionTabMethod();
-//            PageDefinition pageDefinitionToUpdate = new PageDefinition();
-//            PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-
-//            pageDefinitionSynchronizationEngine.UpdatePageDefinitionValues(pageDefinitionToUpdate, propertyDefinition);
-
-//            pageDefinitionSynchronizationEngine.AssertWasCalled(
-//                utility => utility.UpdatePageDefinitionTab(pageDefinitionToUpdate, propertyDefinition.PageTypePropertyAttribute));
-//        }
-//    }
-//}
+            Assert.Equal<int>(propertyDefinition.PageTypePropertyAttribute.SortOrder, pageDefinitionToUpdate.FieldOrder);
+        }
+    }
+}

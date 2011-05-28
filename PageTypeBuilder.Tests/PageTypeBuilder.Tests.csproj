@@ -125,7 +125,7 @@
     <Compile Include="PageTypeWithCustomAttribute.cs" />
     <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\ConstructorTests.cs" />
     <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\CreateNewPageDefitionTests.cs" />
-    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\PageTypePropertyUpdaterTestsUtility.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\PageDefinitionSynchronizationEngineTestsUtility.cs" />
     <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\UpdatePageDefinitionTests.cs" />
     <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\UpdatePageTypePropertyDefinitionsTests.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidatorTests.cs" />

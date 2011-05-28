@@ -5,7 +5,7 @@ using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Tests.Helpers;
 using Xunit;
 
-namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
+namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEngineTests
 {
     public class ConstructorTests
     {

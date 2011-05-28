@@ -4,7 +4,6 @@ using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Tests.Helpers;
-using PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests;
 using Rhino.Mocks;
 using Xunit;
 
@@ -32,7 +31,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
         public void GivenPageTypePropertyDefinition_CreateNewPageDefinition_ReturnsPageDefinitionWithCorrectPageTypeID()
         {
             PageDefinitionSynchronizationEngine utility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition definition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
 
             PageDefinition returnedPageDefintion = utility.CreateNewPageDefinition(definition);
 
@@ -43,7 +42,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
         public void GivenPageTypePropertyDefinition_CreateNewPageDefinition_ReturnsPageDefinitionWithCorrectName()
         {
             PageDefinitionSynchronizationEngine utility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition definition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
 
             PageDefinition returnedPageDefintion = utility.CreateNewPageDefinition(definition);
 
@@ -54,7 +53,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
         public void GivenPageTypePropertyDefinition_CreateNewPageDefinition_CallsSetPageDefinitionTypeMethod()
         {
             PageDefinitionSynchronizationEngine partiallyMockedUtility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition pageTypePropertyDefinition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
 
             PageDefinition returnedPageDefintion = partiallyMockedUtility.CreateNewPageDefinition(pageTypePropertyDefinition);
 
@@ -65,7 +64,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
         public void GivenPageTypePropertyDefinitionWithNoEditCaption_CreateNewPageDefinition_SetsEditCaptionToDefinitionName()
         {
             PageDefinitionSynchronizationEngine partiallyMockedUtility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition pageTypePropertyDefinition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             pageTypePropertyDefinition.Name = TestValueUtility.CreateRandomString();
 
             PageDefinition returnedPageDefintion = partiallyMockedUtility.CreateNewPageDefinition(pageTypePropertyDefinition);
@@ -77,7 +76,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
         public void GivenPageTypePropertyDefinitionWithEditCaption_CreateNewPageDefinition_SetsEditCaptionToDefinitionEditCaption()
         {
             PageDefinitionSynchronizationEngine partiallyMockedUtility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition pageTypePropertyDefinition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             pageTypePropertyDefinition.PageTypePropertyAttribute.EditCaption = TestValueUtility.CreateRandomString();
 
             PageDefinition returnedPageDefintion = partiallyMockedUtility.CreateNewPageDefinition(pageTypePropertyDefinition);
@@ -91,7 +90,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
             PageDefinitionType expectedPageDefintionType = new PageDefinitionType(
                 1, PropertyDataType.String, TestValueUtility.CreateRandomString());
 
-            PageTypePropertyDefinition pageTypePropertyDefinition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition pageTypePropertyDefinition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             PageDefinition pageDefinition = new PageDefinition();
             MockRepository fakes = new MockRepository();
             PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = PageDefinitionSynchronizationEngineFactory.PartialMock(fakes);
@@ -109,7 +108,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
         public void GivenPageTypePropertyDefinition_CreateNewPageDefinition_SavesPageDefinition()
         {
             PageDefinitionSynchronizationEngine utility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition definition = PageTypePropertyUpdaterTestsUtility.CreatePageTypePropertyDefinition();
+            PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
 
             PageDefinition returnedPageDefinition = utility.CreateNewPageDefinition(definition);
 
