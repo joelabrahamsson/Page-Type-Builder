@@ -2,7 +2,7 @@
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 
-namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
+namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEngineTests
 {
     public class PageTypePropertyUpdaterTestsUtility
     {

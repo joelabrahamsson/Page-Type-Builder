@@ -8,7 +8,7 @@ using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
 using Xunit;
 
-namespace PageTypeBuilder.Tests.Synchronization.PageTypePropertyUpdaterTests
+namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEngineTests
 {
     public class UpdatePageTypePropertyDefinitionsTests
     {

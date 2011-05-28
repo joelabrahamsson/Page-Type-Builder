@@ -123,6 +123,11 @@
     <Compile Include="Helpers\TabDefinitionUpdaterFactory.cs" />
     <Compile Include="Helpers\TabLocatorFactory.cs" />
     <Compile Include="PageTypeWithCustomAttribute.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\ConstructorTests.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\CreateNewPageDefitionTests.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\PageTypePropertyUpdaterTestsUtility.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\UpdatePageDefinitionTests.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\UpdatePageTypePropertyDefinitionsTests.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidatorTests.cs" />
     <Compile Include="Synchronization\PageTypeSynchronizerTests\UpdateTabDefinitionsTests.cs" />
     <Compile Include="Synchronization\TabDefinitionUpdaterTests\ConstructorTests.cs" />
@@ -134,13 +139,8 @@
     <Compile Include="TestPageTypeWithPropertyGroups.cs" />
     <Compile Include="TestTab.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensionsTests.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\CreateNewPageDefitionTests.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapperTests.cs" />
     <Compile Include="Discovery\PageTypePropertyLocatorTests.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\ConstructorTests.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\PageTypePropertyUpdaterTestsUtility.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\UpdatePageDefinitionTests.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\UpdatePageTypePropertyDefinitionsTests.cs" />
     <Compile Include="PageTypeResolverTests.cs" />
     <Compile Include="Synchronization\PageTypeSynchronizerTests\AddPageTypesToResolverTests.cs" />
     <Compile Include="Synchronization\PageTypeSynchronizerTests\CreateNonExistingPageTypes.cs" />
