@@ -83,6 +83,9 @@ namespace PageTypeBuilder
             containerBuilder
                 .RegisterType<PageDefinitionUpdater>()
                 .As<IPageDefinitionUpdater>();
+            containerBuilder
+                .RegisterType<PageTypePropertyDefinitionLocator>()
+                .As<PageTypePropertyDefinitionLocator>();
         }
     }
 }

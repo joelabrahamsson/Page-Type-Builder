@@ -15,7 +15,6 @@ namespace PageTypeBuilder.Synchronization
     {
         private PageTypePropertyDefinitionLocator pageTypePropertyDefinitionLocator;
         private IPageDefinitionFactory pageDefinitionFactory;
-        private IPageDefinitionTypeFactory pageDefinitionTypeFactory;
         private PageDefinitionTypeMapper pageDefinitionTypeMapper;
         private IPageDefinitionUpdater pageDefinitionUpdater;
         private IPropertySettingsRepository propertySettingsRepository;
@@ -23,15 +22,15 @@ namespace PageTypeBuilder.Synchronization
 
         public PageDefinitionSynchronizationEngine(
             IPageDefinitionFactory pageDefinitionFactory, 
-            IPageDefinitionTypeFactory pageDefinitionTypeFactory, 
             IPageDefinitionUpdater pageDefinitionUpdater,
+            PageTypePropertyDefinitionLocator pageTypePropertyDefinitionLocator,
+            PageDefinitionTypeMapper pageDefinitionTypeMapper,
             IPropertySettingsRepository propertySettingsRepository,
             IGlobalPropertySettingsLocator globalPropertySettingsLocator)
         {
             this.pageDefinitionFactory = pageDefinitionFactory;
-            this.pageDefinitionTypeFactory = pageDefinitionTypeFactory;
-            pageTypePropertyDefinitionLocator = new PageTypePropertyDefinitionLocator();
-            pageDefinitionTypeMapper = new PageDefinitionTypeMapper(this.pageDefinitionTypeFactory);
+            this.pageTypePropertyDefinitionLocator = pageTypePropertyDefinitionLocator;
+            this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
             this.pageDefinitionUpdater = pageDefinitionUpdater;
             this.propertySettingsRepository = propertySettingsRepository;
             this.globalPropertySettingsLocator = globalPropertySettingsLocator;

@@ -13,8 +13,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return new PageDefinitionSynchronizationEngine(
                 new PageDefinitionFactory(),
-                new PageDefinitionTypeFactory(),
                 new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageTypePropertyDefinitionLocator(), 
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()), 
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
@@ -23,8 +24,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return fakesRepository.PartialMock<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionFactory(),
-                new PageDefinitionTypeFactory(),
                 new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageTypePropertyDefinitionLocator(),
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()), 
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
@@ -33,8 +35,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return fakesRepository.Stub<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionFactory(),
-                new PageDefinitionTypeFactory(),
                 new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageTypePropertyDefinitionLocator(),
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()), 
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
