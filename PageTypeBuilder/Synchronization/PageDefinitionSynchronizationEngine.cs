@@ -13,6 +13,10 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageDefinitionSynchronizationEngine
     {
+        private PageTypePropertyDefinitionLocator pageTypePropertyDefinitionLocator;
+        private IPageDefinitionFactory pageDefinitionFactory;
+        private IPageDefinitionTypeFactory pageDefinitionTypeFactory;
+        private PageDefinitionTypeMapper pageDefinitionTypeMapper;
         private IPageDefinitionUpdater pageDefinitionUpdater;
         private IPropertySettingsRepository propertySettingsRepository;
         private IGlobalPropertySettingsLocator globalPropertySettingsLocator;
@@ -24,10 +28,10 @@ namespace PageTypeBuilder.Synchronization
             IPropertySettingsRepository propertySettingsRepository,
             IGlobalPropertySettingsLocator globalPropertySettingsLocator)
         {
-            PageDefinitionFactory = pageDefinitionFactory;
-            PageDefinitionTypeFactory = pageDefinitionTypeFactory;
-            PageTypePropertyDefinitionLocator = new PageTypePropertyDefinitionLocator();
-            PageDefinitionTypeMapper = new PageDefinitionTypeMapper(PageDefinitionTypeFactory);
+            this.pageDefinitionFactory = pageDefinitionFactory;
+            this.pageDefinitionTypeFactory = pageDefinitionTypeFactory;
+            pageTypePropertyDefinitionLocator = new PageTypePropertyDefinitionLocator();
+            pageDefinitionTypeMapper = new PageDefinitionTypeMapper(this.pageDefinitionTypeFactory);
             this.pageDefinitionUpdater = pageDefinitionUpdater;
             this.propertySettingsRepository = propertySettingsRepository;
             this.globalPropertySettingsLocator = globalPropertySettingsLocator;
@@ -36,7 +40,7 @@ namespace PageTypeBuilder.Synchronization
         protected internal virtual void UpdatePageTypePropertyDefinitions(IPageType pageType, PageTypeDefinition pageTypeDefinition)
         {
             IEnumerable<PageTypePropertyDefinition> definitions = 
-                PageTypePropertyDefinitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeDefinition.Type);
+                pageTypePropertyDefinitionLocator.GetPageTypePropertyDefinitions(pageType, pageTypeDefinition.Type);
 
             foreach (PageTypePropertyDefinition propertyDefinition in definitions)
             {
@@ -107,7 +111,7 @@ namespace PageTypeBuilder.Synchronization
             if (pageDefinition.SettingsID == Guid.Empty)
             {
                 pageDefinition.SettingsID = Guid.NewGuid();
-                PageDefinitionFactory.Save(pageDefinition);
+                pageDefinitionFactory.Save(pageDefinition);
                 container = new PropertySettingsContainer(pageDefinition.SettingsID);
             }
             else
@@ -174,7 +178,7 @@ namespace PageTypeBuilder.Synchronization
             pageDefinition.EditCaption = propertyDefinition.GetEditCaptionOrName();
             SetPageDefinitionType(pageDefinition, propertyDefinition);
 
-            PageDefinitionFactory.Save(pageDefinition);
+            pageDefinitionFactory.Save(pageDefinition);
             
             return pageDefinition;
         }
@@ -186,15 +190,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual PageDefinitionType GetPageDefinitionType(PageTypePropertyDefinition definition)
         {
-            return PageDefinitionTypeMapper.GetPageDefinitionType(definition);
+            return pageDefinitionTypeMapper.GetPageDefinitionType(definition);
         }
-
-        internal PageTypePropertyDefinitionLocator PageTypePropertyDefinitionLocator { get; set; }
-
-        internal IPageDefinitionFactory PageDefinitionFactory { get; set; }
-
-        internal IPageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
-
-        internal PageDefinitionTypeMapper PageDefinitionTypeMapper { get; set; }
     }
 }

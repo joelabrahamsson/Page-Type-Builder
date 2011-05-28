@@ -1,7 +1,9 @@
 using EPiServer.Core;
+using EPiServer.Core.PropertySettings;
 using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;
@@ -17,11 +19,15 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
             PageDefinitionFactory fakePageDefinitionFactory = fakes.Stub<PageDefinitionFactory>();
             fakePageDefinitionFactory.Stub(factory => factory.Save(Arg<PageDefinition>.Is.Anything));
             fakePageDefinitionFactory.Replay();
-            PageDefinitionSynchronizationEngine partiallyMockedUtility = PageDefinitionSynchronizationEngineFactory.PartialMock(fakes);
+            var partiallyMockedUtility = fakes.PartialMock<PageDefinitionSynchronizationEngine>(
+                fakePageDefinitionFactory,
+                new PageDefinitionTypeFactory(),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PropertySettingsRepository(),
+                new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
             partiallyMockedUtility.Stub(
                 utility => utility.SetPageDefinitionType(
                     Arg<PageDefinition>.Is.Anything, Arg<PageTypePropertyDefinition>.Is.Anything));
-            partiallyMockedUtility.PageDefinitionFactory = fakePageDefinitionFactory;
             partiallyMockedUtility.Replay();
 
             return partiallyMockedUtility;
@@ -102,17 +108,6 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
             pageDefinitionSynchronizationEngine.SetPageDefinitionType(pageDefinition, pageTypePropertyDefinition);
 
             Assert.Equal<PageDefinitionType>(expectedPageDefintionType, pageDefinition.Type);
-        }
-
-        [Fact]
-        public void GivenPageTypePropertyDefinition_CreateNewPageDefinition_SavesPageDefinition()
-        {
-            PageDefinitionSynchronizationEngine utility = CreatePageTypePropertyUpdaterWithFakePageDefinitionFactoryAndFakedSetPageDefinitionTypeMethod();
-            PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
-
-            PageDefinition returnedPageDefinition = utility.CreateNewPageDefinition(definition);
-
-            utility.PageDefinitionFactory.AssertWasCalled(factory => factory.Save(returnedPageDefinition));
         }
     }
 }
