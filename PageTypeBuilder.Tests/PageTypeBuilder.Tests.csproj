@@ -115,14 +115,14 @@
     <Compile Include="Discovery\TabLocatorTests.cs" />
     <Compile Include="Discovery\PageTypeDefinitionLocatorTests.cs" />
     <Compile Include="Discovery\PageTypePropertyDefinitionTests.cs" />
+    <Compile Include="Helpers\PageDefinitionSynchronizationEngineFactory.cs" />
+    <Compile Include="Helpers\PageDefinitionUpdaterFactory.cs" />
     <Compile Include="Helpers\PageTypeDefinitionLocatorFactory.cs" />
-    <Compile Include="Helpers\PageTypePropertyUpdaterFactory.cs" />
     <Compile Include="Helpers\PageTypeSynchronizerFactory.cs" />
     <Compile Include="Helpers\PageTypeUpdaterFactory.cs" />
     <Compile Include="Helpers\TabDefinitionUpdaterFactory.cs" />
     <Compile Include="Helpers\TabLocatorFactory.cs" />
     <Compile Include="PageTypeWithCustomAttribute.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\SerializeValuesTests.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidatorTests.cs" />
     <Compile Include="Synchronization\PageTypeSynchronizerTests\UpdateTabDefinitionsTests.cs" />
     <Compile Include="Synchronization\TabDefinitionUpdaterTests\ConstructorTests.cs" />
@@ -135,7 +135,6 @@
     <Compile Include="TestTab.cs" />
     <Compile Include="Synchronization\PageTypePropertyDefinitionExtensionsTests.cs" />
     <Compile Include="Synchronization\PageTypePropertyUpdaterTests\CreateNewPageDefitionTests.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdaterTests\GetExistingPageDefitionTests.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapperTests.cs" />
     <Compile Include="Discovery\PageTypePropertyLocatorTests.cs" />
     <Compile Include="Synchronization\PageTypePropertyUpdaterTests\ConstructorTests.cs" />

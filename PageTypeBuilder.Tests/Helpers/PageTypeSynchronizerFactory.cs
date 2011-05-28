@@ -11,12 +11,12 @@ namespace PageTypeBuilder.Tests.Helpers
 {
     public class PageTypeSynchronizerFactory
     {
-        public static PageTypeSynchronizer Create(PageTypePropertyUpdater pageTypePropertyUpdater, IPageTypeLocator pageTypeLocator)
+        public static PageTypeSynchronizer Create(PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine, IPageTypeLocator pageTypeLocator)
         {
             return new PageTypeSynchronizer(
                 PageTypeDefinitionLocatorFactory.Create(),
                 new PageTypeBuilderConfiguration(),
-                pageTypePropertyUpdater,
+                pageDefinitionSynchronizationEngine,
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
                 PageTypeResolver.Instance,
                 pageTypeLocator,
@@ -28,7 +28,7 @@ namespace PageTypeBuilder.Tests.Helpers
 
         public static PageTypeSynchronizer Create(IPageTypeLocator pageTypeLocator)
         {
-            return Create(PageTypePropertyUpdaterFactory.Create(), pageTypeLocator);
+            return Create(PageDefinitionSynchronizationEngineFactory.Create(), pageTypeLocator);
         }
 
         public static PageTypeSynchronizer Create()
@@ -44,7 +44,7 @@ namespace PageTypeBuilder.Tests.Helpers
             return fakesRepository.PartialMock<PageTypeSynchronizer>(
                 definitionLocator,
                 configuration,
-                PageTypePropertyUpdaterFactory.Create(),
+                PageDefinitionSynchronizationEngineFactory.Create(),
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory())),
                 new PageTypeResolver(),
                 new PageTypeLocator(new PageTypeFactory()),

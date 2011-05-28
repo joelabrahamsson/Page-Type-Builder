@@ -63,8 +63,8 @@ namespace PageTypeBuilder
                 .RegisterType<TabLocator>()
                 .As<TabLocator>();
             containerBuilder
-                .RegisterType<PageTypePropertyUpdater>()
-                .As<PageTypePropertyUpdater>();
+                .RegisterType<PageDefinitionSynchronizationEngine>()
+                .As<PageDefinitionSynchronizationEngine>();
             containerBuilder
                 .RegisterType<TabFactory>()
                 .As<ITabFactory>();
@@ -80,7 +80,9 @@ namespace PageTypeBuilder
             containerBuilder
                 .RegisterInstance(PageTypeResolver.Instance)
                 .As<PageTypeResolver>();
-                
+            containerBuilder
+                .RegisterType<PageDefinitionUpdater>()
+                .As<IPageDefinitionUpdater>();
         }
     }
 }

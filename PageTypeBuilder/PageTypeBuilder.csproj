@@ -155,8 +155,11 @@
     <Compile Include="Reflection\TypeExtensions.cs" />
     <Compile Include="Discovery\PageTypeDefinitionLocator.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronizer.cs" />
+    <Compile Include="Synchronization\IPageDefinitionUpdater.cs" />
     <Compile Include="Synchronization\IPageTypeLocator.cs" />
+    <Compile Include="Synchronization\PageDefinitionSynchronizationEngine.cs" />
     <Compile Include="Synchronization\PageDefinitionTypeMapper.cs" />
+    <Compile Include="Synchronization\PageDefinitionUpdater.cs" />
     <Compile Include="Synchronization\PageTypeLocator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidator.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionValidator.cs.cs" />
@@ -166,7 +169,6 @@
     <Compile Include="PageTypeAttribute.cs" />
     <Compile Include="Abstractions\PageTypeFactory.cs" />
     <Compile Include="Discovery\PageTypePropertyDefinition.cs" />
-    <Compile Include="Synchronization\PageTypePropertyUpdater.cs" />
     <Compile Include="Synchronization\PageTypeUpdater.cs" />
     <Compile Include="Discovery\PageTypeDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedPageTypePropertyDefinitionLocatorType = typeof(PageTypePropertyDefinitionLocator);
 
-            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
+            PageDefinitionSynchronizationEngine updater = PageDefinitionSynchronizationEngineFactory.Create();
 
             Assert.NotNull(updater.PageTypePropertyDefinitionLocator);
             Assert.Equal<Type>(expectedPageTypePropertyDefinitionLocatorType, updater.PageTypePropertyDefinitionLocator.GetType());
@@ -25,7 +25,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedPageDefinitionFactoryType = typeof(PageDefinitionFactory);
 
-            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
+            PageDefinitionSynchronizationEngine updater = PageDefinitionSynchronizationEngineFactory.Create();
 
             Assert.NotNull(updater.PageDefinitionFactory);
             Assert.Equal<Type>(expectedPageDefinitionFactoryType, updater.PageDefinitionFactory.GetType());
@@ -36,7 +36,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedPageDefinitionTypeFactoryType = typeof(PageDefinitionTypeFactory);
 
-            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
+            PageDefinitionSynchronizationEngine updater = PageDefinitionSynchronizationEngineFactory.Create();
 
             Assert.NotNull(updater.PageDefinitionTypeFactory);
             Assert.Equal<Type>(expectedPageDefinitionTypeFactoryType, updater.PageDefinitionTypeFactory.GetType());
@@ -47,7 +47,7 @@ namespace PageTypeBuilder.Tests.PageTypePropertyUpdaterTests
         {
             Type expectedType = typeof(PageDefinitionTypeMapper);
 
-            PageTypePropertyUpdater updater = PageTypePropertyUpdaterFactory.Create();
+            PageDefinitionSynchronizationEngine updater = PageDefinitionSynchronizationEngineFactory.Create();
 
             Assert.NotNull(updater.PageDefinitionTypeMapper);
             Assert.Equal<Type>(expectedType, updater.PageDefinitionTypeMapper.GetType());

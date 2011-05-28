@@ -16,7 +16,7 @@ namespace PageTypeBuilder.Synchronization
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
-            PageTypePropertyUpdater pageTypePropertyUpdater,
+            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine,
             PageTypeDefinitionValidator pageTypeDefinitionValidator,
             PageTypeResolver pageTypeResolver,
             IPageTypeLocator pageTypeLocator,
@@ -31,7 +31,7 @@ namespace PageTypeBuilder.Synchronization
             TabDefinitionUpdater = tabDefinitionUpdater;
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
             PageTypeUpdater = pageTypeUpdater;
-            PageTypePropertyUpdater = pageTypePropertyUpdater;
+            PageDefinitionSynchronizationEngine = pageDefinitionSynchronizationEngine;
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
             _pageTypeLocator = pageTypeLocator;
             this.globalPropertySettingsSynchronizer = globalPropertySettingsSynchronizer;
@@ -114,7 +114,7 @@ namespace PageTypeBuilder.Synchronization
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
                 IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
-                PageTypePropertyUpdater.UpdatePageTypePropertyDefinitions(pageType, definition);
+                PageDefinitionSynchronizationEngine.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }
         
@@ -126,7 +126,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual PageTypeUpdater PageTypeUpdater { get; set; }
 
-        protected internal virtual PageTypePropertyUpdater PageTypePropertyUpdater { get; set; }
+        protected internal virtual PageDefinitionSynchronizationEngine PageDefinitionSynchronizationEngine { get; set; }
 
         protected internal virtual PageTypeDefinitionValidator PageTypeDefinitionValidator { get; set; }
     }

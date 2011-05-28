@@ -18,19 +18,19 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             MockRepository fakes = new MockRepository();
             PageTypeUpdater pageTypeUpdater = PageTypeUpdaterFactory.Stub(fakes);
             IPageType pageType = new NativePageType();
-            PageTypePropertyUpdater pageTypePropertyUpdater = PageTypePropertyUpdaterFactory.Stub(fakes);
-            pageTypePropertyUpdater.Stub(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));
-            pageTypePropertyUpdater.Replay();
+            PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine = PageDefinitionSynchronizationEngineFactory.Stub(fakes);
+            pageDefinitionSynchronizationEngine.Stub(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));
+            pageDefinitionSynchronizationEngine.Replay();
             IPageTypeLocator pageTypeLocator = fakes.Stub<IPageTypeLocator>();
             pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(pageType);
             pageTypeLocator.Replay();
             List<PageTypeDefinition> definitions = new List<PageTypeDefinition> { definition };
             PageTypeSynchronizer synchronizer =
-                PageTypeSynchronizerFactory.Create(pageTypePropertyUpdater, pageTypeLocator);
+                PageTypeSynchronizerFactory.Create(pageDefinitionSynchronizationEngine, pageTypeLocator);
             synchronizer.PageTypeUpdater = pageTypeUpdater;
             synchronizer.UpdatePageTypePropertyDefinitions(definitions);
 
-            pageTypePropertyUpdater.AssertWasCalled(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));
+            pageDefinitionSynchronizationEngine.AssertWasCalled(updater => updater.UpdatePageTypePropertyDefinitions(pageType, definition));
         }
     }
 }

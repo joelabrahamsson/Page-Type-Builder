@@ -7,34 +7,34 @@ using Rhino.Mocks;
 
 namespace PageTypeBuilder.Tests.Helpers
 {
-    public class PageTypePropertyUpdaterFactory
+    public class PageDefinitionSynchronizationEngineFactory
     {
-        public static PageTypePropertyUpdater Create()
+        public static PageDefinitionSynchronizationEngine Create()
         {
-            return new PageTypePropertyUpdater(
+            return new PageDefinitionSynchronizationEngine(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
-                new TabFactory(),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
 
-        public static PageTypePropertyUpdater PartialMock(MockRepository fakesRepository)
+        public static PageDefinitionSynchronizationEngine PartialMock(MockRepository fakesRepository)
         {
-            return fakesRepository.PartialMock<PageTypePropertyUpdater>(
+            return fakesRepository.PartialMock<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
-                new TabFactory(),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
 
-        public static PageTypePropertyUpdater Stub(MockRepository fakesRepository)
+        public static PageDefinitionSynchronizationEngine Stub(MockRepository fakesRepository)
         {
-            return fakesRepository.Stub<PageTypePropertyUpdater>(
+            return fakesRepository.Stub<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionFactory(),
                 new PageDefinitionTypeFactory(),
-                new TabFactory(),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }

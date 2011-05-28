@@ -58,8 +58,8 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
         {
             PageTypeSynchronizer synchronizer = CreatePageTypeSynchronizer();
 
-            Assert.NotNull(synchronizer.PageTypePropertyUpdater);
-            Assert.Equal<Type>(typeof(PageTypePropertyUpdater), synchronizer.PageTypePropertyUpdater.GetType());
+            Assert.NotNull(synchronizer.PageDefinitionSynchronizationEngine);
+            Assert.Equal<Type>(typeof(PageDefinitionSynchronizationEngine), synchronizer.PageDefinitionSynchronizationEngine.GetType());
         }
 
         [Fact]
