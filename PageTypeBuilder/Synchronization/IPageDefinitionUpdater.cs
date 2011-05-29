@@ -5,6 +5,7 @@ namespace PageTypeBuilder.Synchronization
 {
     public interface IPageDefinitionUpdater
     {
-        void UpdatePageDefinition(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition);
+        void UpdateExistingPageDefinition(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition);
+        void CreateNewPageDefinition(PageTypePropertyDefinition propertyDefinition);
     }
 }

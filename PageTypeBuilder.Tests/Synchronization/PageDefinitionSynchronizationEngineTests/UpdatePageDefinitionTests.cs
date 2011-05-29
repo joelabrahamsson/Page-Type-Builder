@@ -23,7 +23,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.Name = newEditCaption;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(newEditCaption, pageDefinitionToUpdate.EditCaption);
         }
@@ -48,7 +48,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.EditCaption = newEditCaption;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(newEditCaption, pageDefinitionToUpdate.EditCaption);
         }
@@ -60,7 +60,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(string.Empty, pageDefinitionToUpdate.HelpText);
         }
@@ -90,7 +90,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.EditCaption = TestValueUtility.CreateRandomString();
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.EditCaption, pageDefinitionToUpdate.EditCaption);
         }
@@ -103,7 +103,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.EditCaption = null;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(propertyDefinition.Name, pageDefinitionToUpdate.EditCaption);
         }
@@ -116,7 +116,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.HelpText = TestValueUtility.CreateRandomString();
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.HelpText, pageDefinitionToUpdate.HelpText);
         }
@@ -131,7 +131,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.Required = required;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.Required, pageDefinitionToUpdate.Required);
         }
@@ -146,7 +146,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.Searchable = searchable;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.Searchable, pageDefinitionToUpdate.Searchable);
         }
@@ -159,7 +159,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.DefaultValue = TestValueUtility.CreateRandomString();
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<string>(propertyDefinition.PageTypePropertyAttribute.DefaultValue.ToString(), pageDefinitionToUpdate.DefaultValue);
         }
@@ -175,7 +175,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.DefaultValueType = defaultValueType;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<DefaultValueType>(propertyDefinition.PageTypePropertyAttribute.DefaultValueType, pageDefinitionToUpdate.DefaultValueType);
         }
@@ -190,7 +190,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.UniqueValuePerLanguage = uniqueValuePerLanguage;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.UniqueValuePerLanguage, pageDefinitionToUpdate.LanguageSpecific);
         }
@@ -205,7 +205,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.DisplayInEditMode = displayInEditMode;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<bool>(propertyDefinition.PageTypePropertyAttribute.DisplayInEditMode, pageDefinitionToUpdate.DisplayEditUI);
         }
@@ -220,7 +220,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.SortOrder = sortOrder;
 
-            pageDefinitionUpdater.UpdatePageDefinition(pageDefinitionToUpdate, propertyDefinition);
+            pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
             Assert.Equal<int>(propertyDefinition.PageTypePropertyAttribute.SortOrder, pageDefinitionToUpdate.FieldOrder);
         }

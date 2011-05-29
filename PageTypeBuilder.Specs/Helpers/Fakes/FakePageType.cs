@@ -8,11 +8,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class FakePageType : IPageType
     {
-        public FakePageType()
-            : this(new PageDefinitionCollection())
-        {}
+        private IPageDefinitionFactory pageDefinitionFactory;
 
-        public FakePageType(PageDefinitionCollection pageDefinitions)
+        public FakePageType(IPageDefinitionFactory pageDefinitionFactory)
         {
             var template = new PageType();
             AllowedPageTypes = template.AllowedPageTypes;
@@ -23,7 +21,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             DefaultStartPublishOffset = template.DefaultStartPublishOffset;
             DefaultStopPublishOffset = template.DefaultStopPublishOffset;
             DefaultVisibleInMenu = template.DefaultVisibleInMenu;
-            Definitions = pageDefinitions;
+            this.pageDefinitionFactory = pageDefinitionFactory;
             Description = template.Description;
             IsAvailable = template.IsAvailable;
             Name = template.Name;
@@ -52,7 +50,15 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         public TimeSpan DefaultStopPublishOffset { get; set; }
         public PageTypeDefault Defaults { get; set; }
         public bool DefaultVisibleInMenu { get; set; }
-        public PageDefinitionCollection Definitions { get; private set; }
+        public PageDefinitionCollection Definitions 
+        { 
+            get
+            {
+                var definitions = new PageDefinitionCollection();
+                definitions.AddRange(pageDefinitionFactory.List(ID));
+                return definitions;
+            }
+        }
         public string Description { get; set; }
         public string FileName { get; set; }
         public Guid GUID { get; set; }

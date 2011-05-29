@@ -8,5 +8,10 @@ namespace PageTypeBuilder.Abstractions
         {
             pageDefinition.Save();
         }
+
+        public PageDefinitionCollection List(int pageTypeId)
+        {
+            return PageDefinition.List(pageTypeId);
+        }
     }
 }

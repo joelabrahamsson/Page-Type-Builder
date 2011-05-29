@@ -12,9 +12,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         private int nextId;
         private List<IPageType> pageTypes;
         private SavesPerIdCounter numberOfSavesPerPageTypeIdCounter = new SavesPerIdCounter();
-        private InMemoryPageDefinitionFactory pageDefinitionFactory;
+        private IPageDefinitionFactory pageDefinitionFactory;
 
-        public InMemoryPageTypeFactory(InMemoryPageDefinitionFactory pageDefinitionFactory)
+        public InMemoryPageTypeFactory(IPageDefinitionFactory pageDefinitionFactory)
         {
             this.pageDefinitionFactory = pageDefinitionFactory;
             Mapper.Configuration.CreateMap<IPageType, FakePageType>();
@@ -37,9 +37,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         private FakePageType GetPageTypeToReturn(IPageType pageTypeRecord)
         {
-            var definitions = new PageDefinitionCollection();
-            definitions.AddRange(pageDefinitionFactory.List(pageTypeRecord.ID));
-            var pageTypeToReturn = new FakePageType(definitions);
+            var pageTypeToReturn = new FakePageType(pageDefinitionFactory);
             Mapper.Map(pageTypeRecord, pageTypeToReturn);
             return pageTypeToReturn;
         }
@@ -70,7 +68,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             {
                 pageTypeToSave.ID = nextId;
                 nextId++;
-                var pageTypeRecord = new FakePageType();
+                var pageTypeRecord = new FakePageType(pageDefinitionFactory);
                 
                 Mapper.Map(pageTypeToSave, pageTypeRecord);
 
@@ -103,7 +101,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public IPageType CreateNew()
         {
-            return new FakePageType();
+            return new FakePageType(pageDefinitionFactory);
         }
     }
 }

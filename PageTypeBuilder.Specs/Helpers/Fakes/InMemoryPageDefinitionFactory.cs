@@ -38,9 +38,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             }
         }
 
-        public IEnumerable<PageDefinition> List(int pageTypeId)
+        public PageDefinitionCollection List(int pageTypeId)
         {
-            return MapRecordsToExposedObjects(pageDefinitions.Where(pd => pd.PageTypeID == pageTypeId));
+            var result = new PageDefinitionCollection();
+            result.AddRange(MapRecordsToExposedObjects(pageDefinitions.Where(pd => pd.PageTypeID == pageTypeId)));
+            return result;
         }
 
         public IEnumerable<PageDefinition> List()

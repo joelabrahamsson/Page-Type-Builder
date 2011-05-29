@@ -13,16 +13,42 @@ namespace PageTypeBuilder.Synchronization
         private static readonly ILog log = LogManager.GetLogger(typeof(PageDefinitionSynchronizationEngine));
         private IPageDefinitionFactory pageDefinitionFactory;
         private ITabFactory tabFactory;
+        private PageDefinitionTypeMapper pageDefinitionTypeMapper;
 
         public PageDefinitionUpdater(
             IPageDefinitionFactory pageDefinitionFactory, 
-            ITabFactory tabFactory)
+            ITabFactory tabFactory,
+            PageDefinitionTypeMapper pageDefinitionTypeMapper)
         {
             this.pageDefinitionFactory = pageDefinitionFactory;
             this.tabFactory = tabFactory;
+            this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
         }
 
-        public virtual void UpdatePageDefinition(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
+        public virtual void CreateNewPageDefinition(PageTypePropertyDefinition propertyDefinition)
+        {
+            PageDefinition pageDefinition = new PageDefinition();
+            pageDefinition.PageTypeID = propertyDefinition.PageType.ID;
+            pageDefinition.Name = propertyDefinition.Name;
+            pageDefinition.EditCaption = propertyDefinition.GetEditCaptionOrName();
+            SetPageDefinitionType(pageDefinition, propertyDefinition);
+
+            UpdatePageDefinitionValues(pageDefinition, propertyDefinition);
+
+            pageDefinitionFactory.Save(pageDefinition);
+        }
+
+        protected internal virtual void SetPageDefinitionType(PageDefinition pageDefinition, PageTypePropertyDefinition propertyDefinition)
+        {
+            pageDefinition.Type = GetPageDefinitionType(propertyDefinition);
+        }
+
+        protected internal virtual PageDefinitionType GetPageDefinitionType(PageTypePropertyDefinition definition)
+        {
+            return pageDefinitionTypeMapper.GetPageDefinitionType(definition);
+        }
+
+        public virtual void UpdateExistingPageDefinition(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
         {
             string oldValues = SerializeValues(pageDefinition);
 

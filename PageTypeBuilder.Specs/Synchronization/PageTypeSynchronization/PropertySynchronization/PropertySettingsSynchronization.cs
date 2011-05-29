@@ -131,7 +131,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                         });
                 });
 
-            var existingPageType = new FakePageType();
+            var existingPageType = new FakePageType(SyncContext.PageDefinitionFactory);
             existingPageType.Name = pageTypeName;
             SyncContext.PageTypeFactory.Save(existingPageType);
 
@@ -192,7 +192,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 });
             });
 
-            var existingPageType = new FakePageType();
+            var existingPageType = new FakePageType(SyncContext.PageDefinitionFactory);
             existingPageType.Name = pageTypeName;
             SyncContext.PageTypeFactory.Save(existingPageType);
 
