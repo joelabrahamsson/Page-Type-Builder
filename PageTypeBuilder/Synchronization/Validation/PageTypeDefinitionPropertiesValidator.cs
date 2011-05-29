@@ -10,9 +10,11 @@ namespace PageTypeBuilder.Synchronization.Validation
 {
     public class PageTypeDefinitionPropertiesValidator
     {
+        PageDefinitionTypeMapper pageDefinitionTypeMapper;
+
         public PageTypeDefinitionPropertiesValidator(PageDefinitionTypeMapper pageDefinitionTypeMapper)
         {
-            PageDefinitionTypeMapper = pageDefinitionTypeMapper;
+            this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
         }
 
         protected internal virtual void ValidatePageTypeProperties(PageTypeDefinition definition)
@@ -141,7 +143,7 @@ namespace PageTypeBuilder.Synchronization.Validation
                 (PageTypePropertyAttribute)
                     propertyInfo.GetCustomAttributes(typeof(PageTypePropertyAttribute), false).First();
 
-            if (PageDefinitionTypeMapper.GetPageDefinitionType(
+            if (pageDefinitionTypeMapper.GetPageDefinitionType(
                 propertyInfo.DeclaringType.Name, propertyInfo.Name, propertyInfo.PropertyType, pageTypePropertyAttribute) == null)
             {
                 string errorMessage = "Unable to map the type for the property {0} in {1} to a suitable EPiServer CMS property.";
@@ -149,9 +151,5 @@ namespace PageTypeBuilder.Synchronization.Validation
                 throw new UnmappablePropertyTypeException(errorMessage);
             }
         }
-
-        internal PageDefinitionTypeMapper PageDefinitionTypeMapper { get; set; }
-
-
     }
 }

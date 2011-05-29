@@ -20,16 +20,6 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
         }
 
         [Fact]
-        public void Constructor_SetsPageDefinitionTypeMapperProperty()
-        {
-            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(null, new NativePageDefinitionsMap());
-
-            PageTypeDefinitionValidator pageTypeValidator = new PageTypeDefinitionValidator(mapper);
-
-            Assert.NotNull(pageTypeValidator.PropertiesValidator.PageDefinitionTypeMapper);
-        }
-
-        [Fact]
         public void GivenListOfPageTypeDefinitions_ValidatePageTypeDefinitions_ValidatesPageTypesHaveGuidOrUniqueNamee()
         {
             MockRepository fakes = new MockRepository();

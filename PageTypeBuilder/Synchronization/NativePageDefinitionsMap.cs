@@ -9,23 +9,23 @@ namespace PageTypeBuilder.Synchronization
     {
         public virtual int GetNativeTypeID(Type pagePropertyType)
         {
-            int? nativeTypeID = null;
-            for (int typeID = 0; typeID < NativePropertyTypes.Length; typeID++)
+            int? nativeTypeId = null;
+            for (int typeId = 0; typeId < NativePropertyTypes.Length; typeId++)
             {
-                if (NativePropertyTypes[typeID] == pagePropertyType)
+                if (NativePropertyTypes[typeId] == pagePropertyType)
                 {
-                    nativeTypeID = typeID;
+                    nativeTypeId = typeId;
                 }
             }
 
-            if (!nativeTypeID.HasValue)
+            if (!nativeTypeId.HasValue)
             {
                 string errorMessage = "Unable to retrieve native type ID. Type {0} is not a native type.";
                 errorMessage = String.Format(CultureInfo.InvariantCulture, errorMessage, pagePropertyType.FullName);
                 throw new PageTypeBuilderException(errorMessage);
             }
 
-            return nativeTypeID.Value;
+            return nativeTypeId.Value;
         }
 
         public bool TypeIsNativePropertyType(Type pagePropertyType)

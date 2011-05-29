@@ -12,23 +12,23 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageDefinitionTypeMapper
     {
-        private INativePageDefinitionsMap nativePageDefinitionsMap;
+        private readonly IPageDefinitionTypeFactory pageDefinitionTypeFactory;
+        private readonly INativePageDefinitionsMap nativePageDefinitionsMap;
 
         public PageDefinitionTypeMapper(IPageDefinitionTypeFactory pageDefinitionTypeFactory, INativePageDefinitionsMap nativePageDefinitionsMap)
         {
-            PageDefinitionTypeFactory = pageDefinitionTypeFactory;
+            this.pageDefinitionTypeFactory = pageDefinitionTypeFactory;
             this.nativePageDefinitionsMap = nativePageDefinitionsMap;
         }
 
-        private IPageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
-
-        protected internal virtual PageDefinitionType GetPageDefinitionType(PageTypePropertyDefinition definition)
+        public virtual PageDefinitionType GetPageDefinitionType(PageTypePropertyDefinition definition)
         {
             return GetPageDefinitionType(
                 definition.PageType.Name, definition.Name, definition.PropertyType, definition.PageTypePropertyAttribute);
+
         }
 
-        protected internal virtual PageDefinitionType GetPageDefinitionType(
+        public virtual PageDefinitionType GetPageDefinitionType(
             string pageTypeName, string propertyName, 
             Type propertyType, PageTypePropertyAttribute pageTypePropertyAttribute)
         {
@@ -55,13 +55,13 @@ namespace PageTypeBuilder.Synchronization
         {
             string pageDefinitionTypeName = pagePropertyType.FullName;
             string assemblyName = pagePropertyType.Assembly.GetName().Name;
-            return PageDefinitionTypeFactory.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
+            return pageDefinitionTypeFactory.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
         }
 
         PageDefinitionType GetNonNativePageDefinitionType(Type pagePropertyType)
         {
-            int nativeTypeID = nativePageDefinitionsMap.GetNativeTypeID(pagePropertyType);
-            return PageDefinitionTypeFactory.GetPageDefinitionType(nativeTypeID);
+            int nativeTypeId = nativePageDefinitionsMap.GetNativeTypeID(pagePropertyType);
+            return pageDefinitionTypeFactory.GetPageDefinitionType(nativeTypeId);
         }
 
         protected void ThrowUnmappablePropertyTypeException(string propertyName, string pageTypeName)
