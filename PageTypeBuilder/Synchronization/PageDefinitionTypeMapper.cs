@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
 using EPiServer.SpecializedProperties;
@@ -13,9 +12,12 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageDefinitionTypeMapper
     {
-        public PageDefinitionTypeMapper(IPageDefinitionTypeFactory pageDefinitionTypeFactory)
+        private INativePageDefinitionsMap nativePageDefinitionsMap;
+
+        public PageDefinitionTypeMapper(IPageDefinitionTypeFactory pageDefinitionTypeFactory, INativePageDefinitionsMap nativePageDefinitionsMap)
         {
             PageDefinitionTypeFactory = pageDefinitionTypeFactory;
+            this.nativePageDefinitionsMap = nativePageDefinitionsMap;
         }
 
         private IPageDefinitionTypeFactory PageDefinitionTypeFactory { get; set; }
@@ -34,25 +36,39 @@ namespace PageTypeBuilder.Synchronization
 
             if (pagePropertyType == null)
             {
-                string errorMessage = "Unable to find a valid EPiServer property type for the property {0} in the page type {1}";
-                errorMessage = string.Format(CultureInfo.InvariantCulture, errorMessage, propertyName, pageTypeName);
-                throw new UnmappablePropertyTypeException(errorMessage);
+                ThrowUnmappablePropertyTypeException(propertyName, pageTypeName);
             }
 
-            PageDefinitionType pageDefinitionType;
+            return GetPageDefinitionTypeImpl(pagePropertyType);
+        }
 
-            if (TypeIsNativePropertyType(pagePropertyType))
+        PageDefinitionType GetPageDefinitionTypeImpl(Type pagePropertyType)
+        {
+            if (nativePageDefinitionsMap.TypeIsNativePropertyType(pagePropertyType))
             {
-                int nativeTypeID = GetNativeTypeID(pagePropertyType);
-                pageDefinitionType = PageDefinitionTypeFactory.GetPageDefinitionType(nativeTypeID);
+                return GetNonNativePageDefinitionType(pagePropertyType);
             }
-            else
-            {
-                string pageDefinitionTypeName = pagePropertyType.FullName;
-                string assemblyName = pagePropertyType.Assembly.GetName().Name;
-                pageDefinitionType = PageDefinitionTypeFactory.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
-            }
-            return pageDefinitionType;
+            return GetNativePageDefinitionType(pagePropertyType);
+        }
+
+        PageDefinitionType GetNativePageDefinitionType(Type pagePropertyType)
+        {
+            string pageDefinitionTypeName = pagePropertyType.FullName;
+            string assemblyName = pagePropertyType.Assembly.GetName().Name;
+            return PageDefinitionTypeFactory.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
+        }
+
+        PageDefinitionType GetNonNativePageDefinitionType(Type pagePropertyType)
+        {
+            int nativeTypeID = nativePageDefinitionsMap.GetNativeTypeID(pagePropertyType);
+            return PageDefinitionTypeFactory.GetPageDefinitionType(nativeTypeID);
+        }
+
+        protected void ThrowUnmappablePropertyTypeException(string propertyName, string pageTypeName)
+        {
+            string errorMessage = "Unable to find a valid EPiServer property type for the property {0} in the page type {1}";
+            errorMessage = string.Format(CultureInfo.InvariantCulture, errorMessage, propertyName, pageTypeName);
+            throw new UnmappablePropertyTypeException(errorMessage);
         }
 
         protected internal virtual Type GetPropertyType(Type propertyType, PageTypePropertyAttribute pageTypePropertyAttribute)
@@ -87,51 +103,6 @@ namespace PageTypeBuilder.Synchronization
                 return defaultPropertyTypeMappings[propertyType];
 
             return null;
-        }
-
-        public bool TypeIsNativePropertyType(Type pagePropertyType)
-        {
-            return NativePropertyTypes.Contains(pagePropertyType);
-        }
-
-        public virtual int GetNativeTypeID(Type pagePropertyType)
-        {
-            int? nativeTypeID = null;
-            for (int typeID = 0; typeID < NativePropertyTypes.Length; typeID++)
-            {
-                if (NativePropertyTypes[typeID] == pagePropertyType)
-                {
-                    nativeTypeID = typeID;
-                }
-            }
-
-            if (!nativeTypeID.HasValue)
-            {
-                string errorMessage = "Unable to retrieve native type ID. Type {0} is not a native type.";
-                errorMessage = string.Format(CultureInfo.InvariantCulture, errorMessage, pagePropertyType.FullName);
-                throw new PageTypeBuilderException(errorMessage);
-            }
-
-            return nativeTypeID.Value;
-        }
-
-        public Type[] NativePropertyTypes
-        {
-            get
-            {
-                Type[] nativeProperties = new Type[9];
-                nativeProperties[0] = typeof(PropertyBoolean);
-                nativeProperties[1] = typeof(PropertyNumber);
-                nativeProperties[2] = typeof(PropertyFloatNumber);
-                nativeProperties[3] = typeof(PropertyPageType);
-                nativeProperties[4] = typeof(PropertyPageReference);
-                nativeProperties[5] = typeof(PropertyDate);
-                nativeProperties[6] = typeof(PropertyString);
-                nativeProperties[7] = typeof(PropertyLongString);
-                nativeProperties[8] = typeof(PropertyCategory);
-
-                return nativeProperties;
-            }
         }
     }
 }

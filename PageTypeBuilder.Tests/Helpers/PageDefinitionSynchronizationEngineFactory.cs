@@ -13,9 +13,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return new PageDefinitionSynchronizationEngine(
                 new PageDefinitionFactory(),
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory()),
                 new PageTypePropertyDefinitionLocator(), 
-                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()), 
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap()), 
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
@@ -24,9 +24,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return fakesRepository.PartialMock<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionFactory(),
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory()),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()), 
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap()), 
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }
@@ -35,9 +35,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return fakesRepository.Stub<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionFactory(),
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory()),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()), 
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap()), 
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
         }

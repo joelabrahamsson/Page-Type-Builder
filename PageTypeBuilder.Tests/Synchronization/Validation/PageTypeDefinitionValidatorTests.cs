@@ -22,7 +22,7 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
         [Fact]
         public void Constructor_SetsPageDefinitionTypeMapperProperty()
         {
-            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(null);
+            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(null, new NativePageDefinitionsMap());
 
             PageTypeDefinitionValidator pageTypeValidator = new PageTypeDefinitionValidator(mapper);
 

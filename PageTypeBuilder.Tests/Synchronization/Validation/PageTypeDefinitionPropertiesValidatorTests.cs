@@ -15,16 +15,6 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
     public class PageTypeDefinitionPropertiesValidatorTests
     {
         [Fact]
-        public void Constructor_SetsPropertiesValidtorProperty()
-        {
-            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(null);
-
-            PageTypeDefinitionPropertiesValidator validator = new PageTypeDefinitionPropertiesValidator(mapper);
-
-            Assert.NotNull(validator.PageDefinitionTypeMapper);
-        }
-
-        [Fact]
         public void GivenPageTypeDefinition_ValidatePageTypeProperties_CallsValidatePageTypePropertyForEachPropertyWithPageTypePropertyAttribute()
         {
             PageTypeDefinition definition = new PageTypeDefinition
@@ -410,7 +400,7 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
                 factory.GetPageDefinitionType("EPiServer.SpecializedProperties.PropertyXhtmlString", "EPiServer")).Return(new PageDefinitionType());
             pageDefinitionTypeFactory.Replay();
             PageTypeDefinitionPropertiesValidator propertiesValidator =
-                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory));
+                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory, new NativePageDefinitionsMap()));
 
             Exception exception = Record.Exception(() =>
             {
@@ -425,7 +415,7 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
         {
             PropertyInfo propertyInfo = typeof(TestPageType).GetProperty("PropertyWithInvalidTypeAndNoTypeSpecified");
             PageTypePropertyAttribute attribute = propertyInfo.GetCustomAttributes<PageTypePropertyAttribute>().First();
-            PageTypeDefinitionPropertiesValidator propertiesValidator = new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(null));
+            PageTypeDefinitionPropertiesValidator propertiesValidator = new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(null, new NativePageDefinitionsMap()));
 
             Exception exception = Record.Exception(() =>
             {
@@ -447,7 +437,7 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
                 factory.GetPageDefinitionType("EPiServer.SpecializedProperties.PropertyXhtmlString", "EPiServer")).Return(new PageDefinitionType());
             pageDefinitionTypeFactory.Replay();
             PageTypeDefinitionPropertiesValidator propertiesValidator =
-                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory));
+                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory, new NativePageDefinitionsMap()));
 
             Exception exception = Record.Exception(() =>
             {
@@ -468,7 +458,7 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
                 factory.GetPageDefinitionType("System.Text.StringBuilder", "mscorlib")).Return(null);
             pageDefinitionTypeFactory.Replay();
             PageTypeDefinitionPropertiesValidator propertiesValidator =
-                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory));
+                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory, new NativePageDefinitionsMap()));
 
 
             Exception exception = Record.Exception(() =>

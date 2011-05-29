@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using EPiServer.Core.PropertySettings;
 using EPiServer.DataAbstraction;
-using log4net;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 

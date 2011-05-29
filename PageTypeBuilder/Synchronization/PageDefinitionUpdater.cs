@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EPiServer.DataAbstraction;
@@ -13,16 +12,13 @@ namespace PageTypeBuilder.Synchronization
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(PageDefinitionSynchronizationEngine));
         private IPageDefinitionFactory pageDefinitionFactory;
-        private IPageDefinitionTypeFactory pageDefinitionTypeFactory;
         private ITabFactory tabFactory;
 
         public PageDefinitionUpdater(
             IPageDefinitionFactory pageDefinitionFactory, 
-            IPageDefinitionTypeFactory pageDefinitionTypeFactory, 
             ITabFactory tabFactory)
         {
             this.pageDefinitionFactory = pageDefinitionFactory;
-            this.pageDefinitionTypeFactory = pageDefinitionTypeFactory;
             this.tabFactory = tabFactory;
         }
 

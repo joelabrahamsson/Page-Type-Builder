@@ -21,9 +21,9 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
             fakePageDefinitionFactory.Replay();
             var partiallyMockedUtility = fakes.PartialMock<PageDefinitionSynchronizationEngine>(
                 fakePageDefinitionFactory,
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new PageDefinitionTypeFactory(), new TabFactory()),
+                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory()),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory()),
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap()),
                 new PropertySettingsRepository(),
                 new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()));
             partiallyMockedUtility.Stub(

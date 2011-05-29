@@ -35,7 +35,6 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection {new TabDefinition(1, "Tab")});
             return new PageDefinitionUpdater(
                 pageDefinitionFactory.Object,
-                new PageDefinitionTypeFactory(),
                 tabFactory.Object);
         }
 
