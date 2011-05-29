@@ -4,8 +4,6 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Tests.Helpers;
-using Rhino.Mocks;
 using Xunit;
 using Xunit.Extensions;
 
@@ -35,7 +33,8 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection {new TabDefinition(1, "Tab")});
             return new PageDefinitionUpdater(
                 pageDefinitionFactory.Object,
-                tabFactory.Object);
+                tabFactory.Object,
+                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap()));
         }
 
         [Fact]

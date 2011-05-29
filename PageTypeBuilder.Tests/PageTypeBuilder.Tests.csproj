@@ -116,14 +116,12 @@
     <Compile Include="Discovery\PageTypeDefinitionLocatorTests.cs" />
     <Compile Include="Discovery\PageTypePropertyDefinitionTests.cs" />
     <Compile Include="Helpers\PageDefinitionSynchronizationEngineFactory.cs" />
-    <Compile Include="Helpers\PageDefinitionUpdaterFactory.cs" />
     <Compile Include="Helpers\PageTypeDefinitionLocatorFactory.cs" />
     <Compile Include="Helpers\PageTypeSynchronizerFactory.cs" />
     <Compile Include="Helpers\PageTypeUpdaterFactory.cs" />
     <Compile Include="Helpers\TabDefinitionUpdaterFactory.cs" />
     <Compile Include="Helpers\TabLocatorFactory.cs" />
     <Compile Include="PageTypeWithCustomAttribute.cs" />
-    <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\CreateNewPageDefitionTests.cs" />
     <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\PageDefinitionSynchronizationEngineTestsUtility.cs" />
     <Compile Include="Synchronization\PageDefinitionSynchronizationEngineTests\UpdatePageDefinitionTests.cs" />
     <Compile Include="Synchronization\Validation\PageTypeDefinitionPropertiesValidatorTests.cs" />
