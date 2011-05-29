@@ -6,6 +6,7 @@ using EPiServer.SpecializedProperties;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEngineTests;
 using Rhino.Mocks;
 using Xunit;

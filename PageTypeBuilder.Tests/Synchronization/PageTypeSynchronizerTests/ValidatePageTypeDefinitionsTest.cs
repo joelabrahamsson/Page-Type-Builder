@@ -3,6 +3,7 @@ using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 using PageTypeBuilder.Tests.Helpers;
 using Rhino.Mocks;

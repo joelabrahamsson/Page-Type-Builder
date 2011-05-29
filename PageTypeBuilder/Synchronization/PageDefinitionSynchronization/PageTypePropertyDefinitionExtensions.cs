@@ -1,6 +1,6 @@
 ﻿using PageTypeBuilder.Discovery;
 
-namespace PageTypeBuilder.Synchronization
+namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
     public static class PageTypePropertyDefinitionExtensions
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EPiServer.Core;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 using Rhino.Mocks;
 using Xunit;

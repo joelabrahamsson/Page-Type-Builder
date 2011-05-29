@@ -6,7 +6,7 @@ using log4net;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 
-namespace PageTypeBuilder.Synchronization
+namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
     public class PageDefinitionUpdater : IPageDefinitionUpdater
     {

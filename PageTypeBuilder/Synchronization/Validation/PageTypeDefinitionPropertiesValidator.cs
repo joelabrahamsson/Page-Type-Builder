@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Reflection;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 
 namespace PageTypeBuilder.Synchronization.Validation
 {

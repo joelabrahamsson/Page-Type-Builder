@@ -4,6 +4,7 @@ using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using Xunit;
 using Xunit.Extensions;
 

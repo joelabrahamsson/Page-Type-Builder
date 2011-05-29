@@ -2,6 +2,7 @@
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using Xunit;
 
 namespace PageTypeBuilder.Tests.Synchronization

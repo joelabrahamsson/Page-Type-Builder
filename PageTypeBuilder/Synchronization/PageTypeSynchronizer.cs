@@ -3,6 +3,7 @@ using System.Linq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 
 namespace PageTypeBuilder.Synchronization

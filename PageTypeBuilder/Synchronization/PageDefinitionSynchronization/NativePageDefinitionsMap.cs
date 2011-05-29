@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using EPiServer.Core;
 
-namespace PageTypeBuilder.Synchronization
+namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
     public class NativePageDefinitionsMap : INativePageDefinitionsMap
     {

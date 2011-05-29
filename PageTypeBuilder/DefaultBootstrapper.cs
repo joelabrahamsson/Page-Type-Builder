@@ -9,6 +9,7 @@ using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 
 namespace PageTypeBuilder
@@ -89,6 +90,9 @@ namespace PageTypeBuilder
             containerBuilder
                 .RegisterType<NativePageDefinitionsMap>()
                 .As<INativePageDefinitionsMap>();
+            containerBuilder
+                .RegisterType<PageDefinitionSpecificPropertySettingsUpdater>()
+                .As<PageDefinitionSpecificPropertySettingsUpdater>();
         }
     }
 }

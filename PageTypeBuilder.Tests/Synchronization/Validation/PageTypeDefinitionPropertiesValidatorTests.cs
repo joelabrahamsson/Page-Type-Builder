@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using Rhino.Mocks;
 using Xunit;
 using PageTypeBuilder.Abstractions;
