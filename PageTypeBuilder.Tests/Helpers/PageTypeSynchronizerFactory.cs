@@ -4,6 +4,7 @@ using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.Hooks;
 using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 using Rhino.Mocks;
@@ -24,7 +25,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
                 TabLocatorFactory.Create(),
-                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())));
+                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())),
+                new HooksHandler(new AppDomainAssemblyLocator()));
         }
 
         public static PageTypeSynchronizer Create(IPageTypeLocator pageTypeLocator)
@@ -52,7 +54,8 @@ namespace PageTypeBuilder.Tests.Helpers
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
                 TabLocatorFactory.Create(),
-                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())));
+                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())),
+                new HooksHandler(new AppDomainAssemblyLocator()));
         }
     }
 }

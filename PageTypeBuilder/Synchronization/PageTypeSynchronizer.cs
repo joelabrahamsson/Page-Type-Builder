@@ -3,6 +3,7 @@ using System.Linq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Synchronization.Hooks;
 using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 
@@ -14,6 +15,7 @@ namespace PageTypeBuilder.Synchronization
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
         private GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer;
+        private IHooksHandler hooksHandler;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
@@ -24,7 +26,8 @@ namespace PageTypeBuilder.Synchronization
             PageTypeUpdater pageTypeUpdater,
             TabDefinitionUpdater tabDefinitionUpdater,
             TabLocator tabLocator,
-            GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer)
+            GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer,
+            IHooksHandler hooksHandler)
         {
             _configuration = configuration;
             PageTypeResolver = pageTypeResolver;
@@ -36,10 +39,13 @@ namespace PageTypeBuilder.Synchronization
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
             _pageTypeLocator = pageTypeLocator;
             this.globalPropertySettingsSynchronizer = globalPropertySettingsSynchronizer;
+            this.hooksHandler = hooksHandler;
         }
 
         internal void SynchronizePageTypes()
         {
+            hooksHandler.InvokePreSynchronizationHooks();
+
             if (!_configuration.DisablePageTypeUpdation)
             {
                 UpdateTabDefinitions();
