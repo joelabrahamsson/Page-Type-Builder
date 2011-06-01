@@ -30,7 +30,7 @@ namespace PageTypeBuilder.Synchronization
             IHooksHandler hooksHandler)
         {
             _configuration = configuration;
-            PageTypeResolver = pageTypeResolver;
+            this.pageTypeResolver = pageTypeResolver;
             TabLocator = tabLocator;
             TabDefinitionUpdater = tabDefinitionUpdater;
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
@@ -104,7 +104,7 @@ namespace PageTypeBuilder.Synchronization
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
                 IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
-                PageTypeResolver.AddPageType(pageType.ID, definition.Type);
+                pageTypeResolver.AddPageType(pageType.ID, definition.Type);
             }
         }
 
@@ -124,8 +124,8 @@ namespace PageTypeBuilder.Synchronization
                 PageDefinitionSynchronizationEngine.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }
-        
-        protected internal virtual PageTypeResolver PageTypeResolver { get; set; }
+
+        private PageTypeResolver pageTypeResolver;
 
         protected internal virtual TabLocator TabLocator { get; set; }
 

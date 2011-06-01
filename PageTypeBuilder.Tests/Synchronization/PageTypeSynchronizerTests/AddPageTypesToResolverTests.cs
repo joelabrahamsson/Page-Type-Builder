@@ -32,8 +32,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeSynchronizerTests
             pageTypeLocator.Stub(locator => locator.GetExistingPageType(definition)).Return(pageType);
             pageTypeLocator.Replay();
             PageTypeResolver resolver = new PageTypeResolver();
-            PageTypeSynchronizer synchronizer = PageTypeSynchronizerFactory.Create(pageTypeLocator);
-            synchronizer.PageTypeResolver = resolver;
+            PageTypeSynchronizer synchronizer = PageTypeSynchronizerFactory.Create(resolver, pageTypeLocator);
 
             synchronizer.AddPageTypesToResolver(definitions);
 

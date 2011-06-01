@@ -15,12 +15,17 @@ namespace PageTypeBuilder.Tests.Helpers
     {
         public static PageTypeSynchronizer Create(PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine, IPageTypeLocator pageTypeLocator)
         {
+            return Create(pageDefinitionSynchronizationEngine, new PageTypeResolver(), pageTypeLocator);
+        }
+
+        public static PageTypeSynchronizer Create(PageDefinitionSynchronizationEngine pageDefinitionSynchronizationEngine, PageTypeResolver pageTypeResolver, IPageTypeLocator pageTypeLocator)
+        {
             return new PageTypeSynchronizer(
                 PageTypeDefinitionLocatorFactory.Create(),
                 new PageTypeBuilderConfiguration(),
                 pageDefinitionSynchronizationEngine,
                 new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap())),
-                PageTypeResolver.Instance,
+                pageTypeResolver,
                 pageTypeLocator,
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
@@ -32,6 +37,11 @@ namespace PageTypeBuilder.Tests.Helpers
         public static PageTypeSynchronizer Create(IPageTypeLocator pageTypeLocator)
         {
             return Create(PageDefinitionSynchronizationEngineFactory.Create(), pageTypeLocator);
+        }
+
+        public static PageTypeSynchronizer Create(PageTypeResolver pageTypeResolver, IPageTypeLocator pageTypeLocator)
+        {
+            return Create(PageDefinitionSynchronizationEngineFactory.Create(), pageTypeResolver, pageTypeLocator);
         }
 
         public static PageTypeSynchronizer Create()
