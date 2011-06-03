@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Discovery
         public virtual IEnumerable<GlobalPropertySettingsUpdater> GetGlobalPropertySettingsUpdaters()
         {
             var updaters = new List<GlobalPropertySettingsUpdater>();
-            IEnumerable<Type> types = GetTypesInApplicationDomain();
+            IEnumerable<Type> types = GetTypesInApplicationDomain().Concrete();
 
             foreach (Type type in types)
             {

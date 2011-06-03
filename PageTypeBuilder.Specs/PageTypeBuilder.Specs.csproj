@@ -84,6 +84,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ExampleImplementations\AbstractGlobalPropertySettings.cs" />
     <Compile Include="ExampleImplementations\GlobalTinyMceSettings.cs" />
     <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithIsDefaultReturningTrue.cs" />
     <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithNullValues.cs" />
