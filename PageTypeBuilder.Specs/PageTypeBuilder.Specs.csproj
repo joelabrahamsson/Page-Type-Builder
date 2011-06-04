@@ -113,8 +113,6 @@
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
     <Compile Include="Hooks\PreSynchronizationHooks.cs" />
-    <Compile Include="Migrations\Invokation.cs" />
-    <Compile Include="Migrations\Validation.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Updating.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AbstractClasses.cs" />
