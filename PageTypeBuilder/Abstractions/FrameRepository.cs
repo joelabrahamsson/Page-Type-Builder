@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public class FrameFacade : IFrameFacade
+    public class FrameRepository : IFrameRepository
     {
         public Frame Load(int id)
         {

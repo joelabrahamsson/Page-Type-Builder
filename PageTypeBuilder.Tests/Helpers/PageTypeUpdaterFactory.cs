@@ -8,18 +8,18 @@ namespace PageTypeBuilder.Tests.Helpers
 {
     public class PageTypeUpdaterFactory
     {
-        public static PageTypeUpdater Create(IPageTypeDefinitionLocator pageDefinitionLocator, IPageTypeFactory pageTypeFactory)
+        public static PageTypeUpdater Create(IPageTypeDefinitionLocator pageDefinitionLocator, IPageTypeRepository pageTypeRepository)
         {
             return new PageTypeUpdater(
                 pageDefinitionLocator,
-                pageTypeFactory,
+                pageTypeRepository,
                 new PageTypeValueExtractor(),
-                new PageTypeLocator(pageTypeFactory));
+                new PageTypeLocator(pageTypeRepository));
         }
 
         public static PageTypeUpdater Create(IPageTypeDefinitionLocator pageDefinitionLocator)
         {
-            return Create(pageDefinitionLocator, new PageTypeFactory());
+            return Create(pageDefinitionLocator, new PageTypeRepository());
         }
 
         public static PageTypeUpdater Create()
@@ -31,9 +31,9 @@ namespace PageTypeBuilder.Tests.Helpers
         {
             return fakesRepository.Stub<PageTypeUpdater>(
                 PageTypeDefinitionLocatorFactory.Stub(), 
-                new PageTypeFactory(),
+                new PageTypeRepository(),
                 new PageTypeValueExtractor(),
-                new PageTypeLocator(new PageTypeFactory()));
+                new PageTypeLocator(new PageTypeRepository()));
         }
     }
 }

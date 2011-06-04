@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public class TabFactory : ITabFactory
+    public class TabDefinitionRepository : ITabDefinitionRepository
     {
         public virtual TabDefinition GetTabDefinition(string name)
         {

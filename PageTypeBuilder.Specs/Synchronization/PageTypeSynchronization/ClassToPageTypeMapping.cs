@@ -17,11 +17,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ClassToP
         {
             var guid = Guid.NewGuid();
 
-            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
+            IPageType existingPageType = SyncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = "ADifferentName";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.GUID = guid;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
             idOfExistingPageType = existingPageType.ID;
 
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
@@ -35,7 +35,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ClassToP
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_update_the_existing_page_type_to_have_the_name_of_the_class =
-            () => SyncContext.PageTypeFactory.Load(idOfExistingPageType).Name.ShouldEqual(className);
+            () => SyncContext.PageTypeRepository.Load(idOfExistingPageType).Name.ShouldEqual(className);
     }
 
     [Subject("Synchronization")]
@@ -49,11 +49,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ClassToP
         {
             var guid = Guid.NewGuid();
 
-            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
+            IPageType existingPageType = SyncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = "ADifferentName";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.GUID = guid;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
             idOfExistingPageType = existingPageType.ID;
 
 
@@ -72,7 +72,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ClassToP
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_update_the_existing_page_type_to_have_the_name_specified_in_the_attribute =
-            () => SyncContext.PageTypeFactory.Load(idOfExistingPageType).Name.ShouldEqual(nameInAttribute);
+            () => SyncContext.PageTypeRepository.Load(idOfExistingPageType).Name.ShouldEqual(nameInAttribute);
     }
 
     //It appears this is not how it currently works, should be fixed
@@ -105,11 +105,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ClassToP
             SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_PageType_with_the_common_name = () =>
-            SyncContext.PageTypeFactory.Load(commonClassName).
+            SyncContext.PageTypeRepository.Load(commonClassName).
                 ShouldNotBeNull();
 
         It should_create_a_PageType_with_the_name_in_the_attribute = () =>
-            SyncContext.PageTypeFactory.Load(nameInAttribute).
+            SyncContext.PageTypeRepository.Load(nameInAttribute).
                 ShouldNotBeNull();
     }
 }

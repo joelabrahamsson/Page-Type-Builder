@@ -11,17 +11,17 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
     public class PageDefinitionUpdater : IPageDefinitionUpdater
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(PageDefinitionSynchronizationEngine));
-        private IPageDefinitionFactory pageDefinitionFactory;
-        private ITabFactory tabFactory;
+        private IPageDefinitionRepository pageDefinitionRepository;
+        private ITabDefinitionRepository tabDefinitionRepository;
         private PageDefinitionTypeMapper pageDefinitionTypeMapper;
 
         public PageDefinitionUpdater(
-            IPageDefinitionFactory pageDefinitionFactory, 
-            ITabFactory tabFactory,
+            IPageDefinitionRepository pageDefinitionRepository, 
+            ITabDefinitionRepository tabDefinitionRepository,
             PageDefinitionTypeMapper pageDefinitionTypeMapper)
         {
-            this.pageDefinitionFactory = pageDefinitionFactory;
-            this.tabFactory = tabFactory;
+            this.pageDefinitionRepository = pageDefinitionRepository;
+            this.tabDefinitionRepository = tabDefinitionRepository;
             this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
         }
 
@@ -35,7 +35,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
             UpdatePageDefinitionValues(pageDefinition, propertyDefinition);
 
-            pageDefinitionFactory.Save(pageDefinition);
+            pageDefinitionRepository.Save(pageDefinition);
         }
 
         protected internal virtual void SetPageDefinitionType(PageDefinition pageDefinition, PageTypePropertyDefinition propertyDefinition)
@@ -58,7 +58,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             if (updatedValues != oldValues)
             {
                 log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
-                pageDefinitionFactory.Save(pageDefinition);
+                pageDefinitionRepository.Save(pageDefinition);
             }
         }
 
@@ -132,11 +132,11 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         protected virtual void UpdatePageDefinitionTab(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
         {
-            var tab = tabFactory.List().First();
+            var tab = tabDefinitionRepository.List().First();
             if (propertyAttribute.Tab != null)
             {
                 Tab definedTab = (Tab) Activator.CreateInstance(propertyAttribute.Tab);
-                tab = tabFactory.GetTabDefinition(definedTab.Name);
+                tab = tabDefinitionRepository.GetTabDefinition(definedTab.Name);
             }
             pageDefinition.Tab = tab;
         }

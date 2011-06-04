@@ -25,7 +25,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         protected static PageDefinition GetCreatedPageDefinition()
         {
-            return SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => p.Name == PropertyName);
+            return SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => p.Name == PropertyName);
         }
     }
 

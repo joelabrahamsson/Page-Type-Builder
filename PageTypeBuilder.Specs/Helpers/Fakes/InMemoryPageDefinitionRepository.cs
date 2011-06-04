@@ -6,12 +6,12 @@ using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
-    public class InMemoryPageDefinitionFactory : IPageDefinitionFactory
+    public class InMemoryPageDefinitionRepository : IPageDefinitionRepository
     {
         private int nextId = 1;
         private List<PageDefinition> pageDefinitions;
 
-        public InMemoryPageDefinitionFactory()
+        public InMemoryPageDefinitionRepository()
         {
             Mapper.Configuration.CreateMap<PageDefinition, PageDefinition>();
             pageDefinitions = new List<PageDefinition>();

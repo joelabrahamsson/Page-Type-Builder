@@ -17,10 +17,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.NoSaving
         {
             var pageTypeAttribute = AttributeHelper.CreatePageTypeAttributeWithEverythingSpeficied(SyncContext);
             var existingPageType = PageTypeMother.CreatePageTypeWithSameValuesAsAttribute(SyncContext, pageTypeAttribute);
-            existingPageType = SyncContext.PageTypeFactory.CreateNew();
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            existingPageType = SyncContext.PageTypeRepository.CreateNew();
+            SyncContext.PageTypeRepository.Save(existingPageType);
             pageTypeId = existingPageType.ID;
-            SyncContext.PageTypeFactory.ResetNumberOfSaves();
+            SyncContext.PageTypeRepository.ResetNumberOfSaves();
 
             var attributeSpecification =
                 AttributeHelper.CreatePageTypeAttributeSpecification(pageTypeAttribute.Guid.ToString());
@@ -37,7 +37,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.NoSaving
             SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_save_the_PageType = () =>
-            SyncContext.PageTypeFactory.GetNumberOfSaves(pageTypeId).ShouldEqual(0);
+            SyncContext.PageTypeRepository.GetNumberOfSaves(pageTypeId).ShouldEqual(0);
     }
 
     [Subject("Synchronization")]
@@ -49,7 +49,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.NoSaving
         Establish context = () =>
         {
             numberOfPageTypesBeforeSynchronization =
-                    SyncContext.PageTypeFactory.List().Count();
+                    SyncContext.PageTypeRepository.List().Count();
 
             SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {
@@ -63,7 +63,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.NoSaving
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_page_type =
-            () => SyncContext.PageTypeFactory.List().Count()
+            () => SyncContext.PageTypeRepository.List().Count()
                 .ShouldEqual(numberOfPageTypesBeforeSynchronization);
     }
 
@@ -76,14 +76,14 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.NoSaving
 
         Establish context = () =>
         {
-            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
+            IPageType existingPageType = SyncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = "NameOfThePageType";
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.SortOrder = originalSortOrder;
 
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
             pageTypeId = existingPageType.ID;
-            SyncContext.PageTypeFactory.ResetNumberOfSaves();
+            SyncContext.PageTypeRepository.ResetNumberOfSaves();
 
             var attribute = new PageTypeAttribute();
             attribute.SortOrder = 2;
@@ -100,9 +100,9 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.NoSaving
             SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_update_the_existing_page_types_SortOrder = () =>
-            SyncContext.PageTypeFactory.Load(pageTypeId).SortOrder.ShouldEqual(originalSortOrder);
+            SyncContext.PageTypeRepository.Load(pageTypeId).SortOrder.ShouldEqual(originalSortOrder);
 
         It should_not_save_the_PageType = () =>
-            SyncContext.PageTypeFactory.GetNumberOfSaves(pageTypeId).ShouldEqual(0);
+            SyncContext.PageTypeRepository.GetNumberOfSaves(pageTypeId).ShouldEqual(0);
     }
 }

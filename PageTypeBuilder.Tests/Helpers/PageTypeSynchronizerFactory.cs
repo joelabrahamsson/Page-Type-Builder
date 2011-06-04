@@ -24,7 +24,7 @@ namespace PageTypeBuilder.Tests.Helpers
                 PageTypeDefinitionLocatorFactory.Create(),
                 new PageTypeBuilderConfiguration(),
                 pageDefinitionSynchronizationEngine,
-                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap())),
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 pageTypeResolver,
                 pageTypeLocator,
                 PageTypeUpdaterFactory.Create(),
@@ -46,7 +46,7 @@ namespace PageTypeBuilder.Tests.Helpers
 
         public static PageTypeSynchronizer Create()
         {
-            return Create(new PageTypeLocator(new PageTypeFactory()));
+            return Create(new PageTypeLocator(new PageTypeRepository()));
         }
 
         public static PageTypeSynchronizer PartialMock(
@@ -58,9 +58,9 @@ namespace PageTypeBuilder.Tests.Helpers
                 definitionLocator,
                 configuration,
                 PageDefinitionSynchronizationEngineFactory.Create(),
-                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap())),
+                new PageTypeDefinitionValidator(new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 new PageTypeResolver(),
-                new PageTypeLocator(new PageTypeFactory()),
+                new PageTypeLocator(new PageTypeRepository()),
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
                 TabLocatorFactory.Create(),

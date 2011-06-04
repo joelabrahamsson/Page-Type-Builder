@@ -20,16 +20,16 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             tabs.Add(newTab);
             tabDefinitionUpdater.Stub(updater => updater.UpdateTabDefinition(Arg<TabDefinition>.Is.Anything, Arg<Tab>.Is.Anything));
             tabDefinitionUpdater.Replay();
-            TabFactory fakeTabFactory = fakes.Stub<TabFactory>();
-            tabDefinitionUpdater.TabFactory = fakeTabFactory;
-            tabDefinitionUpdater.TabFactory.Stub(factory => factory.GetTabDefinition(newTab.Name)).Return(null);
-            tabDefinitionUpdater.TabFactory.Stub(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.Anything));
-            tabDefinitionUpdater.TabFactory.Replay();
+            TabDefinitionRepository fakeTabDefinitionRepository = fakes.Stub<TabDefinitionRepository>();
+            tabDefinitionUpdater.TabDefinitionRepository = fakeTabDefinitionRepository;
+            tabDefinitionUpdater.TabDefinitionRepository.Stub(factory => factory.GetTabDefinition(newTab.Name)).Return(null);
+            tabDefinitionUpdater.TabDefinitionRepository.Stub(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.Anything));
+            tabDefinitionUpdater.TabDefinitionRepository.Replay();
 
             tabDefinitionUpdater.UpdateTabDefinitions(tabs);
 
             tabDefinitionUpdater.AssertWasCalled(updater => updater.UpdateTabDefinition(Arg<TabDefinition>.Is.NotNull, Arg<Tab>.Matches(tab => tab == newTab)));
-            tabDefinitionUpdater.TabFactory.AssertWasCalled(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.NotNull));
+            tabDefinitionUpdater.TabDefinitionRepository.AssertWasCalled(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.NotNull));
         }
 
         [Fact]
@@ -40,15 +40,15 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             List<Tab> tabs = new List<Tab>();
             Tab existingTab = new TestTab();
             tabs.Add(existingTab);
-            TabFactory fakeTabFactory = fakes.Stub<TabFactory>();
-            tabDefinitionUpdater.TabFactory = fakeTabFactory;
+            TabDefinitionRepository fakeTabDefinitionRepository = fakes.Stub<TabDefinitionRepository>();
+            tabDefinitionUpdater.TabDefinitionRepository = fakeTabDefinitionRepository;
             TabDefinition existingTabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(existingTab);
-            tabDefinitionUpdater.TabFactory.Stub(factory => factory.GetTabDefinition(existingTab.Name)).Return(existingTabDefinition);
-            tabDefinitionUpdater.TabFactory.Replay();
+            tabDefinitionUpdater.TabDefinitionRepository.Stub(factory => factory.GetTabDefinition(existingTab.Name)).Return(existingTabDefinition);
+            tabDefinitionUpdater.TabDefinitionRepository.Replay();
 
             tabDefinitionUpdater.UpdateTabDefinitions(tabs);
 
-            tabDefinitionUpdater.TabFactory.AssertWasNotCalled(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.Anything));
+            tabDefinitionUpdater.TabDefinitionRepository.AssertWasNotCalled(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.Anything));
         }
 
         [Fact]
@@ -60,19 +60,19 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
             Tab existingTab = new TestTab();
             tabs.Add(existingTab);
             tabDefinitionUpdater.Stub(updater => updater.UpdateTabDefinition(Arg<TabDefinition>.Is.Anything, Arg<Tab>.Is.Anything));
-            TabFactory fakeTabFactory = fakes.Stub<TabFactory>();
-            tabDefinitionUpdater.TabFactory = fakeTabFactory;
+            TabDefinitionRepository fakeTabDefinitionRepository = fakes.Stub<TabDefinitionRepository>();
+            tabDefinitionUpdater.TabDefinitionRepository = fakeTabDefinitionRepository;
             TabDefinition existingTabDefinition = TabDefinitionUpdaterTestsUtility.CreateTabDefinition(existingTab);
-            tabDefinitionUpdater.TabFactory.Stub(factory => factory.GetTabDefinition(existingTab.Name)).Return(existingTabDefinition);
-            tabDefinitionUpdater.TabFactory.Stub(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.Anything));
-            tabDefinitionUpdater.TabFactory.Replay();
+            tabDefinitionUpdater.TabDefinitionRepository.Stub(factory => factory.GetTabDefinition(existingTab.Name)).Return(existingTabDefinition);
+            tabDefinitionUpdater.TabDefinitionRepository.Stub(factory => factory.SaveTabDefinition(Arg<TabDefinition>.Is.Anything));
+            tabDefinitionUpdater.TabDefinitionRepository.Replay();
             tabDefinitionUpdater.Stub(updater => updater.TabDefinitionShouldBeUpdated(existingTabDefinition, existingTab)).Return(true);
             tabDefinitionUpdater.Replay();
 
             tabDefinitionUpdater.UpdateTabDefinitions(tabs);
 
             tabDefinitionUpdater.AssertWasCalled(updater => updater.UpdateTabDefinition(existingTabDefinition, existingTab));
-            tabDefinitionUpdater.TabFactory.AssertWasCalled(factory => factory.SaveTabDefinition(existingTabDefinition));
+            tabDefinitionUpdater.TabDefinitionRepository.AssertWasCalled(factory => factory.SaveTabDefinition(existingTabDefinition));
         }
     }
 }

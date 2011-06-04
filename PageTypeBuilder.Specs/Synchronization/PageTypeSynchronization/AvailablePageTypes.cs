@@ -36,8 +36,8 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Availabl
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_page_type_that_has_only_itself_in_its_AllowedPageTypes_property =
-            () => SyncContext.PageTypeFactory.Load(className).AllowedPageTypes
-                .ShouldContainOnly(SyncContext.PageTypeFactory.Load(className).ID);
+            () => SyncContext.PageTypeRepository.Load(className).AllowedPageTypes
+                .ShouldContainOnly(SyncContext.PageTypeRepository.Load(className).ID);
     }
 
     [Subject("Synchronization")]
@@ -79,9 +79,9 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Availabl
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_ensure_that_the_corresponding_page_type_has_the_IDs_of_those_two_page_types_in_its_AllowedPageTypes_property =
-            () => SyncContext.PageTypeFactory.Load(className)
+            () => SyncContext.PageTypeRepository.Load(className)
                 .AllowedPageTypes.ShouldContainOnly(
-                    SyncContext.PageTypeFactory.Load(className).ID,
-                    SyncContext.PageTypeFactory.Load(otherClassName).ID);
+                    SyncContext.PageTypeRepository.Load(className).ID,
+                    SyncContext.PageTypeRepository.Load(otherClassName).ID);
     }
 }

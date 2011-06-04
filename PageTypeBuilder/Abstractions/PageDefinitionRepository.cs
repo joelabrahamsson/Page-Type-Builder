@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public class PageDefinitionFactory : IPageDefinitionFactory
+    public class PageDefinitionRepository : IPageDefinitionRepository
     {
         public virtual void Save(PageDefinition pageDefinition)
         {

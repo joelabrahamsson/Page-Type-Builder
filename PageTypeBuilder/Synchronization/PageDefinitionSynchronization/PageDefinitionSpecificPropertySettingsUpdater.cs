@@ -13,16 +13,16 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
     {
         IPropertySettingsRepository propertySettingsRepository;
         IGlobalPropertySettingsLocator globalPropertySettingsLocator;
-        IPageDefinitionFactory pageDefinitionFactory;
+        IPageDefinitionRepository pageDefinitionRepository;
 
         public PageDefinitionSpecificPropertySettingsUpdater(
             IPropertySettingsRepository propertySettingsRepository,
             IGlobalPropertySettingsLocator globalPropertySettingsLocator,
-            IPageDefinitionFactory pageDefinitionFactory)
+            IPageDefinitionRepository pageDefinitionRepository)
         {
             this.propertySettingsRepository = propertySettingsRepository;
             this.globalPropertySettingsLocator = globalPropertySettingsLocator;
-            this.pageDefinitionFactory = pageDefinitionFactory;
+            this.pageDefinitionRepository = pageDefinitionRepository;
         }
 
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
@@ -92,7 +92,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             if (pageDefinition.SettingsID == Guid.Empty)
             {
                 pageDefinition.SettingsID = Guid.NewGuid();
-                pageDefinitionFactory.Save(pageDefinition);
+                pageDefinitionRepository.Save(pageDefinition);
                 container = new PropertySettingsContainer(pageDefinition.SettingsID);
             }
             else

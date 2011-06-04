@@ -45,11 +45,11 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_page_definition_whose_PageTypeID_is_equal_to_the_page_types_ID =
-            () => SyncContext.PageDefinitionFactory.List().First().PageTypeID
-                .ShouldEqual(SyncContext.PageTypeFactory.List().First().ID);
+            () => SyncContext.PageDefinitionRepository.List().First().PageTypeID
+                .ShouldEqual(SyncContext.PageTypeRepository.List().First().ID);
 
         It should_create_a_page_definition_whose_name_equals_the_propertys_name =
-            () => SyncContext.PageDefinitionFactory.List().First().Name
+            () => SyncContext.PageDefinitionRepository.List().First().Name
                 .ShouldEqual(propertyName);
     }
 }

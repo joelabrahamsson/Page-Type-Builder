@@ -5,11 +5,11 @@ using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
-    public class InMemoryFrameFacade : IFrameFacade
+    public class InMemoryFrameRepository : IFrameRepository
     {
         private List<Frame> frames;
 
-        public InMemoryFrameFacade()
+        public InMemoryFrameRepository()
         {
             frames = new List<Frame>
                 {

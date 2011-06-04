@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public interface ITabFactory
+    public interface ITabDefinitionRepository
     {
         TabDefinition GetTabDefinition(string name);
         void SaveTabDefinition(TabDefinition tabDefinition);

@@ -8,17 +8,17 @@ namespace PageTypeBuilder.Tests.Helpers
     {
         public static TabDefinitionUpdater Create()
         {
-            return new TabDefinitionUpdater(new TabFactory());
+            return new TabDefinitionUpdater(new TabDefinitionRepository());
         }
 
         public static TabDefinitionUpdater Stub(MockRepository fakesRepository)
         {
-            return fakesRepository.Stub<TabDefinitionUpdater>(new TabFactory());
+            return fakesRepository.Stub<TabDefinitionUpdater>(new TabDefinitionRepository());
         }
 
         public static TabDefinitionUpdater PartialMock(MockRepository fakesRepository)
         {
-            return fakesRepository.PartialMock<TabDefinitionUpdater>(new TabFactory());
+            return fakesRepository.PartialMock<TabDefinitionUpdater>(new TabDefinitionRepository());
         }
     }
 }

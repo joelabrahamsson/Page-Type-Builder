@@ -19,12 +19,12 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeValueExtractor _pageTypeValueExtractor;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
-            IPageTypeFactory pageTypeFactory, 
+            IPageTypeRepository pageTypeRepository, 
             IPageTypeValueExtractor pageTypeValueExtractor,
             IPageTypeLocator pageTypeLocator)
         {
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
-            PageTypeFactory = pageTypeFactory;
+            PageTypeRepository = pageTypeRepository;
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
             _pageTypeLocator = pageTypeLocator;
@@ -37,7 +37,7 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual IPageType CreateNewPageType(PageTypeDefinition definition)
         {
-            IPageType pageType = PageTypeFactory.CreateNew();
+            IPageType pageType = PageTypeRepository.CreateNew();
 
             PageTypeAttribute attribute = definition.Attribute;
 
@@ -58,7 +58,7 @@ namespace PageTypeBuilder.Synchronization
             }
             pageType.FileName = filename;
             
-            PageTypeFactory.Save(pageType);
+            PageTypeRepository.Save(pageType);
 
             return pageType;
         }
@@ -85,7 +85,7 @@ namespace PageTypeBuilder.Synchronization
             
             string newValuesString = SerializeValues(pageType);
             if (newValuesString != oldValueString)
-                PageTypeFactory.Save(pageType);
+                PageTypeRepository.Save(pageType);
         }
 
         protected internal virtual string SerializeValues(IPageType pageType)
@@ -232,7 +232,7 @@ namespace PageTypeBuilder.Synchronization
             pageType.AllowedPageTypes = availablePageTypeIDs;
         }
 
-        public IPageTypeFactory PageTypeFactory { get; set; }
+        public IPageTypeRepository PageTypeRepository { get; set; }
 
         internal string DefaultFilename { get; set; }
     }

@@ -20,9 +20,9 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.NoSaving
                 SortIndex = 0,
             };
 
-            SyncContext.TabFactory.SaveTabDefinition(existingTab);
+            SyncContext.TabDefinitionRepository.SaveTabDefinition(existingTab);
             existingTabDefinitionId = existingTab.ID;
-            SyncContext.TabFactory.ResetNumberOfSaves();
+            SyncContext.TabDefinitionRepository.ResetNumberOfSaves();
 
             var tabClass = TabClassFactory.CreateTabClass(
                 "NameOfClass",
@@ -37,6 +37,6 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.NoSaving
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_save_the_existing_TabDefinition = () =>
-            SyncContext.TabFactory.GetNumberOfSaves(existingTabDefinitionId).ShouldEqual(0);
+            SyncContext.TabDefinitionRepository.GetNumberOfSaves(existingTabDefinitionId).ShouldEqual(0);
     }
 }

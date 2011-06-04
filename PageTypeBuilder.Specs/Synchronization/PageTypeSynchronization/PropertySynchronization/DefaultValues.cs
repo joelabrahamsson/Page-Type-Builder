@@ -23,7 +23,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_new_PageDefinition_with_an_EditCaption_equal_to_the_propertys_name =
-            () => SyncContext.PageDefinitionFactory.List().First()
+            () => SyncContext.PageDefinitionRepository.List().First()
                 .EditCaption.ShouldEqual(propertyName);
     }
 }

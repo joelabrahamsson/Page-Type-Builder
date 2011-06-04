@@ -462,9 +462,9 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             pageTypeDefinitionLocator.Setup(locator => locator.GetPageTypeDefinitions()).Returns(definitions);
             PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(
                 pageTypeDefinitionLocator.Object, 
-                new PageTypeFactory(),
+                new PageTypeRepository(),
                 new PageTypeValueExtractor(),
-                new PageTypeLocator(new PageTypeFactory()));
+                new PageTypeLocator(new PageTypeRepository()));
             IPageType allowedPageType = new NativePageType();
             allowedPageType.ID = 1;
             pageTypeUpdater.Stub(updater => updater.GetExistingPageType(definitionToReturn)).Return(allowedPageType);
@@ -496,7 +496,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
             pageTypeUpdater.UpdatePageType(definition);
 
-            pageTypeUpdater.PageTypeFactory.AssertWasCalled(factory => factory.Save(Arg<IPageType>.Is.NotNull));
+            pageTypeUpdater.PageTypeRepository.AssertWasCalled(factory => factory.Save(Arg<IPageType>.Is.NotNull));
         }
 
         private PageTypeUpdater CreateFakePageTypeUpdaterWithUpdatePageTypeMethodHelperStubs()
@@ -504,13 +504,13 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             MockRepository mocks = new MockRepository();
             PageTypeUpdater pageTypeUpdater = mocks.PartialMock<PageTypeUpdater>(
                 PageTypeDefinitionLocatorFactory.Stub(), 
-                new PageTypeFactory(),
+                new PageTypeRepository(),
                 new PageTypeValueExtractor(),
-                new PageTypeLocator(new PageTypeFactory()));
-            PageTypeFactory pageTypeFactory = mocks.Stub<PageTypeFactory>();
-            pageTypeFactory.Stub(factory => factory.Save(Arg<IPageType>.Is.Anything));
-            pageTypeFactory.Replay();
-            pageTypeUpdater.PageTypeFactory = pageTypeFactory;
+                new PageTypeLocator(new PageTypeRepository()));
+            PageTypeRepository pageTypeRepository = mocks.Stub<PageTypeRepository>();
+            pageTypeRepository.Stub(factory => factory.Save(Arg<IPageType>.Is.Anything));
+            pageTypeRepository.Replay();
+            pageTypeUpdater.PageTypeRepository = pageTypeRepository;
             pageTypeUpdater.Stub(updater => updater.GetExistingPageType(Arg<PageTypeDefinition>.Is.Anything)).Return(new NativePageType());
             pageTypeUpdater.Stub(updater => updater.UpdateName(Arg<IPageType>.Is.Anything, Arg<PageTypeDefinition>.Is.Anything));
             pageTypeUpdater.Stub(updater => updater.UpdateFilename(Arg<IPageType>.Is.Anything, Arg<PageTypeAttribute>.Is.Anything));

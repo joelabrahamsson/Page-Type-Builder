@@ -7,11 +7,11 @@ using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
-    public class InMemoryPageDefinitionTypeFactory : IPageDefinitionTypeFactory
+    public class InMemoryPageDefinitionTypeRepository : IPageDefinitionTypeRepository
     {
         private List<PageDefinitionType> pageDefinitions;
 
-        public InMemoryPageDefinitionTypeFactory()
+        public InMemoryPageDefinitionTypeRepository()
         {
             pageDefinitions = new List<PageDefinitionType>
             {

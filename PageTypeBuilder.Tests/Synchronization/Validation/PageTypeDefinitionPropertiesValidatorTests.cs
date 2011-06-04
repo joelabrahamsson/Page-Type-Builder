@@ -396,12 +396,12 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
             PropertyInfo propertyInfo = typeof(TestPageType).GetProperty("StringTestProperty");
             PageTypePropertyAttribute attribute = propertyInfo.GetCustomAttributes<PageTypePropertyAttribute>().First();
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeFactory pageDefinitionTypeFactory = fakes.Stub<PageDefinitionTypeFactory>();
-            pageDefinitionTypeFactory.Stub(factory =>
+            PageDefinitionTypeRepository pageDefinitionTypeRepository = fakes.Stub<PageDefinitionTypeRepository>();
+            pageDefinitionTypeRepository.Stub(factory =>
                 factory.GetPageDefinitionType("EPiServer.SpecializedProperties.PropertyXhtmlString", "EPiServer")).Return(new PageDefinitionType());
-            pageDefinitionTypeFactory.Replay();
+            pageDefinitionTypeRepository.Replay();
             PageTypeDefinitionPropertiesValidator propertiesValidator =
-                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory, new NativePageDefinitionsMap()));
+                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeRepository, new NativePageDefinitionsMap()));
 
             Exception exception = Record.Exception(() =>
             {
@@ -433,12 +433,12 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
             PropertyInfo propertyInfo = typeof(TestPageType).GetProperty("PropertyWithValidTypeSpecified");
             PageTypePropertyAttribute attribute = propertyInfo.GetCustomAttributes<PageTypePropertyAttribute>().First();
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeFactory pageDefinitionTypeFactory = fakes.Stub<PageDefinitionTypeFactory>();
-            pageDefinitionTypeFactory.Stub(factory =>
+            PageDefinitionTypeRepository pageDefinitionTypeRepository = fakes.Stub<PageDefinitionTypeRepository>();
+            pageDefinitionTypeRepository.Stub(factory =>
                 factory.GetPageDefinitionType("EPiServer.SpecializedProperties.PropertyXhtmlString", "EPiServer")).Return(new PageDefinitionType());
-            pageDefinitionTypeFactory.Replay();
+            pageDefinitionTypeRepository.Replay();
             PageTypeDefinitionPropertiesValidator propertiesValidator =
-                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory, new NativePageDefinitionsMap()));
+                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeRepository, new NativePageDefinitionsMap()));
 
             Exception exception = Record.Exception(() =>
             {
@@ -454,12 +454,12 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
             PropertyInfo propertyInfo = typeof(TestPageType).GetProperty("PropertyWithInvalidTypeSpecified");
             PageTypePropertyAttribute attribute = propertyInfo.GetCustomAttributes<PageTypePropertyAttribute>().First();
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeFactory pageDefinitionTypeFactory = fakes.Stub<PageDefinitionTypeFactory>();
-            pageDefinitionTypeFactory.Stub(factory =>
+            PageDefinitionTypeRepository pageDefinitionTypeRepository = fakes.Stub<PageDefinitionTypeRepository>();
+            pageDefinitionTypeRepository.Stub(factory =>
                 factory.GetPageDefinitionType("System.Text.StringBuilder", "mscorlib")).Return(null);
-            pageDefinitionTypeFactory.Replay();
+            pageDefinitionTypeRepository.Replay();
             PageTypeDefinitionPropertiesValidator propertiesValidator =
-                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeFactory, new NativePageDefinitionsMap()));
+                new PageTypeDefinitionPropertiesValidator(new PageDefinitionTypeMapper(pageDefinitionTypeRepository, new NativePageDefinitionsMap()));
 
 
             Exception exception = Record.Exception(() =>

@@ -138,11 +138,11 @@ namespace PageTypeBuilder.Specs.Synchronization.Validation.ClashingClasses
         {
             var guid = Guid.NewGuid();
 
-            IPageType existingPageType = SyncContext.PageTypeFactory.CreateNew();
+            IPageType existingPageType = SyncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = nameOfTheFirstPageTypeClass;
             existingPageType.FileName = PageTypeUpdater.DefaultPageTypeFilename;
             existingPageType.GUID = guid;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
 
             SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
             {

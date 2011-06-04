@@ -13,25 +13,25 @@ namespace PageTypeBuilder.Tests.Helpers
         public static PageDefinitionSynchronizationEngine Create()
         {
             return new PageDefinitionSynchronizationEngine(
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory(), new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap())),
+                new PageDefinitionUpdater(new PageDefinitionRepository(), new TabDefinitionRepository(), new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionFactory()));
+                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()));
         }
 
         public static PageDefinitionSynchronizationEngine PartialMock(MockRepository fakesRepository)
         {
             return fakesRepository.PartialMock<PageDefinitionSynchronizationEngine>(
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory(), new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap())),
+                new PageDefinitionUpdater(new PageDefinitionRepository(), new TabDefinitionRepository(), new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionFactory()));
+                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()));
         }
 
         public static PageDefinitionSynchronizationEngine Stub(MockRepository fakesRepository)
         {
             return fakesRepository.Stub<PageDefinitionSynchronizationEngine>(
-                new PageDefinitionUpdater(new PageDefinitionFactory(), new TabFactory(), new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap())),
+                new PageDefinitionUpdater(new PageDefinitionRepository(), new TabDefinitionRepository(), new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 new PageTypePropertyDefinitionLocator(), 
-                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionFactory()));
+                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()));
         }
     }
 }

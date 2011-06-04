@@ -25,9 +25,9 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.ValueSetting
                 SortIndex = 0,
             };
 
-            SyncContext.TabFactory.SaveTabDefinition(existingTab);
+            SyncContext.TabDefinitionRepository.SaveTabDefinition(existingTab);
             existingTabDefinitionId = existingTab.ID;
-            SyncContext.TabFactory.ResetNumberOfSaves();
+            SyncContext.TabDefinitionRepository.ResetNumberOfSaves();
 
             var tabClass = TabClassFactory.CreateTabClass(
                 "NameOfClass",
@@ -42,7 +42,7 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.ValueSetting
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_update_the_existing_TabDefinition_to_have_the_RequiredAccess_specified_by_the_class = () =>
-            SyncContext.TabFactory.List().First(t => t.ID == existingTabDefinitionId).RequiredAccess
+            SyncContext.TabDefinitionRepository.List().First(t => t.ID == existingTabDefinitionId).RequiredAccess
                 .ShouldEqual(accessLevelSpecifiedInTheClass);
     }
 
@@ -62,9 +62,9 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.ValueSetting
                 SortIndex = 0,
             };
 
-            SyncContext.TabFactory.SaveTabDefinition(existingTab);
+            SyncContext.TabDefinitionRepository.SaveTabDefinition(existingTab);
             existingTabDefinitionId = existingTab.ID;
-            SyncContext.TabFactory.ResetNumberOfSaves();
+            SyncContext.TabDefinitionRepository.ResetNumberOfSaves();
 
             var tabClass = TabClassFactory.CreateTabClass(
                 "NameOfClass",
@@ -79,7 +79,7 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.ValueSetting
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_update_the_existing_TabDefinition_to_have_the_SortIndex_specified_by_the_class = () =>
-            SyncContext.TabFactory.List().First(t => t.ID == existingTabDefinitionId).SortIndex
+            SyncContext.TabDefinitionRepository.List().First(t => t.ID == existingTabDefinitionId).SortIndex
                 .ShouldEqual(sortIndexSpecifiedInTheClass);
     }
 }

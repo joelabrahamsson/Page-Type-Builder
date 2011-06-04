@@ -29,13 +29,13 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
 
         private PageDefinitionUpdater GetPageDefinitionUpdater()
         {
-            var pageDefinitionFactory = new Mock<IPageDefinitionFactory>();
-            var tabFactory = new Mock<ITabFactory>();
+            var pageDefinitionFactory = new Mock<IPageDefinitionRepository>();
+            var tabFactory = new Mock<ITabDefinitionRepository>();
             tabFactory.Setup(f => f.List()).Returns(new TabDefinitionCollection {new TabDefinition(1, "Tab")});
             return new PageDefinitionUpdater(
                 pageDefinitionFactory.Object,
                 tabFactory.Object,
-                new PageDefinitionTypeMapper(new PageDefinitionTypeFactory(), new NativePageDefinitionsMap()));
+                new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap()));
         }
 
         [Fact]

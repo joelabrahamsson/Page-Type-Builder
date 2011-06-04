@@ -16,7 +16,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         {
             Scan(scanner =>
                      {
-                         scanner.AssemblyContainingType<InMemoryPageTypeFactory>();
+                         scanner.AssemblyContainingType<InMemoryPageTypeRepository>();
                          scanner.Convention<InMemoryConvention>();
                      });
 
@@ -32,7 +32,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
             Scan(scanner =>
             {
-                scanner.AssemblyContainingType<IPageTypeFactory>();
+                scanner.AssemblyContainingType<IPageTypeRepository>();
                 scanner.WithDefaultConventions();
             });
         }

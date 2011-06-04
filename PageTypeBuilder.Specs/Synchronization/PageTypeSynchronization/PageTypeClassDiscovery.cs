@@ -19,7 +19,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PageType
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_page_type =
-            () => SyncContext.PageTypeFactory.List().Count()
+            () => SyncContext.PageTypeRepository.List().Count()
                 .ShouldEqual(numberOfPageTypesBeforeSynchronization);
     }
 
@@ -45,7 +45,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PageType
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_new_page_type =
-            () => SyncContext.PageTypeFactory.List().Count()
+            () => SyncContext.PageTypeRepository.List().Count()
                 .ShouldEqual(numberOfPageTypesBeforeSynchronization + 1);
     }
 }
