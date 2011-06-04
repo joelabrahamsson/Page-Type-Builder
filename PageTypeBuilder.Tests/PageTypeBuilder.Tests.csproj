@@ -149,7 +149,6 @@
     <Compile Include="Synchronization\PageTypeUpdaterTests\PageTypeUpdaterTestsUtility.cs" />
     <Compile Include="Synchronization\PageTypeUpdaterTests\UpdatePageTypeMethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Synchronization\PageTypeSynchronizerTests\ConstructorTests.cs" />
     <Compile Include="Synchronization\PageTypeSynchronizerTests\SynchronizePageTypesTests.cs" />
     <Compile Include="Synchronization\TabDefinitionUpdaterTests\UpdateTabDefinitionsTests.cs" />
     <Compile Include="TestPageType.cs" />

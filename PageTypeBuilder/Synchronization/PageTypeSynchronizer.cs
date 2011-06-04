@@ -3,6 +3,7 @@ using System.Linq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Synchronization.Hooks;
 using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 
@@ -14,6 +15,7 @@ namespace PageTypeBuilder.Synchronization
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private PageTypeBuilderConfiguration _configuration;
         private GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer;
+        private IHooksHandler hooksHandler;
 
         public PageTypeSynchronizer(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             PageTypeBuilderConfiguration configuration, 
@@ -24,10 +26,11 @@ namespace PageTypeBuilder.Synchronization
             PageTypeUpdater pageTypeUpdater,
             TabDefinitionUpdater tabDefinitionUpdater,
             TabLocator tabLocator,
-            GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer)
+            GlobalPropertySettingsSynchronizer globalPropertySettingsSynchronizer,
+            IHooksHandler hooksHandler)
         {
             _configuration = configuration;
-            PageTypeResolver = pageTypeResolver;
+            this.pageTypeResolver = pageTypeResolver;
             TabLocator = tabLocator;
             TabDefinitionUpdater = tabDefinitionUpdater;
             _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
@@ -36,10 +39,13 @@ namespace PageTypeBuilder.Synchronization
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
             _pageTypeLocator = pageTypeLocator;
             this.globalPropertySettingsSynchronizer = globalPropertySettingsSynchronizer;
+            this.hooksHandler = hooksHandler;
         }
 
         internal void SynchronizePageTypes()
         {
+            hooksHandler.InvokePreSynchronizationHooks();
+
             if (!_configuration.DisablePageTypeUpdation)
             {
                 UpdateTabDefinitions();
@@ -98,7 +104,7 @@ namespace PageTypeBuilder.Synchronization
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
                 IPageType pageType = _pageTypeLocator.GetExistingPageType(definition);
-                PageTypeResolver.AddPageType(pageType.ID, definition.Type);
+                pageTypeResolver.AddPageType(pageType.ID, definition.Type);
             }
         }
 
@@ -118,8 +124,8 @@ namespace PageTypeBuilder.Synchronization
                 PageDefinitionSynchronizationEngine.UpdatePageTypePropertyDefinitions(pageType, definition);
             }
         }
-        
-        protected internal virtual PageTypeResolver PageTypeResolver { get; set; }
+
+        private PageTypeResolver pageTypeResolver;
 
         protected internal virtual TabLocator TabLocator { get; set; }
 

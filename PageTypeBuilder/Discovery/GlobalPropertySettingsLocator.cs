@@ -41,18 +41,9 @@ namespace PageTypeBuilder.Discovery
 
         private IEnumerable<Type> GetTypesInApplicationDomain()
         {
-            string assemblyName = typeof(IUpdateGlobalPropertySettings<>).Assembly.GetName().Name;
-            List<Type> updaterTypes = new List<Type>();
-            var assemblies = assemblyLocator.GetAssemblies();
-            foreach (Assembly assembly in assemblies)
-            {
-                if(assembly.GetReferencedAssemblies().Count(a => a.Name == assemblyName) == 0)
-                    continue;
-
-                IEnumerable<Type> typesInAssembly = assembly.GetTypes();
-                updaterTypes.AddRange(typesInAssembly);
-            }
-            return updaterTypes;
+            return assemblyLocator
+                .AssembliesWithReferenceToAssemblyOf(typeof (IUpdatePropertySettings<>))
+                .Types();
         }
     }
 }

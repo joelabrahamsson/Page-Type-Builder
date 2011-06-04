@@ -9,6 +9,7 @@ using PageTypeBuilder.Configuration;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.Hooks;
 using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using PageTypeBuilder.Synchronization.Validation;
 
@@ -93,6 +94,9 @@ namespace PageTypeBuilder
             containerBuilder
                 .RegisterType<PageDefinitionSpecificPropertySettingsUpdater>()
                 .As<PageDefinitionSpecificPropertySettingsUpdater>();
+            containerBuilder
+                .RegisterType<HooksHandler>()
+                .As<IHooksHandler>();
         }
     }
 }

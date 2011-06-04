@@ -75,5 +75,39 @@ namespace PageTypeBuilder.Reflection
         {
             return !type.IsValueType || type.IsNullableType();
         }
+
+        public static IEnumerable<Type> WithAttribute<T>(this IEnumerable<Type> types)
+            where T : Attribute
+        {
+            foreach (var type in types)
+            {
+                object[] attributes = GetAttributes(type);
+                foreach (object attribute in attributes)
+                {
+                    if (typeof(T).IsAssignableFrom(attribute.GetType()))
+                        yield return type;
+                }
+            }
+        }
+
+        private static object[] GetAttributes(Type type)
+        {
+            return type.GetCustomAttributes(true); ;
+        }
+
+        public static T GetAttribute<T>(this Type type)
+            where T : Attribute
+        {
+            T attribute = null;
+
+            object[] attributes = type.GetCustomAttributes(true);
+            foreach (object attributeInType in attributes)
+            {
+                if (typeof(T).IsAssignableFrom(attributeInType.GetType()))
+                    attribute = (T)attributeInType;
+            }
+
+            return attribute;
+        }
     }
 }
