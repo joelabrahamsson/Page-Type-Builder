@@ -113,6 +113,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
     <Compile Include="Hooks\PreSynchronizationHooks.cs" />
+    <Compile Include="Migrations\Validation.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Updating.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AbstractClasses.cs" />
@@ -148,6 +149,10 @@
     <None Include="PageTypeBuilder.Specs.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PageTypeBuilder.Migrations\PageTypeBuilder.Migrations.csproj">
+      <Project>{16AA8088-9008-49EC-A23F-C4BBD6BFE549}</Project>
+      <Name>PageTypeBuilder.Migrations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PageTypeBuilder\PageTypeBuilder.csproj">
       <Project>{E6723D8E-6D57-4388-B746-0E887E6B4B1C}</Project>
       <Name>PageTypeBuilder</Name>
