@@ -159,6 +159,8 @@
     <Compile Include="Synchronization\Hooks\HooksHandler.cs" />
     <Compile Include="Synchronization\Hooks\IHooksHandler.cs" />
     <Compile Include="Synchronization\Hooks\IPreSynchronizationHook.cs" />
+    <Compile Include="Synchronization\Hooks\ISynchronizationHookContext.cs" />
+    <Compile Include="Synchronization\Hooks\SynchronizationHookContext.cs" />
     <Compile Include="Synchronization\INativePageDefinitionsMap.cs" />
     <Compile Include="Synchronization\IPageDefinitionUpdater.cs" />
     <Compile Include="Synchronization\IPageTypeLocator.cs" />

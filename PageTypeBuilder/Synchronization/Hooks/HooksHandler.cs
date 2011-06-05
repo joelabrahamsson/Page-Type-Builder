@@ -23,7 +23,7 @@ namespace PageTypeBuilder.Synchronization.Hooks
                 .Select(t => (IPreSynchronizationHook) Activator.CreateInstance(t))
                 .ToList();
 
-            hooks.ForEach(h => h.PreSynchronization());
+            hooks.ForEach(h => h.PreSynchronization(new SynchronizationHookContext(assemblyLocator)));
         }
     }
 }
