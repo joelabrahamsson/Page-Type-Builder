@@ -7,11 +7,11 @@ namespace $rootnamespace$
 {
     [InitializableModule]
     [ModuleDependency(typeof(Initializer))]
-    public class PageTypeBuilderInitializer : IInitializableModule
+    public class StructureMapActivatorInitializer : IInitializableModule
     {
         public void Initialize(InitializationEngine context)
         {
-            PageTypeResolver.Instance.Activator = new StructureMapTypedPageActivator(StructureMap.ObjectFactory);
+            PageTypeResolver.Instance.Activator = new StructureMapTypedPageActivator(StructureMap.ObjectFactory.Container);
         }
 
         public void Uninitialize(InitializationEngine context)

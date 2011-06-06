@@ -15,4 +15,7 @@
     <tags>EPiServer, PageTypeBuilder, StructureMap</tags>
     <language>en-US</language> 
   </metadata>
+  <files>
+    <file src="content\StructureMapActivatorInitializer.cs.pp" target="content" /> 
+  </files>
 </package>
