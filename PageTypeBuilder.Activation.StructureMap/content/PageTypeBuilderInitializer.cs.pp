@@ -2,7 +2,6 @@
 using EPiServer.Framework.Initialization;
 using PageTypeBuilder;
 using PageTypeBuilder.Activation.StructureMap;
-using SE1177.Core.Framework.IOC;
 
 namespace $rootnamespace$
 {
@@ -12,7 +11,7 @@ namespace $rootnamespace$
     {
         public void Initialize(InitializationEngine context)
         {
-            PageTypeResolver.Instance.Activator = new StructureMapTypedPageActivator(IOC.Container);
+            PageTypeResolver.Instance.Activator = new StructureMapTypedPageActivator(StructureMap.ObjectFactory);
         }
 
         public void Uninitialize(InitializationEngine context)
