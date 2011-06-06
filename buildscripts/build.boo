@@ -17,6 +17,13 @@ target compile:
   msbuild(file: solution_file, configuration: configuration)
 
 desc "Build NuGet packages"
+target nuget2:
+
+  exec("Libraries/NuGet/NuGet.exe","pack PageTypeBuilder\\PageTypeBuilder.csproj /o nugetpackages")
+  exec("Libraries/NuGet/NuGet.exe","pack PageTypeBuilder.Activation.StructureMap\\PageTypeBuilder.Activation.StructureMap.csproj /o nugetpackages")
+
+
+desc "Build NuGet packages"
 target nuget:
 
   with FileList("PageTypeBuilder/bin/${configuration}"):

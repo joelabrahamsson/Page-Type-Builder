@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PageTypeBuilder</id>
+    <description>Page Type Builder allows developers to define EPiServer page types in code which eliminates the need to synchronize page types between different servers.</description> 
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>http://pagetypebuilder.codeplex.com/</projectUrl>
+    <licenseUrl>http://pagetypebuilder.codeplex.com/license</licenseUrl>
+    <dependencies>
+        <dependency id="Castle.Core" version="2.5.1" />
+    </dependencies>
+    <tags>EPiServer, PageTypeBuilder, PTB</tags>
+  </metadata>
+</package>

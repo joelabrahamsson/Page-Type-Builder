@@ -2,7 +2,7 @@
 <package> 
   <metadata> 
     <id>pagetypebuilder</id> 
-    <version>1.3.0</version> 
+    <version>$version$</version> 
     <authors>Joel Abrahamsson</authors> 
     <owners>Joel Abrahamsson</owners>
     <description>Page Type Builder allows developers to define EPiServer page types in code which eliminates the need to synchronize page types between different servers.</description> 
