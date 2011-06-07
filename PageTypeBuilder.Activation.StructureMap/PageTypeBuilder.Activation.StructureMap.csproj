@@ -63,9 +63,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.BaseLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap, Version=2.6.1.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+    <Reference Include="StructureMap, Version=2.6.2.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap.2.6.2\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -94,6 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="PageTypeBuilder.Activation.StructureMap.snk" />
   </ItemGroup>
   <ItemGroup>
