@@ -23,9 +23,9 @@ namespace PageTypeBuilder.Specs.Helpers
             var pageTypeAttribute = new PageTypeAttribute(guid.ToString());
             
             var anotherPageTypeClass = syncContext.CreateAndAddPageTypeClassToAppDomain(type => { });
-            var existingPageType = syncContext.PageTypeFactory.CreateNew();
+            var existingPageType = syncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = anotherPageTypeClass.Name;
-            syncContext.PageTypeFactory.Save(existingPageType);
+            syncContext.PageTypeRepository.Save(existingPageType);
             syncContext.PageTypeResolver.AddPageType(existingPageType.ID, anotherPageTypeClass);
 
             var availablePageTypes = new[] { anotherPageTypeClass };

@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public interface IPageTypeFactory
+    public interface IPageTypeRepository
     {
         IPageType Load(string name);
         IPageType Load(Guid guid);

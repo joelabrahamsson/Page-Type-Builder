@@ -13,8 +13,8 @@ namespace PageTypeBuilder.Tests.Synchronization.TabDefinitionUpdaterTests
         {
             TabDefinitionUpdater tabUpdater = TabDefinitionUpdaterFactory.Create();
 
-            Assert.NotNull(tabUpdater.TabFactory);
-            Assert.Equal<Type>(typeof(TabFactory), tabUpdater.TabFactory.GetType());
+            Assert.NotNull(tabUpdater.TabDefinitionRepository);
+            Assert.Equal<Type>(typeof(TabDefinitionRepository), tabUpdater.TabDefinitionRepository.GetType());
         }
     }
 }

@@ -18,7 +18,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Abstract
         Establish context = () =>
         {
             numberOfPageTypesBeforeSynchronization =
-                SyncContext.PageTypeFactory.List().Count();
+                SyncContext.PageTypeRepository.List().Count();
 
             SyncContext.AddTypeInheritingFromTypedPageData(type =>
             {
@@ -32,7 +32,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Abstract
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_page_type =
-            () => SyncContext.PageTypeFactory.List().Count()
+            () => SyncContext.PageTypeRepository.List().Count()
                 .ShouldEqual(numberOfPageTypesBeforeSynchronization);
     }
 
@@ -64,7 +64,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Abstract
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_new_page_type_with_the_name_of_the_concrete_class =
-            () => SyncContext.PageTypeFactory.Load(className).ShouldNotBeNull();
+            () => SyncContext.PageTypeRepository.Load(className).ShouldNotBeNull();
     }
 
     [Subject("Synchronization")]
@@ -95,6 +95,6 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Abstract
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_new_page_type_with_the_name_of_the_concrete_class =
-            () => SyncContext.PageTypeFactory.Load(className).ShouldNotBeNull();
+            () => SyncContext.PageTypeRepository.Load(className).ShouldNotBeNull();
     }
 }

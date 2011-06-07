@@ -2,7 +2,7 @@
 
 namespace PageTypeBuilder.Abstractions
 {
-    public class PageTypeFactory : IPageTypeFactory
+    public class PageTypeRepository : IPageTypeRepository
     {
         public virtual IPageType Load(string name)
         {

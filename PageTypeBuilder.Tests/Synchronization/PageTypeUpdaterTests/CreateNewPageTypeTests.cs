@@ -32,11 +32,11 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         private void SetupPageTypeUpdaterWithFakePageTypeFactory(PageTypeUpdater pageTypeUpdater)
         {
             MockRepository mocks = new MockRepository();
-            PageTypeFactory fakePageTypeFactory = mocks.Stub<PageTypeFactory>();
-            fakePageTypeFactory.Stub(factory => factory.Save(Arg<IPageType>.Is.NotNull));
-            fakePageTypeFactory.Stub(factory => factory.CreateNew()).Return(new NativePageType());
-            fakePageTypeFactory.Replay();
-            pageTypeUpdater.PageTypeFactory = fakePageTypeFactory;
+            PageTypeRepository fakePageTypeRepository = mocks.Stub<PageTypeRepository>();
+            fakePageTypeRepository.Stub(factory => factory.Save(Arg<IPageType>.Is.NotNull));
+            fakePageTypeRepository.Stub(factory => factory.CreateNew()).Return(new NativePageType());
+            fakePageTypeRepository.Replay();
+            pageTypeUpdater.PageTypeRepository = fakePageTypeRepository;
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
 
             pageTypeUpdater.CreateNewPageType(definition);
 
-            pageTypeUpdater.PageTypeFactory.AssertWasCalled(factory => factory.Save(Arg<IPageType>.Is.NotNull));
+            pageTypeUpdater.PageTypeRepository.AssertWasCalled(factory => factory.Save(Arg<IPageType>.Is.NotNull));
         }
     }
 }

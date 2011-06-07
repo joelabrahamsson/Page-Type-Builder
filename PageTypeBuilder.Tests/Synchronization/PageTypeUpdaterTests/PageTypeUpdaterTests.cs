@@ -15,8 +15,8 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         {
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
 
-            Assert.NotNull(pageTypeUpdater.PageTypeFactory);
-            Assert.Equal<Type>(typeof(PageTypeFactory), pageTypeUpdater.PageTypeFactory.GetType());
+            Assert.NotNull(pageTypeUpdater.PageTypeRepository);
+            Assert.Equal<Type>(typeof(PageTypeRepository), pageTypeUpdater.PageTypeRepository.GetType());
         }
 
         private PageTypeUpdater CreatePageTypeUpdater()
@@ -30,10 +30,10 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         {
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
 
-            PageTypeFactory setPageTypeFactory = new PageTypeFactory();
-            pageTypeUpdater.PageTypeFactory = setPageTypeFactory;
+            PageTypeRepository setPageTypeRepository = new PageTypeRepository();
+            pageTypeUpdater.PageTypeRepository = setPageTypeRepository;
 
-            Assert.Equal<IPageTypeFactory>(setPageTypeFactory, pageTypeUpdater.PageTypeFactory);
+            Assert.Equal<IPageTypeRepository>(setPageTypeRepository, pageTypeUpdater.PageTypeRepository);
         }
 
         [Fact]

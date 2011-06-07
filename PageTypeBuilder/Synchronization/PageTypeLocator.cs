@@ -6,11 +6,11 @@ namespace PageTypeBuilder.Synchronization
 {
     public class PageTypeLocator : IPageTypeLocator
     {
-        private IPageTypeFactory _pageTypeFactory;
+        private IPageTypeRepository pageTypeRepository;
 
-        public PageTypeLocator(IPageTypeFactory pageTypeFactory)
+        public PageTypeLocator(IPageTypeRepository pageTypeRepository)
         {
-            _pageTypeFactory = pageTypeFactory;
+            this.pageTypeRepository = pageTypeRepository;
         }
 
         public virtual IPageType GetExistingPageType(PageTypeDefinition definition)
@@ -20,17 +20,17 @@ namespace PageTypeBuilder.Synchronization
             PageTypeAttribute attribute = definition.Attribute;
             if (attribute.Guid.HasValue)
             {
-                existingPageType = _pageTypeFactory.Load(attribute.Guid.Value);
+                existingPageType = pageTypeRepository.Load(attribute.Guid.Value);
             }
 
             if (existingPageType == null && attribute.Name != null)
             {
-                existingPageType = _pageTypeFactory.Load(attribute.Name);
+                existingPageType = pageTypeRepository.Load(attribute.Name);
             }
 
             if (existingPageType == null)
             {
-                existingPageType = _pageTypeFactory.Load(type.Name);
+                existingPageType = pageTypeRepository.Load(type.Name);
             }
 
             return existingPageType;

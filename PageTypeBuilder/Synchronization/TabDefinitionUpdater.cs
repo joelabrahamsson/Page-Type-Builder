@@ -6,9 +6,9 @@ namespace PageTypeBuilder.Synchronization
 {
     public class TabDefinitionUpdater
     {
-        public TabDefinitionUpdater(ITabFactory tabFactory)
+        public TabDefinitionUpdater(ITabDefinitionRepository tabDefinitionRepository)
         {
-            TabFactory = tabFactory;
+            TabDefinitionRepository = tabDefinitionRepository;
         }
 
         public virtual void UpdateTabDefinitions(IEnumerable<Tab> tabs)
@@ -20,14 +20,14 @@ namespace PageTypeBuilder.Synchronization
                 if(TabDefinitionShouldBeUpdated(tabDefinition, tab))
                 {
                     UpdateTabDefinition(tabDefinition, tab);
-                    TabFactory.SaveTabDefinition(tabDefinition);
+                    TabDefinitionRepository.SaveTabDefinition(tabDefinition);
                 }
             }
         }
 
         private TabDefinition GetTabDefinition(Tab tab)
         {
-            TabDefinition tabDefinition = TabFactory.GetTabDefinition(tab.Name);
+            TabDefinition tabDefinition = TabDefinitionRepository.GetTabDefinition(tab.Name);
             if(tabDefinition == null)
                 tabDefinition = new TabDefinition();
             return tabDefinition;
@@ -54,6 +54,6 @@ namespace PageTypeBuilder.Synchronization
             return false;
         }
 
-        public ITabFactory TabFactory { get; set; }
+        public ITabDefinitionRepository TabDefinitionRepository { get; set; }
     }
 }

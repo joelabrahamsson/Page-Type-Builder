@@ -36,27 +36,27 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_have_a_property_one_image_url_page_type_property =
             () =>
-                SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-ImageUrl")).ShouldNotBeNull();
+                SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-ImageUrl")).ShouldNotBeNull();
 
         It should_have_a_property_one_image_url_page_type_property_with_the_correct_edit_caption =
             () =>
-                SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-ImageUrl")).EditCaption.ShouldEqual("Property One - Image Url");
+                SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-ImageUrl")).EditCaption.ShouldEqual("Property One - Image Url");
 
         It should_have_a_property_one_image_url_page_type_property_with_the_correct_sort_order =
             () =>
-                SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-ImageUrl")).FieldOrder.ShouldEqual(100);
+                SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-ImageUrl")).FieldOrder.ShouldEqual(100);
 
         It should_have_a_property_one_image_alt_page_type_property =
             () =>
-                SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-AltText")).ShouldNotBeNull();
+                SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-AltText")).ShouldNotBeNull();
 
         It should_have_a_property_one_image_alt_page_type_property_with_the_correct_edit_caption =
             () =>
-                SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-AltText")).EditCaption.ShouldEqual("Property One - Alt text");
+                SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-AltText")).EditCaption.ShouldEqual("Property One - Alt text");
 
         It should_have_a_property_one_image_alt_page_type_property_with_the_correct_sort_order =
             () =>
-                SyncContext.PageDefinitionFactory.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-AltText")).FieldOrder.ShouldEqual(110);
+                SyncContext.PageDefinitionRepository.List().FirstOrDefault(p => string.Equals(p.Name, "PropertyOne-AltText")).FieldOrder.ShouldEqual(110);
     }
 
     public class Image : PageTypePropertyGroup

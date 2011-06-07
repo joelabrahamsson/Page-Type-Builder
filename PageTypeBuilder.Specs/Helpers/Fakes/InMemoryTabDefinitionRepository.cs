@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EPiServer.DataAbstraction;
@@ -7,14 +6,14 @@ using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
-    public class InMemoryTabFactory : ITabFactory
+    public class InMemoryTabDefinitionRepository : ITabDefinitionRepository
     {
         private int nextId = 1;
         private List<TabDefinition> tabs;
         private SavesPerIdCounter numberOfSavesPerTabIdCounter = new SavesPerIdCounter();
 
 
-        public InMemoryTabFactory()
+        public InMemoryTabDefinitionRepository()
         {
             Mapper.Configuration.CreateMap<TabDefinition, TabDefinition>();
             tabs = new List<TabDefinition>();

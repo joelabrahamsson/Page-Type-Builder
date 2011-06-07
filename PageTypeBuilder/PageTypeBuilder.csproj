@@ -109,10 +109,10 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="Abstractions\FrameFacade.cs" />
-    <Compile Include="Abstractions\IFrameFacade.cs" />
-    <Compile Include="Abstractions\IPageDefinitionFactory.cs" />
-    <Compile Include="Abstractions\IPageDefinitionTypeFactory.cs" />
+    <Compile Include="Abstractions\FrameRepository.cs" />
+    <Compile Include="Abstractions\IFrameRepository.cs" />
+    <Compile Include="Abstractions\IPageDefinitionRepository.cs" />
+    <Compile Include="Abstractions\IPageDefinitionTypeRepository.cs" />
     <Compile Include="Abstractions\IPageType.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -126,12 +126,12 @@
     <Compile Include="Discovery\GlobalPropertySettingsUpdater.cs" />
     <Compile Include="Discovery\IGlobalPropertySettingsLocator.cs" />
     <Compile Include="Discovery\IPageTypeDefinitionLocator.cs" />
-    <Compile Include="Abstractions\IPageTypeFactory.cs" />
-    <Compile Include="Abstractions\ITabFactory.cs" />
-    <Compile Include="Abstractions\PageDefinitionFactory.cs" />
-    <Compile Include="Abstractions\PageDefinitionTypeFactory.cs" />
+    <Compile Include="Abstractions\IPageTypeRepository.cs" />
+    <Compile Include="Abstractions\ITabDefinitionRepository.cs" />
+    <Compile Include="Abstractions\PageDefinitionRepository.cs" />
+    <Compile Include="Abstractions\PageDefinitionTypeRepository.cs" />
     <Compile Include="Abstractions\PageTypeValueExtractor.cs" />
-    <Compile Include="Abstractions\TabFactory.cs" />
+    <Compile Include="Abstractions\TabDefinitionRepository.cs" />
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\PropertySettingsUpdater.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
@@ -159,6 +159,8 @@
     <Compile Include="Synchronization\Hooks\HooksHandler.cs" />
     <Compile Include="Synchronization\Hooks\IHooksHandler.cs" />
     <Compile Include="Synchronization\Hooks\IPreSynchronizationHook.cs" />
+    <Compile Include="Synchronization\Hooks\ISynchronizationHookContext.cs" />
+    <Compile Include="Synchronization\Hooks\SynchronizationHookContext.cs" />
     <Compile Include="Synchronization\INativePageDefinitionsMap.cs" />
     <Compile Include="Synchronization\IPageDefinitionUpdater.cs" />
     <Compile Include="Synchronization\IPageTypeLocator.cs" />
@@ -174,7 +176,7 @@
     <Compile Include="Discovery\PageTypePropertyDefinitionLocator.cs" />
     <Compile Include="Synchronization\PageTypeSynchronizer.cs" />
     <Compile Include="PageTypeAttribute.cs" />
-    <Compile Include="Abstractions\PageTypeFactory.cs" />
+    <Compile Include="Abstractions\PageTypeRepository.cs" />
     <Compile Include="Discovery\PageTypePropertyDefinition.cs" />
     <Compile Include="Synchronization\PageTypeUpdater.cs" />
     <Compile Include="Discovery\PageTypeDefinition.cs" />

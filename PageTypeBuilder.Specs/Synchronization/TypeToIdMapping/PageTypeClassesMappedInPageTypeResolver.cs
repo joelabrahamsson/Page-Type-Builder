@@ -24,10 +24,10 @@ namespace PageTypeBuilder.Specs.TypeToIdMapping.PageTypeClassesMappedInPageTypeR
 
         It should_be_able_to_get_the_created_PageTypes_Id_from_PageTypeResolver =
             () => SyncContext.PageTypeResolver.GetPageTypeID(pageTypeClass)
-                .ShouldEqual(SyncContext.PageTypeFactory.Load(className).ID);
+                .ShouldEqual(SyncContext.PageTypeRepository.Load(className).ID);
 
         It should_be_able_to_get_the_Type_of_the_page_type_class_from_PageTypeResolver_using_the_PageTypes_Id =
-            () => SyncContext.PageTypeResolver.GetPageTypeType(SyncContext.PageTypeFactory.Load(className).ID)
+            () => SyncContext.PageTypeResolver.GetPageTypeType(SyncContext.PageTypeRepository.Load(className).ID)
                 .ShouldEqual(pageTypeClass);
     }
 
@@ -46,9 +46,9 @@ namespace PageTypeBuilder.Specs.TypeToIdMapping.PageTypeClassesMappedInPageTypeR
                 type.Name = className;
             });
 
-            var existingPageType = SyncContext.PageTypeFactory.CreateNew();
+            var existingPageType = SyncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = className;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
             idOfExistingPageType = existingPageType.ID;
         };
 
@@ -79,9 +79,9 @@ namespace PageTypeBuilder.Specs.TypeToIdMapping.PageTypeClassesMappedInPageTypeR
                 type.Name = className;
             });
 
-            var existingPageType = SyncContext.PageTypeFactory.CreateNew();
+            var existingPageType = SyncContext.PageTypeRepository.CreateNew();
             existingPageType.Name = className;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
             idOfExistingPageType = existingPageType.ID;
 
             SyncContext.Configuration.SetDisablePageTypeUpdation(true);

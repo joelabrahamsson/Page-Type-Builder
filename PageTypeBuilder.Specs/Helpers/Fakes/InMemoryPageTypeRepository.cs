@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
-    public class InMemoryPageTypeFactory : IPageTypeFactory
+    public class InMemoryPageTypeRepository : IPageTypeRepository
     {
         private int nextId;
         private List<IPageType> pageTypes;
         private SavesPerIdCounter numberOfSavesPerPageTypeIdCounter = new SavesPerIdCounter();
-        private IPageDefinitionFactory pageDefinitionFactory;
+        private IPageDefinitionRepository pageDefinitionRepository;
 
-        public InMemoryPageTypeFactory(IPageDefinitionFactory pageDefinitionFactory)
+        public InMemoryPageTypeRepository(IPageDefinitionRepository pageDefinitionRepository)
         {
-            this.pageDefinitionFactory = pageDefinitionFactory;
+            this.pageDefinitionRepository = pageDefinitionRepository;
             Mapper.Configuration.CreateMap<IPageType, FakePageType>();
             Mapper.Configuration.CreateMap<FakePageType, IPageType>();
             Mapper.Configuration.CreateMap<IPageType, IPageType>();
@@ -37,7 +36,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         private FakePageType GetPageTypeToReturn(IPageType pageTypeRecord)
         {
-            var pageTypeToReturn = new FakePageType(pageDefinitionFactory);
+            var pageTypeToReturn = new FakePageType(pageDefinitionRepository);
             Mapper.Map(pageTypeRecord, pageTypeToReturn);
             return pageTypeToReturn;
         }
@@ -68,7 +67,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             {
                 pageTypeToSave.ID = nextId;
                 nextId++;
-                var pageTypeRecord = new FakePageType(pageDefinitionFactory);
+                var pageTypeRecord = new FakePageType(pageDefinitionRepository);
                 
                 Mapper.Map(pageTypeToSave, pageTypeRecord);
 
@@ -101,7 +100,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public IPageType CreateNew()
         {
-            return new FakePageType(pageDefinitionFactory);
+            return new FakePageType(pageDefinitionRepository);
         }
     }
 }

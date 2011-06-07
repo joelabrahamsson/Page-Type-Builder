@@ -7,6 +7,6 @@ namespace PageTypeBuilder.Synchronization.Hooks
 {
     public interface IPreSynchronizationHook
     {
-        void PreSynchronization();
+        void PreSynchronization(ISynchronizationHookContext context);
     }
 }

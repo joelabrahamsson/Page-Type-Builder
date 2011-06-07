@@ -29,27 +29,27 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             }
         }
 
-        public InMemoryPageTypeFactory PageTypeFactory
+        public InMemoryPageTypeRepository PageTypeRepository
         {
             get
             {
-                return (InMemoryPageTypeFactory) Container.GetInstance<IPageTypeFactory>();
+                return (InMemoryPageTypeRepository) Container.GetInstance<IPageTypeRepository>();
             }
         }
 
-        public InMemoryPageDefinitionFactory PageDefinitionFactory
+        public InMemoryPageDefinitionRepository PageDefinitionRepository
         {
             get
             {
-                return (InMemoryPageDefinitionFactory) Container.GetInstance<IPageDefinitionFactory>();
+                return (InMemoryPageDefinitionRepository) Container.GetInstance<IPageDefinitionRepository>();
             }
         }
 
-        public InMemoryPageDefinitionTypeFactory PageDefinitionTypeFactory
+        public InMemoryPageDefinitionTypeRepository PageDefinitionTypeRepository
         {
             get
             {
-                return (InMemoryPageDefinitionTypeFactory) Container.GetInstance<IPageDefinitionTypeFactory>();
+                return (InMemoryPageDefinitionTypeRepository) Container.GetInstance<IPageDefinitionTypeRepository>();
             }
         }
 
@@ -61,11 +61,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             }
         }
 
-        public InMemoryTabFactory TabFactory
+        public InMemoryTabDefinitionRepository TabDefinitionRepository
         {
             get
             {
-                return (InMemoryTabFactory) Container.GetInstance<ITabFactory>();
+                return (InMemoryTabDefinitionRepository) Container.GetInstance<ITabDefinitionRepository>();
             }
         }
 
@@ -129,8 +129,8 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public PageDefinition GetPageDefinition(string name, string pageTypeName)
         {
-            var pageType = PageTypeFactory.Load(pageTypeName);
-            return PageDefinitionFactory.List(pageType.ID)
+            var pageType = PageTypeRepository.Load(pageTypeName);
+            return PageDefinitionRepository.List(pageType.ID)
                 .Where(def => def.Name == name)
                 .FirstOrDefault();
         }

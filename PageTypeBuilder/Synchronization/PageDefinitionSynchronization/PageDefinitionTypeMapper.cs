@@ -12,12 +12,12 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
     public class PageDefinitionTypeMapper
     {
-        private readonly IPageDefinitionTypeFactory pageDefinitionTypeFactory;
+        private readonly IPageDefinitionTypeRepository pageDefinitionTypeRepository;
         private readonly INativePageDefinitionsMap nativePageDefinitionsMap;
 
-        public PageDefinitionTypeMapper(IPageDefinitionTypeFactory pageDefinitionTypeFactory, INativePageDefinitionsMap nativePageDefinitionsMap)
+        public PageDefinitionTypeMapper(IPageDefinitionTypeRepository pageDefinitionTypeRepository, INativePageDefinitionsMap nativePageDefinitionsMap)
         {
-            this.pageDefinitionTypeFactory = pageDefinitionTypeFactory;
+            this.pageDefinitionTypeRepository = pageDefinitionTypeRepository;
             this.nativePageDefinitionsMap = nativePageDefinitionsMap;
         }
 
@@ -55,13 +55,13 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         {
             string pageDefinitionTypeName = pagePropertyType.FullName;
             string assemblyName = pagePropertyType.Assembly.GetName().Name;
-            return pageDefinitionTypeFactory.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
+            return pageDefinitionTypeRepository.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
         }
 
         PageDefinitionType GetNonNativePageDefinitionType(Type pagePropertyType)
         {
             int nativeTypeId = nativePageDefinitionsMap.GetNativeTypeID(pagePropertyType);
-            return pageDefinitionTypeFactory.GetPageDefinitionType(nativeTypeId);
+            return pageDefinitionTypeRepository.GetPageDefinitionType(nativeTypeId);
         }
 
         protected void ThrowUnmappablePropertyTypeException(string propertyName, string pageTypeName)

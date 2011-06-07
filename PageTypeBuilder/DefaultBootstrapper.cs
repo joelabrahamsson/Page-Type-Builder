@@ -23,20 +23,20 @@ namespace PageTypeBuilder
                 .RegisterType<AppDomainAssemblyLocator>()
                 .As<IAssemblyLocator>();
             containerBuilder
-                .RegisterType<PageTypeFactory>()
-                .As<IPageTypeFactory>();
+                .RegisterType<PageTypeRepository>()
+                .As<IPageTypeRepository>();
             containerBuilder
-                .RegisterType<PageDefinitionFactory>()
-                .As<IPageDefinitionFactory>();
+                .RegisterType<PageDefinitionRepository>()
+                .As<IPageDefinitionRepository>();
             containerBuilder
-                .RegisterType<PageDefinitionTypeFactory>()
-                .As<IPageDefinitionTypeFactory>();
+                .RegisterType<PageDefinitionTypeRepository>()
+                .As<IPageDefinitionTypeRepository>();
             containerBuilder
                 .RegisterType<PageTypeLocator>()
                 .As<IPageTypeLocator>();
             containerBuilder
-                .RegisterType<PageDefinitionTypeFactory>()
-                .As<IPageDefinitionTypeFactory>();
+                .RegisterType<PageDefinitionTypeRepository>()
+                .As<IPageDefinitionTypeRepository>();
             containerBuilder
                 .RegisterType<PageTypeDefinitionLocator>()
                 .As<IPageTypeDefinitionLocator>();
@@ -68,8 +68,8 @@ namespace PageTypeBuilder
                 .RegisterType<PageDefinitionSynchronizationEngine>()
                 .As<PageDefinitionSynchronizationEngine>();
             containerBuilder
-                .RegisterType<TabFactory>()
-                .As<ITabFactory>();
+                .RegisterType<TabDefinitionRepository>()
+                .As<ITabDefinitionRepository>();
             containerBuilder
                 .RegisterType<PageTypeSynchronizer>()
                 .As<PageTypeSynchronizer>();

@@ -14,7 +14,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         Establish context = () => SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
         {
             numberOfPageDefinitionsBeforeSynchronization =
-                SyncContext.PageDefinitionFactory.List().Count();
+                SyncContext.PageDefinitionRepository.List().Count();
 
             IPageType existingPageType = new NativePageType();
             existingPageType.Name = "NameOfExistingPageType";
@@ -35,7 +35,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_not_create_a_new_PageDefinition =
-            () => SyncContext.PageDefinitionFactory.List().Count()
+            () => SyncContext.PageDefinitionRepository.List().Count()
                       .ShouldEqual(numberOfPageDefinitionsBeforeSynchronization);
     }
 }

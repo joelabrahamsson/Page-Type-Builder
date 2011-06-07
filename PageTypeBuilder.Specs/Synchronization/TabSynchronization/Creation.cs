@@ -27,12 +27,12 @@ namespace PageTypeBuilder.Specs.Synchronization.TabSynchronization.Creation
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_create_a_TabDefinition_with_the_name_returned_by_the_class_Name_property = () =>
-            SyncContext.TabFactory.GetTabDefinition(tabName).ShouldNotBeNull();
+            SyncContext.TabDefinitionRepository.GetTabDefinition(tabName).ShouldNotBeNull();
 
         It should_create_a_TabDefinition_with_RequiredAccess_equal_to_the_returned_value_by_the_class_RequiredAccess_property = () =>
-            SyncContext.TabFactory.GetTabDefinition(tabName).RequiredAccess.ShouldEqual(requiredAccess);
+            SyncContext.TabDefinitionRepository.GetTabDefinition(tabName).RequiredAccess.ShouldEqual(requiredAccess);
 
         It should_create_a_TabDefinition_with_SortIndex_equal_to_the_value_returned_by_the_class_SortIndex_property = () =>
-            SyncContext.TabFactory.GetTabDefinition(tabName).SortIndex.ShouldEqual(sortIndex);
+            SyncContext.TabDefinitionRepository.GetTabDefinition(tabName).SortIndex.ShouldEqual(sortIndex);
     }
 }

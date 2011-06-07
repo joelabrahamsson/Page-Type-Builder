@@ -8,9 +8,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 {
     public class FakePageType : IPageType
     {
-        private IPageDefinitionFactory pageDefinitionFactory;
+        private IPageDefinitionRepository pageDefinitionRepository;
 
-        public FakePageType(IPageDefinitionFactory pageDefinitionFactory)
+        public FakePageType(IPageDefinitionRepository pageDefinitionRepository)
         {
             var template = new PageType();
             AllowedPageTypes = template.AllowedPageTypes;
@@ -21,7 +21,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             DefaultStartPublishOffset = template.DefaultStartPublishOffset;
             DefaultStopPublishOffset = template.DefaultStopPublishOffset;
             DefaultVisibleInMenu = template.DefaultVisibleInMenu;
-            this.pageDefinitionFactory = pageDefinitionFactory;
+            this.pageDefinitionRepository = pageDefinitionRepository;
             Description = template.Description;
             IsAvailable = template.IsAvailable;
             Name = template.Name;
@@ -55,7 +55,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             get
             {
                 var definitions = new PageDefinitionCollection();
-                definitions.AddRange(pageDefinitionFactory.List(ID));
+                definitions.AddRange(pageDefinitionRepository.List(ID));
                 return definitions;
             }
         }

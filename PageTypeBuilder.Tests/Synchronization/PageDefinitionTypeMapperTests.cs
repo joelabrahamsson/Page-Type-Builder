@@ -40,8 +40,8 @@ namespace PageTypeBuilder.Tests.Synchronization
         {
             PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeFactory fakeFactory = fakes.Stub<PageDefinitionTypeFactory>();
-            PageDefinitionTypeMapper pageDefinitionTypeMapper = fakes.PartialMock<PageDefinitionTypeMapper>(fakeFactory, new NativePageDefinitionsMap());
+            PageDefinitionTypeRepository fakeRepository = fakes.Stub<PageDefinitionTypeRepository>();
+            PageDefinitionTypeMapper pageDefinitionTypeMapper = fakes.PartialMock<PageDefinitionTypeMapper>(fakeRepository, new NativePageDefinitionsMap());
             Type type = typeof(string);
             pageDefinitionTypeMapper.Stub(mapper => mapper.GetPropertyType(definition.PropertyType, definition.PageTypePropertyAttribute)).Return(type);
             fakes.ReplayAll();
@@ -69,7 +69,7 @@ namespace PageTypeBuilder.Tests.Synchronization
             PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             definition.PageTypePropertyAttribute.Type = null;
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeMapper pageDefinitionTypeMapper = fakes.PartialMock<PageDefinitionTypeMapper>((PageDefinitionTypeFactory)null, new NativePageDefinitionsMap());
+            PageDefinitionTypeMapper pageDefinitionTypeMapper = fakes.PartialMock<PageDefinitionTypeMapper>((PageDefinitionTypeRepository)null, new NativePageDefinitionsMap());
             Type defaultType = typeof(string);
             pageDefinitionTypeMapper.Stub(utility => utility.GetDefaultPropertyType(definition.PropertyType)).Return(defaultType);
             pageDefinitionTypeMapper.Replay();
@@ -131,12 +131,12 @@ namespace PageTypeBuilder.Tests.Synchronization
             PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             definition.PageTypePropertyAttribute.Type = typeof(PropertyString);
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeFactory fakeFactory = fakes.Stub<PageDefinitionTypeFactory>();
-            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(fakeFactory, new NativePageDefinitionsMap());
+            PageDefinitionTypeRepository fakeRepository = fakes.Stub<PageDefinitionTypeRepository>();
+            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(fakeRepository, new NativePageDefinitionsMap());
             int nativeTypeID = new NativePageDefinitionsMap().GetNativeTypeID(definition.PageTypePropertyAttribute.Type);
             PageDefinitionType pageDefinitionTypeFromFactory = new PageDefinitionType(1, PropertyDataType.String, TestValueUtility.CreateRandomString());
-            fakeFactory.Stub(factory => factory.GetPageDefinitionType(nativeTypeID)).Return(pageDefinitionTypeFromFactory);
-            fakeFactory.Replay();
+            fakeRepository.Stub(factory => factory.GetPageDefinitionType(nativeTypeID)).Return(pageDefinitionTypeFromFactory);
+            fakeRepository.Replay();
 
             PageDefinitionType returnedPageDefinitionType = mapper.GetPageDefinitionType(definition);
 
@@ -149,13 +149,13 @@ namespace PageTypeBuilder.Tests.Synchronization
             PageTypePropertyDefinition definition = PageDefinitionSynchronizationEngineTestsUtility.CreatePageTypePropertyDefinition();
             definition.PageTypePropertyAttribute.Type = typeof(PropertyXhtmlString);
             MockRepository fakes = new MockRepository();
-            PageDefinitionTypeFactory fakeFactory = fakes.Stub<PageDefinitionTypeFactory>();
-            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(fakeFactory, new NativePageDefinitionsMap());
+            PageDefinitionTypeRepository fakeRepository = fakes.Stub<PageDefinitionTypeRepository>();
+            PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(fakeRepository, new NativePageDefinitionsMap());
             PageDefinitionType pageDefinitionTypeFromFactory = new PageDefinitionType(1, PropertyDataType.String, TestValueUtility.CreateRandomString());
             string typeName = definition.PageTypePropertyAttribute.Type.FullName;
             string assemblyName = definition.PageTypePropertyAttribute.Type.Assembly.GetName().Name;
-            fakeFactory.Stub(factory => factory.GetPageDefinitionType(typeName, assemblyName)).Return(pageDefinitionTypeFromFactory);
-            fakeFactory.Replay();
+            fakeRepository.Stub(factory => factory.GetPageDefinitionType(typeName, assemblyName)).Return(pageDefinitionTypeFromFactory);
+            fakeRepository.Replay();
 
             PageDefinitionType returnedPageDefinitionType = mapper.GetPageDefinitionType(definition);
 

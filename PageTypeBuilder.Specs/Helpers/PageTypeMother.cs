@@ -11,7 +11,7 @@ namespace PageTypeBuilder.Specs.Helpers
     {
         public static IPageType CreatePageTypeWithSameValuesAsAttribute(InMemoryContext syncContext, PageTypeAttribute pageTypeAttribute)
         {
-            var pageType = syncContext.PageTypeFactory.CreateNew();
+            var pageType = syncContext.PageTypeRepository.CreateNew();
             if(pageTypeAttribute.Guid.HasValue)
                 pageType.GUID = pageTypeAttribute.Guid.Value;
             pageType.AllowedPageTypes = pageTypeAttribute.AvailablePageTypes
@@ -37,7 +37,7 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public static IPageType CreatePageTypeWithEverythingButGuidDifferentThanAttribute(InMemoryContext syncContext, PageTypeAttribute pageTypeAttribute)
         {
-            var pageType = syncContext.PageTypeFactory.CreateNew();
+            var pageType = syncContext.PageTypeRepository.CreateNew();
             pageType.GUID = pageTypeAttribute.Guid.Value;
             if(pageTypeAttribute.AvailablePageTypes.Length == 0)
                 throw new Exception("This method only supports attributes that have atleast one type in AvailablePageTypes");

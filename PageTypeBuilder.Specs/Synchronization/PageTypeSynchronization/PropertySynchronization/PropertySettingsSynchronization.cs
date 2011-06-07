@@ -43,7 +43,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_assign_PageDefinitions_SettingsId =
             () =>
-            SyncContext.PageDefinitionFactory.List().First().SettingsID.ShouldNotBeNull();
+            SyncContext.PageDefinitionRepository.List().First().SettingsID.ShouldNotBeNull();
 
         It should_create_a_new_PropertySettingsContainer_with_the_same_Id_as_the_PageDefinitions_SettingsId =
             () =>
@@ -68,7 +68,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         static Guid GetPageDefinitionsPropertySettingsId()
         {
-            return SyncContext.PageDefinitionFactory.List().First().SettingsID;
+            return SyncContext.PageDefinitionRepository.List().First().SettingsID;
         }
     }
 
@@ -131,20 +131,20 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                         });
                 });
 
-            var existingPageType = new FakePageType(SyncContext.PageDefinitionFactory);
+            var existingPageType = new FakePageType(SyncContext.PageDefinitionRepository);
             existingPageType.Name = pageTypeName;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
 
             var existingPageDefinition = new PageDefinition();
-            existingPageDefinition.Type = SyncContext.PageDefinitionTypeFactory.GetPageDefinitionType<PropertyXhtmlString>();
+            existingPageDefinition.Type = SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType<PropertyXhtmlString>();
             existingPageDefinition.PageTypeID = existingPageType.ID;
             existingPageDefinition.Name = propertyName;
             existingPageDefinition.EditCaption = propertyName;
             existingPageDefinition.SettingsID = Guid.NewGuid();
-            SyncContext.PageDefinitionFactory.Save(existingPageDefinition);
+            SyncContext.PageDefinitionRepository.Save(existingPageDefinition);
 
             existingPageType.Definitions.Add(existingPageDefinition);
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
 
             
             var existingSettings = new TinyMCESettings();
@@ -192,20 +192,20 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                 });
             });
 
-            var existingPageType = new FakePageType(SyncContext.PageDefinitionFactory);
+            var existingPageType = new FakePageType(SyncContext.PageDefinitionRepository);
             existingPageType.Name = pageTypeName;
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
 
             var existingPageDefinition = new PageDefinition();
-            existingPageDefinition.Type = SyncContext.PageDefinitionTypeFactory.GetPageDefinitionType<PropertyXhtmlString>();
+            existingPageDefinition.Type = SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType<PropertyXhtmlString>();
             existingPageDefinition.PageTypeID = existingPageType.ID;
             existingPageDefinition.Name = propertyName;
             existingPageDefinition.EditCaption = propertyName;
             existingPageDefinition.SettingsID = Guid.NewGuid();
-            SyncContext.PageDefinitionFactory.Save(existingPageDefinition);
+            SyncContext.PageDefinitionRepository.Save(existingPageDefinition);
 
             existingPageType.Definitions.Add(existingPageDefinition);
-            SyncContext.PageTypeFactory.Save(existingPageType);
+            SyncContext.PageTypeRepository.Save(existingPageType);
 
             var existingSettings = new TinyMCESettings();
             existingSettings.ToolbarRows = new List<ToolbarRow>();
@@ -281,7 +281,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         static Guid GetPageDefinitionsPropertySettingsId()
         {
-            return SyncContext.PageDefinitionFactory.List().First().SettingsID;
+            return SyncContext.PageDefinitionRepository.List().First().SettingsID;
         }
     }
 
@@ -338,7 +338,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         static Guid GetPageDefinitionsPropertySettingsId()
         {
-            return SyncContext.PageDefinitionFactory.List().First().SettingsID;
+            return SyncContext.PageDefinitionRepository.List().First().SettingsID;
         }
     }
 }
