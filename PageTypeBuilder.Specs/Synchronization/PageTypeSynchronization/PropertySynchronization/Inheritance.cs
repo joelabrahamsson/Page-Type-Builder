@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using Machine.Specifications;
-using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
+using Refraction;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization.Inheritance
 {
@@ -12,33 +9,25 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     public class when_a_class_inheriting_from_an_abstract_page_type_class_that_has_a_page_type_property_has_been_added
         : SynchronizationSpecs
     {
-        static string className = "MyPageTypeClass";
         static string propertyName = "PropertyInAbstractClass";
-        static Type propertyType = typeof(string);
-        static PageTypePropertyAttribute propertyAttribute;
 
         Establish context = () =>
         {
-            propertyAttribute = new PageTypePropertyAttribute();
-            Type abstractClass = PageTypeClassFactory.CreatePageTypeClass(type =>
-            {
-                type.TypeAttributes = TypeAttributes.Abstract;
-
-                type.AddProperty(property =>
+            var assembly = Create.Assembly(with =>
                 {
-                    property.Name = propertyName;
-                    property.Type = propertyType;
-                    property.AddAttributeTemplate(propertyAttribute);
+                    with.Class("MyAbstractPageType")
+                        .Inheriting<TypedPageData>()
+                        .AnnotatedWith<PageTypeAttribute>()
+                        .Abstract()
+                        .AutomaticProperty<string>(x =>
+                                          x.Named(propertyName)
+                                              .AnnotatedWith<PageTypePropertyAttribute>());
+                    
+                    with.Class("MyConcretePageType")
+                        .Inheriting("MyAbstractPageType");
                 });
-            });
-
-            SyncContext.AssemblyLocator.Add(abstractClass.Assembly);
-
-            ((ModuleBuilder)abstractClass.Module).CreateClass(type =>
-            {
-                type.Name = className;
-                type.ParentType = abstractClass;
-            });
+            
+            SyncContext.AssemblyLocator.Add(assembly);
         };
 
         Because of =

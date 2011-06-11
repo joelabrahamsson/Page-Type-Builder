@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using EPiServer.Core.PropertySettings;
@@ -6,9 +7,9 @@ using EPiServer.DataAbstraction;
 using EPiServer.Editor.TinyMCE;
 using EPiServer.SpecializedProperties;
 using Machine.Specifications;
-using PageTypeBuilder.Specs.ExampleImplementations;
+using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.Fakes;
-using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
+using Refraction;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization.PropertySettingsSynchronization
 {
@@ -20,22 +21,26 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static string propertyName = "MainBody";
         static string pageTypeName = "PageTypeName";
-
+        static string settingsClassName = "MyTinyMceSettings";
         Establish context = () =>
         {
-            var propertyAttribute = new PageTypePropertyAttribute();
-            var settingsAttribute = new TinyMceSettingsAttribute();
-            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+            var assembly = Create.Assembly(with =>
             {
-                type.Name = pageTypeName;
-                type.AddProperty(prop =>
-                {
-                    prop.Name = propertyName;
-                    prop.Type = typeof(string);
-                    prop.AddAttributeTemplate(propertyAttribute);
-                    prop.AddAttributeTemplate(settingsAttribute);
-                });
+                var settingsUpdater = with.TinyMceSettingsAttribute(
+                    updateSettingsImplementation: "settings.Width = int.MaxValue",
+                    matchMethodBody: "return settings.Width == int.MaxValue",
+                    className: settingsClassName,
+                    overwriteExistingSettings: false);
+
+                with.Class(pageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(propertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object()));
             });
+            SyncContext.AssemblyLocator.Add(assembly);
         };
 
         Because of =
@@ -78,23 +83,24 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static string propertyName = "MainBody";
         static string pageTypeName = "PageTypeName";
-
         Establish context = () =>
         {
-            var propertyAttribute = new PageTypePropertyAttribute();
-            var settingsAttribute = new TinyMceSettingsAttribute();
-            settingsAttribute.ModifyPropertySettings = true;
-            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+            var assembly = Create.Assembly(with =>
             {
-                type.Name = pageTypeName;
-                type.AddProperty(prop =>
-                {
-                    prop.Name = propertyName;
-                    prop.Type = typeof(string);
-                    prop.AddAttributeTemplate(propertyAttribute);
-                    prop.AddAttributeTemplate(settingsAttribute);
-                });
+                var settingsUpdater = with.TinyMceSettingsAttribute(
+                    updateSettingsImplementation: "settings.Width = int.MaxValue",
+                    matchMethodBody: "return settings.Width == int.MaxValue",
+                    overwriteExistingSettings: false);
+
+                with.Class(pageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(propertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object()));
             });
+            SyncContext.AssemblyLocator.Add(assembly);
         };
 
         Because of =
@@ -102,7 +108,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_settings_modified_by_the_attributes_Update_method =
             () =>
-            TinyMceSettingsAttribute.MatchesUpdatedSettings(SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName));
+            SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName).Width.ShouldEqual(int.MaxValue);
     }
 
     [Subject("Synchronization")]
@@ -111,25 +117,25 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static string propertyName = "MainBody";
         static string pageTypeName = "NameOfPageType";
-
+        static string settingsClassName = "MyTinyMceSettings";
         Establish context = () =>
         {
-            var propertyAttribute = new PageTypePropertyAttribute();
-            var settingsAttribute = new TinyMceSettingsAttribute();
-            settingsAttribute.OverWriteExisting = true;
-            settingsAttribute.ModifyPropertySettings = true;
-            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
-                {
-                    type.Name = pageTypeName;
+            var assembly = Create.Assembly(with =>
+            {
+                var settingsUpdater = with.TinyMceSettingsAttribute(
+                    updateSettingsImplementation: "settings.Width = int.MaxValue",
+                    matchMethodBody: "return settings.Width == int.MaxValue",
+                    className: settingsClassName);
 
-                    type.AddProperty(prop =>
-                        {
-                            prop.Name = propertyName;
-                            prop.Type = typeof (string);
-                            prop.AddAttributeTemplate(propertyAttribute);
-                            prop.AddAttributeTemplate(settingsAttribute);
-                        });
-                });
+                with.Class(pageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(propertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object()));
+            });
+            SyncContext.AssemblyLocator.Add(assembly);
 
             var existingPageType = new FakePageType(SyncContext.PageDefinitionRepository);
             existingPageType.Name = pageTypeName;
@@ -163,7 +169,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_update_settings_as_modified_by_the_attributes_Update_method =
             () =>
-            TinyMceSettingsAttribute.MatchesUpdatedSettings(SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName));
+            SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName).Width.ShouldEqual(int.MaxValue);
     }
 
     [Subject("Synchronization")]
@@ -172,25 +178,26 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static string propertyName = "MainBody";
         static string pageTypeName = "NameOfPageType";
-
+        static string settingsClassName = "MyTinyMceSettings";
         Establish context = () =>
         {
-            var propertyAttribute = new PageTypePropertyAttribute();
-            var settingsAttribute = new TinyMceSettingsAttribute();
-            settingsAttribute.OverWriteExisting = false;
-            settingsAttribute.ModifyPropertySettings = true;
-            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
+            var assembly = Create.Assembly(with =>
             {
-                type.Name = pageTypeName;
+                var settingsUpdater = with.TinyMceSettingsAttribute(
+                    updateSettingsImplementation: "settings.Width = int.MaxValue",
+                    matchMethodBody: "return settings.Width == int.MaxValue",
+                    className: settingsClassName,
+                    overwriteExistingSettings: false);
 
-                type.AddProperty(prop =>
-                {
-                    prop.Name = propertyName;
-                    prop.Type = typeof(string);
-                    prop.AddAttributeTemplate(propertyAttribute);
-                    prop.AddAttributeTemplate(settingsAttribute);
-                });
+                with.Class(pageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(propertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object()));
             });
+            SyncContext.AssemblyLocator.Add(assembly);
 
             var existingPageType = new FakePageType(SyncContext.PageDefinitionRepository);
             existingPageType.Name = pageTypeName;
@@ -239,28 +246,23 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static string propertyName = "MainBody";
         static string pageTypeName = "PageTypeName";
-
+        static string settingsDisplayName = Guid.NewGuid().ToString();
         Establish context = () =>
         {
-            SyncContext.AssemblyLocator.Add(typeof(GlobalTinyMceSettings).Assembly);
+            var assembly = Create.Assembly(with => {
+                var settingsUpdater = with.GlobalPropertySettingsClass(
+                    className: "MyGlobalTinyMceSettings",
+                    displayName: settingsDisplayName);
 
-            var propertyAttribute = new PageTypePropertyAttribute();
-            var useGlobalSettingsAttribute = new UseGlobalSettingsAttribute(typeof(GlobalTinyMceSettings));
-            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
-            {
-                type.Name = pageTypeName;
-                type.AddProperty(prop =>
-                {
-                    prop.Name = propertyName;
-                    prop.Type = typeof(string);
-                    prop.AddAttributeTemplate(propertyAttribute);
-                    prop.Attributes.Add(new AttributeSpecification(useGlobalSettingsAttribute)
-                        {
-                            Constructor = typeof(UseGlobalSettingsAttribute).GetConstructor(new [] { typeof(Type)}),
-                            ConstructorParameters = new object[] {typeof (GlobalTinyMceSettings)}
-                        });
-                });
+                with.Class(pageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(propertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith<UseGlobalSettingsAttribute>(new object(), settingsUpdater));
             });
+            SyncContext.AssemblyLocator.Add(assembly);
         };
 
         Because of =
@@ -270,7 +272,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () =>
             GetPageDefinitionsPropertySettingsContainer().Settings[typeof(TinyMCESettings).FullName]
             .Id.ShouldEqual(SyncContext.PropertySettingsRepository.GetGlobals(typeof(TinyMCESettings))
-            .Where(w => w.DisplayName.Equals(new GlobalTinyMceSettings().DisplayName)).First().Id);
+            .Where(w => w.DisplayName.Equals(settingsDisplayName)).First().Id);
 
         static PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer()
         {
@@ -292,28 +294,24 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
     {
         static string propertyName = "MainBody";
         static string pageTypeName = "PageTypeName";
+        static string settingsDisplayName = Guid.NewGuid().ToString();
 
         Establish context = () =>
         {
-            SyncContext.AssemblyLocator.Add(typeof(GlobalTinyMceSettings).Assembly);
+            var assembly = Create.Assembly(with => {
+                var settingsUpdater = with.GlobalPropertySettingsClass(
+                    className: "MyGlobalTinyMceSettings",
+                    displayName: settingsDisplayName);
 
-            var propertyAttribute = new PageTypePropertyAttribute();
-            var useGlobalSettingsAttribute = new UseGlobalSettingsAttribute(typeof(GlobalTinyMceSettings));
-            SyncContext.CreateAndAddPageTypeClassToAppDomain(type =>
-            {
-                type.Name = pageTypeName;
-                type.AddProperty(prop =>
-                {
-                    prop.Name = propertyName;
-                    prop.Type = typeof(string);
-                    prop.AddAttributeTemplate(propertyAttribute);
-                    prop.Attributes.Add(new AttributeSpecification(useGlobalSettingsAttribute)
-                    {
-                        Constructor = typeof(UseGlobalSettingsAttribute).GetConstructor(new[] { typeof(Type) }),
-                        ConstructorParameters = new object[] { typeof(GlobalTinyMceSettings) }
-                    });
-                });
+                with.Class(pageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(propertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith<UseGlobalSettingsAttribute>(new object(), settingsUpdater));
             });
+            SyncContext.AssemblyLocator.Add(assembly);
         };
 
         private Because of =
@@ -327,7 +325,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () =>
             GetPageDefinitionsPropertySettingsContainer().Settings[typeof(TinyMCESettings).FullName]
             .Id.ShouldEqual(SyncContext.PropertySettingsRepository.GetGlobals(typeof(TinyMCESettings))
-            .Where(w => w.DisplayName.Equals(new GlobalTinyMceSettings().DisplayName)).First().Id);
+            .Where(w => w.DisplayName.Equals(settingsDisplayName)).First().Id);
 
         static PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer()
         {

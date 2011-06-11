@@ -8,7 +8,7 @@ namespace PageTypeBuilder.Specs.Helpers
         private static string alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         public static string CharactersLongAlphanumericString(this int number)
         {
-            var random = new Random();
+            var random = new System.Random();
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < number; i++)

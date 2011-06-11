@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
+using Refraction;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.AbstractClasses
 {
@@ -75,20 +76,18 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Abstract
 
         Establish context = () =>
         {
-            Type abstractClass = PageTypeClassFactory.CreateTypeInheritingFromTypedPageData(type =>
+            var assembly = Create.Assembly(with =>
             {
-                type.Name = "BaseClass";
-                type.TypeAttributes = TypeAttributes.Abstract;
-                type.AddAttributeTemplate(new PageTypeAttribute());
+                with.Class("MyAbstractPageType")
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .Abstract();
+
+                with.Class(className)
+                    .Inheriting("MyAbstractPageType");
             });
 
-            SyncContext.AssemblyLocator.Add(abstractClass.Assembly);
-
-            ((ModuleBuilder)abstractClass.Module).CreateClass(type =>
-            {
-                type.Name = className;
-                type.ParentType = abstractClass;
-            });
+            SyncContext.AssemblyLocator.Add(assembly);
         };
 
         Because of =

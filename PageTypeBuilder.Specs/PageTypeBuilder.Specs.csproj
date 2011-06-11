@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PageTypeBuilder.Specs</RootNamespace>
     <AssemblyName>PageTypeBuilder.Specs</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,10 +44,12 @@
     <Reference Include="EPiServer, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EPiServer.BaseLibrary, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.BaseLibrary.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EPiServer.Configuration, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -55,10 +58,16 @@
     <Reference Include="EPiServer.Framework, Version=6.1.79.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\Framework\6.0.318.113\bin\EPiServer.Framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EPiServer.Implementation, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.Implementation.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\log4net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Machine.Specifications, Version=0.4.13.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -66,6 +75,9 @@
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.3.1.416.3\lib\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Refraction">
+      <HintPath>..\Libraries\Refraction.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=2.6.1.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -84,12 +96,6 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="ExampleImplementations\AbstractGlobalPropertySettings.cs" />
-    <Compile Include="ExampleImplementations\GlobalTinyMceSettings.cs" />
-    <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithIsDefaultReturningTrue.cs" />
-    <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithNullValues.cs" />
-    <Compile Include="ExampleImplementations\GlobalTinyMceSettingsWithOverwriteExistingSettingsReturningFalse.cs" />
-    <Compile Include="ExampleImplementations\TinyMceSettingsAttribute.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\Fakes\SavesPerGuidCounter.cs" />
     <Compile Include="Helpers\Fakes\FakePageType.cs" />
@@ -106,7 +112,9 @@
     <Compile Include="Helpers\Fakes\SavesPerIdCounter.cs" />
     <Compile Include="Helpers\PageTypeMother.cs" />
     <Compile Include="Helpers\PropertySettingsRepositoryExtensions.cs" />
+    <Compile Include="Helpers\Random.cs" />
     <Compile Include="Helpers\TabClassFactory.cs" />
+    <Compile Include="Helpers\TinyMceSettingsExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\AssemblySpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\AttributeSpecification.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\PropertySpecification.cs" />
@@ -114,7 +122,9 @@
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
     <Compile Include="Hooks\PreSynchronizationHooks.cs" />
     <Compile Include="Migrations\Validation.cs" />
+    <Compile Include="Helpers\AssemblyDefinitionExtensions.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
+    <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\GlobalPropertySettingsSpecsBase.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Updating.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AbstractClasses.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\AvailablePageTypes.cs" />
