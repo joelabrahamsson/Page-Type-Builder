@@ -55,6 +55,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="EPiServer.Data, Version=6.2.267.1, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\EPiServer\Framework\6.0.318.44\bin\EPiServer.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EPiServer.Framework, Version=6.1.79.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\EPiServer\Framework\6.0.318.113\bin\EPiServer.Framework.dll</HintPath>
@@ -97,6 +102,8 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\Fakes\InMemoryDynamicDataStore.cs" />
+    <Compile Include="Helpers\Fakes\InMemoryDynamicDataStoreFactory.cs" />
     <Compile Include="Helpers\Fakes\SavesPerGuidCounter.cs" />
     <Compile Include="Helpers\Fakes\FakePageType.cs" />
     <Compile Include="Helpers\Fakes\FakePageTypeBuilderConfiguration.cs" />
@@ -121,6 +128,7 @@
     <Compile Include="Helpers\TypeBuildingDsl\ReflectionExtensions.cs" />
     <Compile Include="Helpers\TypeBuildingDsl\TypeSpecification.cs" />
     <Compile Include="Hooks\PreSynchronizationHooks.cs" />
+    <Compile Include="Migrations\Invokation.cs" />
     <Compile Include="Migrations\Validation.cs" />
     <Compile Include="Helpers\AssemblyDefinitionExtensions.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
