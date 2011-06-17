@@ -1,93 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EPiServer.DataAbstraction;
 using Machine.Specifications;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Migrations;
 using PageTypeBuilder.Specs.Helpers.Fakes;
-using Refraction;
 
-namespace PageTypeBuilder.Specs.Migrations
+namespace PageTypeBuilder.Specs.Migrations.Helpers
 {
-    public class Helpers
+    public class when_deleting_page_type : MigrationHelpersSpec
     {
-        public class when_called_with_name_of_existing_page_type
+        static string pageTypeName = "MyPageType";
+
+        Establish context = () =>
         {
-            static Migration migration;
-            static string pageTypeName = "MyPageType";
-            static IPageTypeRepository pageTypeRepository;
+            var pageType = new FakePageType(pageDefinitionRepository);
+            pageType.Name = pageTypeName;
+            pageTypeRepository.Save(pageType);
 
-            Establish context = () =>
-                {
-                    var pageDefinitionRepository = new InMemoryPageDefinitionRepository();
-                    var pageType = new FakePageType(pageDefinitionRepository);
-                    pageType.Name = pageTypeName;
+            migration = MigrationWithExecuteMethod("PageType(\"" + pageTypeName + "\").Delete();");
+        };
 
-                    pageTypeRepository = new InMemoryPageTypeRepository(pageDefinitionRepository);
-                    pageTypeRepository.Save(pageType);
+        Because of = () => migration.Execute();
 
-                    var assembly = Create.Assembly(with =>
-                        with.Class("Migration1")
-                        .Inheriting<Migration>()
-                        .Constructor(x =>
-                            x.Parameter<IPageTypeRepository>("pageTypeRepository")
-                             .PassToBase("pageTypeRepository")
-                             .Parameter<IPageDefinitionRepository>("pageDefinitionRepository")
-                             .PassToBase("pageDefinitionRepository")
-                             .Parameter<ITabDefinitionRepository>("tabDefinitionRepository")
-                             .PassToBase("tabDefinitionRepository"))
-                        .PublicMethod(x =>
-                        x.Named("Execute")
-                        .IsOverride()
-                        .Body("PageType(\"" + pageTypeName + "\").Delete();")));
-
-                    migration = (Migration) assembly.GetTypeInstance("Migration1",
-                        pageTypeRepository, pageDefinitionRepository, new TabDefinitionRepository());
-                };
-
-            Because of = () => migration.Execute();
-
-            It should_delete_the_page_type_with_that_name
+        It should_delete_the_page_type_with_that_name
                 = () => pageTypeRepository.Load(pageTypeName).ShouldBeNull();
-        }
+    }
 
-        public class when_no_page_type_matches_by_name
+    public class when_deleting_none_existing_page_type : MigrationHelpersSpec
+    {
+        static string pageTypeName = "MyPageType";
+        static Exception thrownException;
+
+        Establish context = () =>
         {
-            static Migration migration;
-            static string pageTypeName = "MyPageType";
-            static IPageTypeRepository pageTypeRepository;
-            static Exception thrownException;
+            migration = MigrationWithExecuteMethod("PageType(\"" + pageTypeName + "\").Delete();");
+        };
 
-            Establish context = () =>
-            {
-                var pageDefinitionRepository = new InMemoryPageDefinitionRepository();
-                pageTypeRepository = new InMemoryPageTypeRepository(pageDefinitionRepository);
+        Because of = () => thrownException = Catch.Exception(() => migration.Execute());
 
-                var assembly = Create.Assembly(with =>
-                    with.Class("Migration1")
-                    .Inheriting<Migration>()
-                    .Constructor(x =>
-                        x.Parameter<IPageTypeRepository>("pageTypeRepository")
-                         .PassToBase("pageTypeRepository")
-                         .Parameter<IPageDefinitionRepository>("pageDefinitionRepository")
-                         .PassToBase("pageDefinitionRepository")
-                         .Parameter<ITabDefinitionRepository>("tabDefinitionRepository")
-                         .PassToBase("tabDefinitionRepository"))
-                    .PublicMethod(x =>
-                    x.Named("Execute")
-                    .IsOverride()
-                    .Body("PageType(\"" + pageTypeName + "\").Delete();")));
-
-                migration = (Migration)assembly.GetTypeInstance("Migration1",
-                    pageTypeRepository, pageDefinitionRepository, new TabDefinitionRepository());
-            };
-
-            Because of = () => thrownException = Catch.Exception(() => migration.Execute());
-
-            It should_not_throw_an_exception
+        It should_not_throw_an_exception
                 = () => thrownException.ShouldBeNull();
-        }
     }
 }
