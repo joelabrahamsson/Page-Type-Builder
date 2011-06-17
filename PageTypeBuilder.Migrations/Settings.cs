@@ -2,16 +2,16 @@
 
 namespace PageTypeBuilder.Migrations
 {
-    public class MigrationsConfiguration : ConfigurationSection
+    public class Settings : ConfigurationSection
     {
-        public static MigrationsConfiguration GetConfiguration()
+        public static Settings GetConfiguration()
         {
-            MigrationsConfiguration configuration = ConfigurationManager.GetSection("pageTypeBuilderMigrations") as MigrationsConfiguration;
+            Settings configuration = ConfigurationManager.GetSection("pagetypebuilder.migrations") as Settings;
 
             if (configuration != null)
                 return configuration;
 
-            return new MigrationsConfiguration();
+            return new Settings();
         }
 
         [ConfigurationProperty("disabled", IsRequired = false)]

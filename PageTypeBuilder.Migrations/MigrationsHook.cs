@@ -12,7 +12,7 @@ namespace PageTypeBuilder.Migrations
     {
         public void PreSynchronization(ISynchronizationHookContext context)
         {
-            if (MigrationsConfiguration.GetConfiguration().Disabled)
+            if (Settings.GetConfiguration().Disabled)
             {
                 return;
             }

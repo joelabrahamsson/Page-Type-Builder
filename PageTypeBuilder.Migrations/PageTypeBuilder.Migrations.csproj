@@ -63,7 +63,7 @@
     <Compile Include="MigrationContext.cs" />
     <Compile Include="MigrationExtensions.cs" />
     <Compile Include="MigrationsHook.cs" />
-    <Compile Include="MigrationsSettings.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="PageDefinitionAction.cs" />
     <Compile Include="PageTypeAction.cs" />
     <Compile Include="PageTypeExtensions.cs" />
