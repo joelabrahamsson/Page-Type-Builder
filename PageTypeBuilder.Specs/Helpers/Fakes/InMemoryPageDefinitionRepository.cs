@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EPiServer.DataAbstraction;
@@ -43,6 +44,17 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             var result = new PageDefinitionCollection();
             result.AddRange(MapRecordsToExposedObjects(pageDefinitions.Where(pd => pd.PageTypeID == pageTypeId)));
             return result;
+        }
+
+        public void Delete(PageDefinition pageDefinition)
+        {
+            if(pageDefinition == null)
+            {
+                throw new ArgumentNullException("pageDefinition cannot be null.");
+            }
+
+            var record = pageDefinitions.Find(d => d.ID == pageDefinition.ID);
+            pageDefinitions.Remove(record);
         }
 
         public IEnumerable<PageDefinition> List()

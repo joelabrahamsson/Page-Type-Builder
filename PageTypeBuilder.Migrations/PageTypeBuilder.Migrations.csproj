@@ -62,6 +62,7 @@
     <Compile Include="MigrationExtensions.cs" />
     <Compile Include="MigrationsHook.cs" />
     <Compile Include="MigrationsSettings.cs" />
+    <Compile Include="PageDefinitionAction.cs" />
     <Compile Include="PageTypeAction.cs" />
     <Compile Include="PageTypeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

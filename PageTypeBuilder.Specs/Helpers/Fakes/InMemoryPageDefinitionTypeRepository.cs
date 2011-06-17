@@ -68,11 +68,16 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             return pageDefinitions.FirstOrDefault(def => def.TypeName == typeName && def.AssemblyName == assemblyName);
         }
 
+        public PageDefinitionType GetPageDefinitionType(Type type)
+        {
+            string typeName = type.FullName;
+            string assemblyName = type.Assembly.GetName().Name;
+            return GetPageDefinitionType(typeName, assemblyName);
+        }
+
         public PageDefinitionType GetPageDefinitionType<T>()
         {
-            string typeName = typeof (T).FullName;
-            string assemblyName = typeof (T).Assembly.GetName().Name;
-            return GetPageDefinitionType(typeName, assemblyName);
+            return GetPageDefinitionType(typeof(T));
         }
     }
 }

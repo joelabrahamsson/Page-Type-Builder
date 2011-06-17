@@ -19,6 +19,8 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
                                  .PassToBase("pageTypeRepository")
                                  .Parameter<IPageDefinitionRepository>("pageDefinitionRepository")
                                  .PassToBase("pageDefinitionRepository")
+                                 .Parameter<IPageDefinitionTypeRepository>("pageDefinitionTypeRepository")
+                                 .PassToBase("pageDefinitionTypeRepository")
                                  .Parameter<ITabDefinitionRepository>("tabDefinitionRepository")
                                  .PassToBase("tabDefinitionRepository"));
         }
@@ -37,11 +39,13 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
             this Assembly assembly,
             IPageTypeRepository pageTypeRepository,
             IPageDefinitionRepository pageDefinitionRepository,
+            IPageDefinitionTypeRepository pageDefinitionTypeRepository,
             ITabDefinitionRepository tabDefinitionRepository)
         {
             return (Migration) assembly.GetTypeInstance(DefaultMigrationName,
                                                         pageTypeRepository, 
                                                         pageDefinitionRepository,
+                                                        pageDefinitionTypeRepository,
                                                         tabDefinitionRepository);
         }
     }

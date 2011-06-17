@@ -9,16 +9,18 @@ namespace PageTypeBuilder.Migrations
     {
 
         public Migration()
-            : this(new PageTypeRepository(), new PageDefinitionRepository(), new TabDefinitionRepository())
+            : this(new PageTypeRepository(), new PageDefinitionRepository(), new PageDefinitionTypeRepository(), new TabDefinitionRepository())
         {}
 
         public Migration(
             IPageTypeRepository pageTypeRepository, 
             IPageDefinitionRepository pageDefinitionRepository,
+            IPageDefinitionTypeRepository pageDefinitionTypeRepository,
             ITabDefinitionRepository tabDefinitionRepository)
         {
             PageTypeRepository = pageTypeRepository;
             PageDefinitionRepository = pageDefinitionRepository;
+            PageDefinitionTypeRepository = pageDefinitionTypeRepository;
             TabDefinitionRepository = tabDefinitionRepository;
         }
 
@@ -26,12 +28,13 @@ namespace PageTypeBuilder.Migrations
 
         protected internal IPageTypeRepository PageTypeRepository { get; private set; }
         protected internal IPageDefinitionRepository PageDefinitionRepository { get; private set; }
+        protected internal IPageDefinitionTypeRepository PageDefinitionTypeRepository { get; private set; }
         protected internal ITabDefinitionRepository TabDefinitionRepository { get; private set; }
 
         protected PageTypeAction PageType(string name)
         {
             var pageType = PageTypeRepository.Load(name);
-            return new PageTypeAction(pageType, PageTypeRepository);
+            return new PageTypeAction(pageType, PageTypeRepository, PageDefinitionRepository, PageDefinitionTypeRepository);
         }
     }
 }

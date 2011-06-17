@@ -35,8 +35,8 @@ namespace PageTypeBuilder.Migrations
         {
             var types = migrations.Select(m => m.GetType());
             ValidateAllInSameNamespace(types);
-
             ValidateNames(types);
+            ValidateNamesInConsecutiveOrder(migrations);
 
             var numbersOfExecuted = GetStore().Items<ExecutedMigration>().Select(m => m.Number);
             var numbersOfMigrationsInAppDomain = migrations.Select(m => m.Number());
@@ -79,6 +79,26 @@ namespace PageTypeBuilder.Migrations
                   + "All concrete classes implementing IMigration"
                   + "must reside in the same namespaces.");
             }
+        }
+
+        void ValidateNamesInConsecutiveOrder(IEnumerable<IMigration> migrations)
+        {
+            if(migrations.Count() == 0)
+            {
+                return;
+            }
+
+            var migrationNumbers = migrations.Select(x => x.Number()).OrderBy(x => x);
+            var comparisonNumbers = Enumerable.Range(migrationNumbers.Min(), migrationNumbers.Max());
+            if(migrationNumbers.SequenceEqual(comparisonNumbers))
+            {
+                return;
+            }
+
+            string errorMessage = "All migrations must be numbered in a consecutive order."
+                + " Found: " + migrationNumbers.Select(x => x.ToString()).Aggregate((accumulate, number) => accumulate + ", " + number)
+                + " Expected: " + comparisonNumbers.Select(x => x.ToString()).Aggregate((accumulate, number) => accumulate + ", " + number);
+            throw new PageTypeBuilderException(errorMessage);
         }
 
         void ExecuteMigrations(IEnumerable<IMigration> migrations)

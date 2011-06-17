@@ -13,6 +13,7 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
         protected static IPageTypeRepository pageTypeRepository;
         protected static IPageDefinitionRepository pageDefinitionRepository;
         protected static ITabDefinitionRepository tabDefinitionRepository;
+        protected static InMemoryPageDefinitionTypeRepository pageDefinitionTypeRepository;
         protected static Migration migration;
 
         Establish context = () =>
@@ -20,12 +21,16 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
                 pageDefinitionRepository = new InMemoryPageDefinitionRepository();
                 pageTypeRepository = new InMemoryPageTypeRepository(pageDefinitionRepository);
                 tabDefinitionRepository = new InMemoryTabDefinitionRepository();
+                pageDefinitionTypeRepository = new InMemoryPageDefinitionTypeRepository();
             };
 
         protected static Migration GetMigrationInstance(Assembly assembly)
         {
             return assembly.GetMigrationInstance(
-                pageTypeRepository, pageDefinitionRepository, tabDefinitionRepository);
+                pageTypeRepository, 
+                pageDefinitionRepository, 
+                pageDefinitionTypeRepository, 
+                tabDefinitionRepository);
         }
 
         protected static Migration MigrationWithExecuteMethod(string methodBody)

@@ -54,6 +54,49 @@ namespace PageTypeBuilder.Specs.Migrations.Validation
             = () => thrownException.ShouldBeOfType<PageTypeBuilderException>();
     }
 
+    public class given_two_migrations_whose_names_are_not_in_consecutive_order
+    {
+        static Assembly assembly;
+        static ISynchronizationHookContext hookContext;
+        static IPreSynchronizationHook hook;
+        static Exception thrownException;
+
+        Establish context = () =>
+        {
+            DynamicDataStoreFactory.Instance = new InMemoryDynamicDataStoreFactory();
+            assembly = Create.Assembly(with =>
+            {
+                with.Class("Migration1")
+                    .Inheriting<Migration>()
+                    .PublicMethod(x =>
+                         x.Named("Execute")
+                          .IsOverride());
+
+                with.Class("Migration3")
+                    .Inheriting<Migration>()
+                    .PublicMethod(x =>
+                         x.Named("Execute")
+                          .IsOverride());
+            });
+
+            var assemblyLocator = new InMemoryAssemblyLocator();
+            assemblyLocator.Add(assembly);
+
+            hookContext = new SynchronizationHookContext(assemblyLocator);
+
+            hook = new MigrationsHook();
+        };
+
+        Because of =
+            () => thrownException = Catch.Exception(() => hook.PreSynchronization(hookContext));
+
+        It should_throw_an_exception
+            = () => thrownException.ShouldNotBeNull();
+
+        It should_throw_a_PageTypeBuilderException
+            = () => thrownException.ShouldBeOfType<PageTypeBuilderException>();
+    }
+
     public class given_a_migration_whose_name_starts_with_lowercase_m
     {
         static Assembly assembly;

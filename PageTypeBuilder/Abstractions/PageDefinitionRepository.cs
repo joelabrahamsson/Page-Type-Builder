@@ -13,5 +13,10 @@ namespace PageTypeBuilder.Abstractions
         {
             return PageDefinition.List(pageTypeId);
         }
+
+        public void Delete(PageDefinition pageDefinition)
+        {
+            pageDefinition.Delete();
+        }
     }
 }

@@ -130,6 +130,8 @@
     <Compile Include="Hooks\PreSynchronizationHooks.cs" />
     <Compile Include="Migrations\Helpers.cs" />
     <Compile Include="Migrations\Invokation.cs" />
+    <Compile Include="Migrations\MigrationHelpersSpec.cs" />
+    <Compile Include="Migrations\TypeGenerationExtensions.cs" />
     <Compile Include="Migrations\Validation.cs" />
     <Compile Include="Helpers\AssemblyDefinitionExtensions.cs" />
     <Compile Include="Synchronization\GlobalPropertySettingsSynchronization\Creation.cs" />
