@@ -27,5 +27,6 @@ namespace PageTypeBuilder.Abstractions
         string Name { get; set; }
         void Save();
         int SortOrder { get; set; }
+        void Delete();
     }
 }

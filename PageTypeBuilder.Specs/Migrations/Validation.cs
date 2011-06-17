@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using EPiServer.Data.Dynamic;
 using Machine.Specifications;
 using PageTypeBuilder.Migrations;
 using PageTypeBuilder.Specs.Helpers.Fakes;
@@ -164,6 +165,8 @@ namespace PageTypeBuilder.Specs.Migrations.Validation
 
         Establish context = () =>
         {
+            DynamicDataStoreFactory.Instance = new InMemoryDynamicDataStoreFactory();
+
             assembly = Create.Assembly(with =>
                 with.Class("migration01a")
                     .Inheriting<Migration>()
@@ -185,5 +188,42 @@ namespace PageTypeBuilder.Specs.Migrations.Validation
 
         It should_not_throw_an_exception
             = () => thrownException.ShouldBeNull();
+    }
+
+    public class given_an_executed_migration_doesnt_exist_in_the_application_domain
+    {
+        static Assembly assembly;
+        static ISynchronizationHookContext hookContext;
+        static IPreSynchronizationHook hook;
+        static Exception thrownException;
+
+        Establish context = () =>
+        {
+            DynamicDataStoreFactory.Instance = new InMemoryDynamicDataStoreFactory();
+
+            assembly = Create.Assembly(with =>
+                with.Class("Migration1")
+                    .Inheriting<Migration>()
+                    .PublicMethod(x =>
+                        x.Named("Execute")
+                         .IsOverride()));
+
+            var assemblyLocator = new InMemoryAssemblyLocator();
+            assemblyLocator.Add(assembly);
+
+            var firstRunHookContext = new SynchronizationHookContext(assemblyLocator);
+            hookContext = new SynchronizationHookContext(new InMemoryAssemblyLocator());
+            hook = new MigrationsHook();
+            hook.PreSynchronization(firstRunHookContext);
+        };
+
+        Because of =
+            () => thrownException = Catch.Exception(() => hook.PreSynchronization(hookContext));
+
+        It should_throw_an_exception
+            = () => thrownException.ShouldNotBeNull();
+
+        It should_throw_a_PageTypeBuilderException
+            = () => thrownException.ShouldBeOfType<PageTypeBuilderException>();
     }
 }

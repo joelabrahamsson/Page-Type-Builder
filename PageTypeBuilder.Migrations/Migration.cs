@@ -1,23 +1,37 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using EPiServer.DataAbstraction;
+using PageTypeBuilder.Abstractions;
 
 namespace PageTypeBuilder.Migrations
 {
-    public abstract class Migration
+    public abstract class Migration : IMigration
     {
-        public abstract void Execute();
 
-        protected PageType GetPageType(string name)
+        public Migration()
+            : this(new PageTypeRepository(), new PageDefinitionRepository(), new TabDefinitionRepository())
+        {}
+
+        public Migration(
+            IPageTypeRepository pageTypeRepository, 
+            IPageDefinitionRepository pageDefinitionRepository,
+            ITabDefinitionRepository tabDefinitionRepository)
         {
-            return PageType.Load(name);
+            PageTypeRepository = pageTypeRepository;
+            PageDefinitionRepository = pageDefinitionRepository;
+            TabDefinitionRepository = tabDefinitionRepository;
         }
 
-        private static Regex numberPattern = new Regex("[0-9]*$", RegexOptions.Compiled);
-        internal int Number()
+        public abstract void Execute();
+
+        protected internal IPageTypeRepository PageTypeRepository { get; private set; }
+        protected internal IPageDefinitionRepository PageDefinitionRepository { get; private set; }
+        protected internal ITabDefinitionRepository TabDefinitionRepository { get; private set; }
+
+        protected PageTypeAction PageType(string name)
         {
-            var typeName = GetType().Name;
-            return int.Parse(numberPattern.Match(typeName).Captures[0].Value);
+            var pageType = PageTypeRepository.Load(name);
+            return new PageTypeAction(pageType, PageTypeRepository);
         }
     }
 }

@@ -135,6 +135,7 @@
     <Compile Include="Configuration\PageTypeBuilderConfiguration.cs" />
     <Compile Include="Discovery\PropertySettingsUpdater.cs" />
     <Compile Include="Discovery\TabLocator.cs" />
+    <Compile Include="Helpers\ObjectExtensions.cs" />
     <Compile Include="IUpdateGlobalPropertySettings.cs" />
     <Compile Include="IUpdatePropertySettings.cs" />
     <Compile Include="PageDataCollectionExtensions.cs" />

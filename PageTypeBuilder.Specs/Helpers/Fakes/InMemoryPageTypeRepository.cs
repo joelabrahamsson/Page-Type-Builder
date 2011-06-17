@@ -102,5 +102,15 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         {
             return new FakePageType(pageDefinitionRepository);
         }
+
+        public void Delete(IPageType pageType)
+        {
+            if(pageType == null)
+            {
+                throw new ArgumentNullException("pageType");
+            }
+            var record = pageTypes.Where(p => p.ID == pageType.ID).FirstOrDefault();
+            pageTypes.Remove(record);
+        }
     }
 }

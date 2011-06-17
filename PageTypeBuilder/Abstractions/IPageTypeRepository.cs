@@ -9,5 +9,6 @@ namespace PageTypeBuilder.Abstractions
         IPageType Load(int id);
         void Save(IPageType pageTypeToSave);
         IPageType CreateNew();
+        void Delete(IPageType pageType);
     }
 }

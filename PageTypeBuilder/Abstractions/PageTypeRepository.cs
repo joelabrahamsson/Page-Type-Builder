@@ -37,5 +37,11 @@ namespace PageTypeBuilder.Abstractions
         {
             return new NativePageType();
         }
+
+
+        public void Delete(IPageType pageType)
+        {
+            pageType.Delete();
+        }
     }
 }

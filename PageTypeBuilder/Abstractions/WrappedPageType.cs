@@ -129,5 +129,10 @@ namespace PageTypeBuilder.Abstractions
             get { return wrapped.SortOrder; }
             set { wrapped.SortOrder = value; }
         }
+
+        public void Delete()
+        {
+            wrapped.Delete();
+        }
     }
 }

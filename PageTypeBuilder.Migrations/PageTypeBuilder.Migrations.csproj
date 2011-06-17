@@ -48,6 +48,7 @@
       <HintPath>..\..\..\Program Files (x86)\EPiServer\Framework\6.0.318.44\bin\EPiServer.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,8 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExecutedMigrations.cs" />
+    <Compile Include="IMigration.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="MigrationExtensions.cs" />
     <Compile Include="MigrationsHook.cs" />
+    <Compile Include="MigrationsSettings.cs" />
+    <Compile Include="PageTypeAction.cs" />
     <Compile Include="PageTypeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

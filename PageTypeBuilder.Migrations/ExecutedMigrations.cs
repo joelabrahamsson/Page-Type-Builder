@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PageTypeBuilder.Migrations
 {
     internal class ExecutedMigration
     {
-        public ExecutedMigration(Migration migration)
+        public ExecutedMigration(IMigration migration)
         {
             Number = migration.Number();
             Date = DateTime.Now;

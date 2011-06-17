@@ -59,7 +59,7 @@ namespace PageTypeBuilder.Specs.Migrations
         static ISynchronizationHookContext hookContext;
         static string migrationName = "Migration1";
         static string verificationPropertyName = "ExecuteInvoked";
-
+        
         Establish context = () =>
         {
             DynamicDataStoreFactory.Instance = new InMemoryDynamicDataStoreFactory();

@@ -78,5 +78,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         }
 
         public int SortOrder { get; set; }
+        public void Delete()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
