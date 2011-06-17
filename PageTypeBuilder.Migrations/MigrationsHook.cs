@@ -38,7 +38,7 @@ namespace PageTypeBuilder.Migrations
             ValidateNames(types);
             ValidateNamesInConsecutiveOrder(migrations);
 
-            var numbersOfExecuted = GetStore().Items<ExecutedMigration>().Select(m => m.Number);
+            var numbersOfExecuted = GetStore().Items<ExecutedMigration>().ToList().Select(m => m.Number);
             var numbersOfMigrationsInAppDomain = migrations.Select(m => m.Number());
             var migrationsNotInAppDomain = numbersOfExecuted
                 .Where(m => !numbersOfMigrationsInAppDomain.Contains(m));
@@ -106,6 +106,8 @@ namespace PageTypeBuilder.Migrations
             var store = GetStore();
             var lastApplied = store.Items<ExecutedMigration>()
                 .OrderByDescending(migration => migration.Number)
+                .Take(1)
+                .ToList()
                 .Select(migration => migration.Number)
                 .FirstOrDefault();
 

@@ -40,7 +40,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyXhtmlString =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyXHtmlString");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("XhtmlString");
     }
 
     [Subject("Synchronization")]
@@ -54,7 +54,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyNumber =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyNumber");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("Number");
     }
 
     [Subject("Synchronization")]
@@ -68,7 +68,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyNumber =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyNumber");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("Number");
     }
 
     [Subject("Synchronization")]
@@ -82,7 +82,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyBoolean =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyBoolean");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("Boolean");
     }
 
     [Subject("Synchronization")]
@@ -96,7 +96,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyBoolean =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyBoolean");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("Boolean");
     }
 
     [Subject("Synchronization")]
@@ -110,7 +110,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyDate =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyDate");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("Date");
     }
 
     [Subject("Synchronization")]
@@ -124,7 +124,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyDate =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyDate");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("Date");
     }
 
     [Subject("Synchronization")]
@@ -138,7 +138,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyFloatNumber =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyFloatNumber");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("FloatNumber");
     }
 
     [Subject("Synchronization")]
@@ -152,7 +152,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyFloatNumber =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyFloatNumber");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("FloatNumber");
     }
 
     [Subject("Synchronization")]
@@ -166,7 +166,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyPageType =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyPageType");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("PageType");
     }
 
     [Subject("Synchronization")]
@@ -180,7 +180,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyPageReference =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyPageReference");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("PageReference");
     }
 
     [Ignore]
@@ -195,6 +195,6 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_a_new_page_definition_of_type_PropertyLinkCollection =
             () =>
-            GetCreatedPageDefinition().Type.Name.ShouldEqual("PropertyLinkCollection");
+            GetCreatedPageDefinition().Type.Name.ShouldEqual("LinkCollection");
     }
 }

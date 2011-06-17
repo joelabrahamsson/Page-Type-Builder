@@ -16,43 +16,43 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
             pageDefinitions = new List<PageDefinitionType>
             {
                 new PageDefinitionType(0, PropertyDataType.Boolean,
-                                        "PropertyBoolean", "EPiServer.Core.PropertyBoolean",
-                                        "EPiServer"),
+                                        "Boolean", null, null /*"EPiServer.Core.PropertyBoolean",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(1, PropertyDataType.Number,
-                                        "PropertyNumber", "EPiServer.Core.PropertyNumber",
-                                        "EPiServer"),
+                                        "Number", null, null/*"EPiServer.Core.PropertyNumber",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(2, PropertyDataType.FloatNumber,
-                                        "PropertyFloatNumber", "EPiServer.Core.PropertyFloatNumber",
-                                        "EPiServer"),
+                                        "FloatNumber", null, null /*"EPiServer.Core.PropertyFloatNumber",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(3, PropertyDataType.PageType,
-                                        "PropertyPageType", "EPiServer.Core.PropertyPageType",
-                                        "EPiServer"),
+                                        "PageType", null, null /*"EPiServer.Core.PropertyPageType",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(4, PropertyDataType.PageReference,
-                                        "PropertyPageReference", "EPiServer.Core.PropertyPageReference",
-                                        "EPiServer"),
+                                        "PageReference", null, null/*"EPiServer.Core.PropertyPageReference",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(5, PropertyDataType.Date,
-                                        "PropertyDate", "EPiServer.Core.PropertyDate",
-                                        "EPiServer"),
+                                        "Date",  null, null/*"EPiServer.Core.PropertyDate",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(6, PropertyDataType.String,
-                                        "PropertyString", "EPiServer.Core.PropertyString",
-                                        "EPiServer"),
+                                        "String",  null, null/*"EPiServer.Core.PropertyString",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(7, PropertyDataType.LongString,
-                                        "PropertyLongString", "EPiServer.Core.PropertyLongString",
-                                        "EPiServer"),
+                                        "LongString", null, null /*"EPiServer.Core.PropertyLongString",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(8, PropertyDataType.Category,
-                                        "PropertyCategory", "EPiServer.Core.PropertyCategory",
-                                        "EPiServer"),
+                                        "Category", null, null /*"EPiServer.Core.PropertyCategory",
+                                        "EPiServer"*/),
 
                 new PageDefinitionType(100, PropertyDataType.LongString,
-                                        "PropertyXHtmlString",
+                                        "XhtmlString",
                                         "EPiServer.SpecializedProperties.PropertyXhtmlString",
                                         "EPiServer")
             };

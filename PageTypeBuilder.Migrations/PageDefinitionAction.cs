@@ -12,17 +12,14 @@ namespace PageTypeBuilder.Migrations
     public class PageDefinitionAction
     {
         PageDefinition pageDefinition;
-        IPageDefinitionRepository pageDefinitionRepository;
-        IPageDefinitionTypeRepository pageDefinitionTypeRepository;
+        IMigrationContext context;
 
         public PageDefinitionAction(
-            PageDefinition pageDefinition, 
-            IPageDefinitionRepository pageDefinitionRepository,
-            IPageDefinitionTypeRepository pageDefinitionTypeRepository)
+            PageDefinition pageDefinition,
+            IMigrationContext context)
         {
             this.pageDefinition = pageDefinition;
-            this.pageDefinitionRepository = pageDefinitionRepository;
-            this.pageDefinitionTypeRepository = pageDefinitionTypeRepository;
+            this.context = context;
         }
 
         public void Delete()
@@ -32,7 +29,7 @@ namespace PageTypeBuilder.Migrations
                 return;
             }
 
-            pageDefinitionRepository.Delete(pageDefinition);
+            context.PageDefinitionRepository.Delete(pageDefinition);
         }
 
         public void Rename(string newName)
@@ -43,7 +40,7 @@ namespace PageTypeBuilder.Migrations
             }
 
             pageDefinition.Name = newName;
-            pageDefinitionRepository.Save(pageDefinition);
+            context.PageDefinitionRepository.Save(pageDefinition);
         }
 
         public void ChangeTypeTo<T>() where T : PropertyData
@@ -61,15 +58,21 @@ namespace PageTypeBuilder.Migrations
             }
 
             pageDefinition.Type = newType;
-            pageDefinitionRepository.Save(pageDefinition);
+            context.PageDefinitionRepository.Save(pageDefinition);
         }
 
         PageDefinitionType GetPageDefinitionType<T>()
         {
             var type = typeof (T);
+            if(context.NativePageDefinitionsMap.TypeIsNativePropertyType(type))
+            {
+                var typeId = context.NativePageDefinitionsMap.GetNativeTypeID(type);
+                return context.PageDefinitionTypeRepository.GetPageDefinitionType(typeId);
+            }
+
             string typeName = type.FullName;
             string assemblyName = type.Assembly.GetName().Name;
-            return pageDefinitionTypeRepository.GetPageDefinitionType(typeName, assemblyName);
+            return context.PageDefinitionTypeRepository.GetPageDefinitionType(typeName, assemblyName);
         }
     }
 }

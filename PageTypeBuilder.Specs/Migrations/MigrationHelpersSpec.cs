@@ -3,6 +3,8 @@ using Machine.Specifications;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Migrations;
 using PageTypeBuilder.Specs.Helpers.Fakes;
+using PageTypeBuilder.Synchronization;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using Refraction;
 
 namespace PageTypeBuilder.Specs.Migrations.Helpers
@@ -14,6 +16,7 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
         protected static IPageDefinitionRepository pageDefinitionRepository;
         protected static ITabDefinitionRepository tabDefinitionRepository;
         protected static InMemoryPageDefinitionTypeRepository pageDefinitionTypeRepository;
+        protected static INativePageDefinitionsMap nativePageDefinitionsMap;
         protected static Migration migration;
 
         Establish context = () =>
@@ -22,15 +25,19 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
                 pageTypeRepository = new InMemoryPageTypeRepository(pageDefinitionRepository);
                 tabDefinitionRepository = new InMemoryTabDefinitionRepository();
                 pageDefinitionTypeRepository = new InMemoryPageDefinitionTypeRepository();
+                nativePageDefinitionsMap = new NativePageDefinitionsMap();
             };
 
         protected static Migration GetMigrationInstance(Assembly assembly)
         {
-            return assembly.GetMigrationInstance(
-                pageTypeRepository, 
-                pageDefinitionRepository, 
-                pageDefinitionTypeRepository, 
-                tabDefinitionRepository);
+            var context = new MigrationContext(
+                pageTypeRepository,
+                pageDefinitionRepository,
+                pageDefinitionTypeRepository,
+                tabDefinitionRepository,
+                nativePageDefinitionsMap);
+
+            return assembly.GetMigrationInstance(context);
         }
 
         protected static Migration MigrationWithExecuteMethod(string methodBody)

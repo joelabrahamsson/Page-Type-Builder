@@ -46,19 +46,19 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         {
             if (nativePageDefinitionsMap.TypeIsNativePropertyType(pagePropertyType))
             {
-                return GetNonNativePageDefinitionType(pagePropertyType);
+                return GetNativePageDefinitionType(pagePropertyType);
             }
-            return GetNativePageDefinitionType(pagePropertyType);
+            return GetNonNativePageDefinitionType(pagePropertyType);
         }
 
-        PageDefinitionType GetNativePageDefinitionType(Type pagePropertyType)
+        PageDefinitionType GetNonNativePageDefinitionType(Type pagePropertyType)
         {
             string pageDefinitionTypeName = pagePropertyType.FullName;
             string assemblyName = pagePropertyType.Assembly.GetName().Name;
             return pageDefinitionTypeRepository.GetPageDefinitionType(pageDefinitionTypeName, assemblyName);
         }
 
-        PageDefinitionType GetNonNativePageDefinitionType(Type pagePropertyType)
+        PageDefinitionType GetNativePageDefinitionType(Type pagePropertyType)
         {
             int nativeTypeId = nativePageDefinitionsMap.GetNativeTypeID(pagePropertyType);
             return pageDefinitionTypeRepository.GetPageDefinitionType(nativeTypeId);

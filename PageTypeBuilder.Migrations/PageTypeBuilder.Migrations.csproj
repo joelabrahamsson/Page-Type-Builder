@@ -58,7 +58,9 @@
   <ItemGroup>
     <Compile Include="ExecutedMigrations.cs" />
     <Compile Include="IMigration.cs" />
+    <Compile Include="IMigrationContext.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="MigrationContext.cs" />
     <Compile Include="MigrationExtensions.cs" />
     <Compile Include="MigrationsHook.cs" />
     <Compile Include="MigrationsSettings.cs" />

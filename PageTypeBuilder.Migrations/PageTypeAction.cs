@@ -7,20 +7,14 @@ namespace PageTypeBuilder.Migrations
     public class PageTypeAction
     {
         IPageType pageType;
-        IPageTypeRepository pageTypeRepository;
-        IPageDefinitionRepository pageDefinitionRepository;
-        IPageDefinitionTypeRepository pageDefinitionTypeRepository;
+        IMigrationContext context;
 
         public PageTypeAction(
-            IPageType pageType, 
-            IPageTypeRepository pageTypeRepository, 
-            IPageDefinitionRepository pageDefinitionRepository,
-            IPageDefinitionTypeRepository pageDefinitionTypeRepository)
+            IPageType pageType,
+            IMigrationContext context)
         {
             this.pageType = pageType;
-            this.pageTypeRepository = pageTypeRepository;
-            this.pageDefinitionRepository = pageDefinitionRepository;
-            this.pageDefinitionTypeRepository = pageDefinitionTypeRepository;
+            this.context = context;
         }
 
         public void Delete()
@@ -30,7 +24,7 @@ namespace PageTypeBuilder.Migrations
                 return;
             }
 
-            pageTypeRepository.Delete(pageType);
+            context.PageTypeRepository.Delete(pageType);
         }
 
         public void Rename(string newName)
@@ -41,7 +35,7 @@ namespace PageTypeBuilder.Migrations
             }
 
             pageType.Name = newName;
-            pageTypeRepository.Save(pageType);
+            context.PageTypeRepository.Save(pageType);
         }
 
         public PageDefinitionAction PageDefinition(string name)
@@ -52,7 +46,7 @@ namespace PageTypeBuilder.Migrations
                 pageDefinition = pageType.Definitions.Find(d => d.Name == name);    
             }
 
-            return new PageDefinitionAction(pageDefinition, pageDefinitionRepository, pageDefinitionTypeRepository);
+            return new PageDefinitionAction(pageDefinition, context);
         }
     }
 }

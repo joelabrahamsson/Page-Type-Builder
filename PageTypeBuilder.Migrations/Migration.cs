@@ -1,40 +1,25 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using EPiServer.DataAbstraction;
-using PageTypeBuilder.Abstractions;
-
-namespace PageTypeBuilder.Migrations
+﻿namespace PageTypeBuilder.Migrations
 {
     public abstract class Migration : IMigration
     {
 
         public Migration()
-            : this(new PageTypeRepository(), new PageDefinitionRepository(), new PageDefinitionTypeRepository(), new TabDefinitionRepository())
+            : this(new MigrationContext())
         {}
 
-        public Migration(
-            IPageTypeRepository pageTypeRepository, 
-            IPageDefinitionRepository pageDefinitionRepository,
-            IPageDefinitionTypeRepository pageDefinitionTypeRepository,
-            ITabDefinitionRepository tabDefinitionRepository)
+        public Migration(IMigrationContext context)
         {
-            PageTypeRepository = pageTypeRepository;
-            PageDefinitionRepository = pageDefinitionRepository;
-            PageDefinitionTypeRepository = pageDefinitionTypeRepository;
-            TabDefinitionRepository = tabDefinitionRepository;
+            Context = context;
         }
 
         public abstract void Execute();
 
-        protected internal IPageTypeRepository PageTypeRepository { get; private set; }
-        protected internal IPageDefinitionRepository PageDefinitionRepository { get; private set; }
-        protected internal IPageDefinitionTypeRepository PageDefinitionTypeRepository { get; private set; }
-        protected internal ITabDefinitionRepository TabDefinitionRepository { get; private set; }
+        protected IMigrationContext Context { get; private set; }
 
         protected PageTypeAction PageType(string name)
         {
-            var pageType = PageTypeRepository.Load(name);
-            return new PageTypeAction(pageType, PageTypeRepository, PageDefinitionRepository, PageDefinitionTypeRepository);
+            var pageType = Context.PageTypeRepository.Load(name);
+            return new PageTypeAction(pageType, Context);
         }
     }
 }

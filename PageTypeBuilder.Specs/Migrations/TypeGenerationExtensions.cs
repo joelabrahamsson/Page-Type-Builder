@@ -15,14 +15,8 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
             return assembly.Class(DefaultMigrationName)
                 .Inheriting<Migration>()
                 .Constructor(x =>
-                             x.Parameter<IPageTypeRepository>("pageTypeRepository")
-                                 .PassToBase("pageTypeRepository")
-                                 .Parameter<IPageDefinitionRepository>("pageDefinitionRepository")
-                                 .PassToBase("pageDefinitionRepository")
-                                 .Parameter<IPageDefinitionTypeRepository>("pageDefinitionTypeRepository")
-                                 .PassToBase("pageDefinitionTypeRepository")
-                                 .Parameter<ITabDefinitionRepository>("tabDefinitionRepository")
-                                 .PassToBase("tabDefinitionRepository"));
+                             x.Parameter<IMigrationContext>("context")
+                                 .PassToBase("context"));
         }
 
         public static CodeTypeDeclaration WithExecuteMethod(
@@ -37,16 +31,10 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
 
         public static Migration GetMigrationInstance(
             this Assembly assembly,
-            IPageTypeRepository pageTypeRepository,
-            IPageDefinitionRepository pageDefinitionRepository,
-            IPageDefinitionTypeRepository pageDefinitionTypeRepository,
-            ITabDefinitionRepository tabDefinitionRepository)
+            IMigrationContext migrationContext)
         {
             return (Migration) assembly.GetTypeInstance(DefaultMigrationName,
-                                                        pageTypeRepository, 
-                                                        pageDefinitionRepository,
-                                                        pageDefinitionTypeRepository,
-                                                        tabDefinitionRepository);
+                                                        migrationContext);
         }
     }
 }
