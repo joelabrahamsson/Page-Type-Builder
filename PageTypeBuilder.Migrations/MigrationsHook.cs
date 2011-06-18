@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using EPiServer.Data.Dynamic;
+using log4net;
 using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Synchronization.Hooks;
 
@@ -10,10 +11,14 @@ namespace PageTypeBuilder.Migrations
 {
     public class MigrationsHook : IPreSynchronizationHook
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(MigrationsHook));
+
         public void PreSynchronization(ISynchronizationHookContext context)
         {
+            log.Debug("Migration hook executing");
             if (Settings.GetConfiguration().Disabled)
             {
+                log.Debug("Migrations has been disabled through configuration. Discontinuing migrations.");
                 return;
             }
 
@@ -74,10 +79,10 @@ namespace PageTypeBuilder.Migrations
         {
             if (migrations.GroupBy(m => m.Namespace).Count() > 1)
             {
-                throw new PageTypeBuilderException(
-                    "Migrations found in multiple namespaces. " 
-                  + "All concrete classes implementing IMigration"
-                  + "must reside in the same namespaces.");
+                string errorMessage = "Migrations found in multiple namespaces. "
+                                      + "All concrete classes implementing IMigration"
+                                      + "must reside in the same namespaces.";
+                throw new PageTypeBuilderException(errorMessage);
             }
         }
 
@@ -110,10 +115,12 @@ namespace PageTypeBuilder.Migrations
                 .ToList()
                 .Select(migration => migration.Number)
                 .FirstOrDefault();
+            log.Debug("Last migration executed according to database was " + lastApplied);
 
             migrations.Where(migration => migration.Number() > lastApplied)
                 .ToList().ForEach(migration =>
                     {
+                        log.Debug("Executing migration " + migration.Number());
                         migration.Execute();
                         var executed = new ExecutedMigration(migration);
                         store.Save(executed);

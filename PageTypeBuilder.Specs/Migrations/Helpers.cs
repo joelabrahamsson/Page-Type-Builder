@@ -3,6 +3,7 @@ using EPiServer.Core;
 using EPiServer.DataAbstraction;
 using Machine.Specifications;
 using PageTypeBuilder.Specs.Helpers.Fakes;
+using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 
 namespace PageTypeBuilder.Specs.Migrations.Helpers
 {
@@ -246,13 +247,14 @@ namespace PageTypeBuilder.Specs.Migrations.Helpers
             pageType.Name = pageTypeName;
             pageTypeRepository.Save(pageType);
             var pageTypeId = pageTypeRepository.Load(pageTypeName).ID;
-            
+
+            var originalTypeId = new NativePageDefinitionsMap().GetNativeTypeID(originalType);
             var pageDefinition = new PageDefinition
             {
                 Name = pageDefinitionName,
                 EditCaption = pageDefinitionName,
                 PageTypeID = pageTypeId,
-                Type = pageDefinitionTypeRepository.GetPageDefinitionType(originalType)
+                Type = pageDefinitionTypeRepository.GetPageDefinitionType(originalTypeId)
             };
 
             pageDefinitionRepository.Save(pageDefinition);
