@@ -1,6 +1,6 @@
 solution_file = "PageTypeBuilder.sln"
 configuration = "release"
-mspec_path = "packages/Machine.Specifications-Signed.0.4.13.0/tools/mspec.exe"
+mspec_path = "packages/Machine.Specifications-Signed.0.4.13.0/tools/mspec-clr4.exe"
 short_release_name = env("releasename")
 release_name = "PageTypeBuilder-" + short_release_name
 release_dir = "build"
