@@ -34,66 +34,6 @@
         }
 
         [Fact]
-        public void GivenTypeWithOnePageTypePropertyAttributeFromInterface_GetPageTypePropertyDefinitions_ReturnsListWithOnePropertyDefinition()
-        {
-            var type = typeof(TestPageTypeWithInterface);
-            var pageType = new NativePageType();
-            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<int>(1, propertyDefinitions.Count());
-        }
-
-        [Fact]
-        public void GivenTypeWithOnePageTypePropertyAttributeFromInterface_GetPageTypePropertyDefinitions_ReturnsDefinitionFromInterface()
-        {
-            var type = typeof(TestPageTypeWithInterface);
-            var pageType = new NativePageType();
-            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<string>(TestEditCaptions.FromInterfaceA, propertyDefinitions.ElementAt(0).PageTypePropertyAttribute.EditCaption);
-        }
-
-        [Fact]
-        public void GivenTypeWithOnePageTypePropertyAttributeFromInterfaceOverriddenInPageType_GetPageTypePropertyDefinitions_ReturnsListWithOnePropertyDefinition()
-        {
-            var type = typeof(TestPageTypeWithInterfaceWhichAlsoDefinesProperty);
-            var pageType = new NativePageType();
-            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<int>(1, propertyDefinitions.Count());
-        }
-
-        [Fact]
-        public void GivenTypeWithOnePageTypePropertyAttributeFromInterfaceOverriddenInPageType_GetPageTypePropertyDefinitions_ReturnsDefinitionFromPageType()
-        {
-            var type = typeof(TestPageTypeWithInterfaceWhichAlsoDefinesProperty);
-            var pageType = new NativePageType();
-            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions.First().PageTypePropertyAttribute.EditCaption);
-        }
-
-        [Fact]
-        public void GivenTypeWithOnePageTypePropertyAttributeFromClashingInterfacesButOverriddenInPageType_GetPageTypePropertyDefinitions_ReturnsListWithOnePropertyDefinition()
-        {
-            var type = typeof(TestPageTypeWithClashingInterfacesWhichAlsoDefinesProperty);
-            var pageType = new NativePageType();
-            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<int>(1, propertyDefinitions.Count());
-        }
-
-        [Fact]
-        public void GivenTypeWithOnePageTypePropertyAttributeFromClashingInterfacesButOverriddenInPageType_GetPageTypePropertyDefinitions_ReturnsDefinitionFromPageType()
-        {
-            var type = typeof(TestPageTypeWithClashingInterfacesWhichAlsoDefinesProperty);
-            var pageType = new NativePageType();
-            PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();
-            IEnumerable<PageTypePropertyDefinition> propertyDefinitions = definitionLocator.GetPageTypePropertyDefinitions(pageType, type);
-            Assert.Equal<string>(TestEditCaptions.FromPageType, propertyDefinitions.First().PageTypePropertyAttribute.EditCaption);
-        }
-
-        [Fact]
         public void GivenTypeWithNestedPropertyGroups_GetPageTypePropertyDefinitions_ReturnsListWithSevenPropertyDefinitions()
         {
             PageTypePropertyDefinitionLocator definitionLocator = new PageTypePropertyDefinitionLocator();

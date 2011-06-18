@@ -20,8 +20,7 @@ namespace PageTypeBuilder.Synchronization.Validation
 
         protected internal virtual void ValidatePageTypeProperties(PageTypeDefinition definition)
         {
-            ValidateNoClashingPropertiesFromInterfaces(definition.Type);
-            List<PropertyInfo> propertiesForPageType = definition.Type.GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces().ToList();
+            List<PropertyInfo> propertiesForPageType = definition.Type.GetPageTypePropertiesOnClass().ToList();
 
             foreach (PropertyInfo propertyInfo in propertiesForPageType)
                 ValidatePageTypeProperty(propertyInfo);
@@ -41,33 +40,6 @@ namespace PageTypeBuilder.Synchronization.Validation
                     ValidatePageTypeProperty(property);
                 }
             }            
-        }
-
-        public virtual void ValidateNoClashingPropertiesFromInterfaces(Type pageTypeType)
-        {
-            var propertiesOnClass = pageTypeType.GetPageTypePropertiesOnClass();
-            IEnumerable<PropertyInfo> propertiesFromInterfaces = pageTypeType.GetPageTypePropertiesFromInterfaces();
-            
-            var groups = propertiesFromInterfaces.GroupBy(propertyInfo => propertyInfo.Name);
-            foreach (var propertiesWithSameNameFromInterfaces in groups)
-            {
-                if (propertiesWithSameNameFromInterfaces.Count() == 1)
-                    continue;
-
-                if (ClassOverridesInterfaceProperty(propertiesWithSameNameFromInterfaces.Key, propertiesOnClass))
-                    continue;
-                
-                var interfaceCount = propertiesWithSameNameFromInterfaces.Count();
-                var className = pageTypeType.Name;
-                var propertyName = propertiesWithSameNameFromInterfaces.Key;
-                throw new PageTypeBuilderException(string.Format("{0} separate interfaces implemented by the class {1} provide a PageTypeProperty definition for the property named {2}. Either remove the ambiguity by renaming properties in the interfaces or provide the class {1} with its own PageTypeProperty definition on the property which will trump the ambiguities in the interfaces.",
-                                                                    interfaceCount, className, propertyName));
-            }
-        }
-
-        private bool ClassOverridesInterfaceProperty(string propertyName, IEnumerable<PropertyInfo> propertiesOnClass)
-        {
-            return propertiesOnClass.Any(propertyInfo => propertyInfo.Name == propertyName);
         }
 
         protected internal virtual void ValidatePageTypeProperty(PropertyInfo propertyInfo)

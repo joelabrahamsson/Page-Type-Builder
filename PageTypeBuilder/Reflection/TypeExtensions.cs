@@ -12,48 +12,14 @@ namespace PageTypeBuilder.Reflection
             return type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
-        public static IEnumerable<PropertyInfo> GetPropertiesFromInterfaces(this Type type)
-        {
-            var propertiesFromInterfaces = new List<PropertyInfo>();
-            foreach (var face in type.GetInterfaces())
-            {
-                foreach (var propertyInfo in face.GetPublicOrPrivateProperties())
-                {
-                    propertiesFromInterfaces.Add(propertyInfo);
-                }
-            }
-            return propertiesFromInterfaces;
-        }
-
         internal static IEnumerable<PropertyInfo> GetPageTypePropertiesOnClass(this Type pageTypeType)
         {
             return pageTypeType.GetPublicOrPrivateProperties().Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyAttribute)));
         }
 
-        internal static IEnumerable<PropertyInfo> GetPageTypePropertiesFromInterfaces(this Type pageTypeType)
-        {
-            return pageTypeType.GetPropertiesFromInterfaces()
-                .Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyAttribute)));
-        }
-
         internal static IEnumerable<PropertyInfo> GetPageTypePropertyGroupProperties(this Type pageTypeType)
         {
             return pageTypeType.GetPublicOrPrivateProperties().Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyGroupAttribute)));
-        }
-
-        internal static IEnumerable<PropertyInfo> GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces(this Type pageTypeType)
-        {
-            var pageTypeProperties = pageTypeType.GetPageTypePropertiesOnClass().ToList();
-            
-            IEnumerable<PropertyInfo> propertiesFromInterfaces = pageTypeType.GetPageTypePropertiesFromInterfaces();
-            
-            foreach (var interfaceProperty in propertiesFromInterfaces)
-            {
-                if (pageTypeProperties.Count(p => p.Name.Equals(interfaceProperty.Name)) == 0)
-                    pageTypeProperties.Add(interfaceProperty); 
-            }
-
-            return pageTypeProperties;
         }
 
         public static IEnumerable<Type> AssignableTo(this IEnumerable<Type> types, Type superType)

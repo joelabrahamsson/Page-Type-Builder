@@ -11,7 +11,7 @@
     {
         public virtual IEnumerable<PageTypePropertyDefinition> GetPageTypePropertyDefinitions(IPageType pageType, Type pageTypeType)
         {
-            var properties = pageTypeType.GetAllValidPageTypePropertiesFromClassAndImplementedInterfaces();
+            var properties = pageTypeType.GetPageTypePropertiesOnClass();
 
             List<PageTypePropertyDefinition> pageTypePropertyDefinitions = new List<PageTypePropertyDefinition>();
             foreach (PropertyInfo property in properties)
