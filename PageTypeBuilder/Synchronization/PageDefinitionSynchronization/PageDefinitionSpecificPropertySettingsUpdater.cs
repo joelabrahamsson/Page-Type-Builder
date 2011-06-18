@@ -27,15 +27,18 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
         {
-            PropertySettingsContainer container = GetPropertySettingsContainer(pageDefinition);
-
-            UpdatePageDefinitionsGlobalPropertySettings(propertyDefinition, pageTypeDefinition, container);
-            UpdatePageDefinitionsLocalPropertySettings(propertyDefinition, pageTypeDefinition, container);
+            UpdatePageDefinitionsGlobalPropertySettings(propertyDefinition, pageTypeDefinition, pageDefinition);
+            UpdatePageDefinitionsLocalPropertySettings(propertyDefinition, pageTypeDefinition, pageDefinition);
         }
 
-        void UpdatePageDefinitionsLocalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PropertySettingsContainer container)
+        void UpdatePageDefinitionsLocalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PageDefinition pageDefinition)
         {
             List<PropertySettingsUpdater> settingsUpdaters = GetPropertySettingsUpdaters(pageTypeDefinition, propertyDefinition);
+            if(!settingsUpdaters.Any())
+            {
+                return;
+            }
+            var container = GetPropertySettingsContainer(pageDefinition);
             settingsUpdaters.ForEach(updater =>
                 {
                     var wrapper = container.GetSetting(updater.SettingsType);
@@ -67,12 +70,13 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 });
         }
 
-        void UpdatePageDefinitionsGlobalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PropertySettingsContainer container)
+        void UpdatePageDefinitionsGlobalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PageDefinition pageDefinition)
         {
             object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
             var useGlobalSettingsAttribute = attributes.OfType<UseGlobalSettingsAttribute>().FirstOrDefault();
             if (useGlobalSettingsAttribute != null)
             {
+                var container = GetPropertySettingsContainer(pageDefinition);
                 //TODO: Should validate not null and valid type at startup
                 var globalSettingsUpdater = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters().Where(u => u.WrappedInstanceType == useGlobalSettingsAttribute.Type).First();
                 var wrapper = propertySettingsRepository.GetGlobals(globalSettingsUpdater.SettingsType)

@@ -1,4 +1,5 @@
-﻿using EPiServer.DataAbstraction;
+﻿using System;
+using EPiServer.DataAbstraction;
 
 namespace PageTypeBuilder.Abstractions
 {
@@ -17,6 +18,11 @@ namespace PageTypeBuilder.Abstractions
         public void Delete(PageDefinition pageDefinition)
         {
             pageDefinition.Delete();
+        }
+
+        public PageDefinition Load(int id)
+        {
+            return PageDefinition.Load(id);
         }
     }
 }

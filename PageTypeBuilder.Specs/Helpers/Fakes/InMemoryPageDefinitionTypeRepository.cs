@@ -51,6 +51,9 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                                         "Category", null, null /*"EPiServer.Core.PropertyCategory",
                                         "EPiServer"*/),
 
+                new PageDefinitionType(11, PropertyDataType.String, "Url", "EPiServer.SpecializedProperties.PropertyUrl",
+                    "EPiServer"),
+
                 new PageDefinitionType(100, PropertyDataType.LongString,
                                         "XhtmlString",
                                         "EPiServer.SpecializedProperties.PropertyXhtmlString",

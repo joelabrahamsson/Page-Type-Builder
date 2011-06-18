@@ -36,6 +36,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
 
         public void Dispose()
         {
+            assemblies.Clear();
             AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
         }
     }

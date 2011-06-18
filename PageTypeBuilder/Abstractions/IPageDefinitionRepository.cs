@@ -7,5 +7,6 @@ namespace PageTypeBuilder.Abstractions
         void Save(PageDefinition pageDefinition);
         PageDefinitionCollection List(int pageTypeId);
         void Delete(PageDefinition pageDefinition);
+        PageDefinition Load(int id);
     }
 }

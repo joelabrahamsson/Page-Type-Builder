@@ -147,6 +147,7 @@
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\NoSaving.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\PropertyGroupPropertiesSynchronization.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\PropertySettingsSynchronization.cs" />
+    <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\TypeUpdating.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\PropertySynchronization\ValueSetting.cs" />
     <Compile Include="Synchronization\PageTypeSynchronization\ValueSetting.cs" />
     <Compile Include="Synchronization\TabSynchronization\Creation.cs" />
@@ -179,7 +180,9 @@
       <Name>PageTypeBuilder</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

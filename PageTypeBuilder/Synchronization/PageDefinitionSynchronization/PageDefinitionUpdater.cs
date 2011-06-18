@@ -66,6 +66,9 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         {
             StringBuilder builder = new StringBuilder();
 
+            builder.Append("Type: ");
+            builder.Append(pageDefinition.Type.TypeName);
+            builder.Append("|");
             builder.Append("EditCaption:");
             builder.Append(pageDefinition.EditCaption);
             builder.Append("|");
@@ -103,6 +106,13 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         protected virtual void UpdatePageDefinitionValues(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
         {
             PageTypePropertyAttribute propertyAttribute = pageTypePropertyDefinition.PageTypePropertyAttribute;
+            
+            var specifiedType = GetPageDefinitionType(pageTypePropertyDefinition);
+            var currentType = pageDefinition.Type;
+            if(specifiedType.DataType == currentType.DataType)
+            {
+                pageDefinition.Type = specifiedType;
+            }
 
             pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
             pageDefinition.HelpText = propertyAttribute.HelpText ?? string.Empty;

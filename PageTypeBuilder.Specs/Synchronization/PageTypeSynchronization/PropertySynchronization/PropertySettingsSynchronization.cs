@@ -50,6 +50,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () =>
             SyncContext.PageDefinitionRepository.List().First().SettingsID.ShouldNotBeNull();
 
+        It should_assign_PageDefinitions_SettingsId_to_non_empty_value =
+            () =>
+            SyncContext.PageDefinitionRepository.List().First().SettingsID.ShouldNotEqual(Guid.Empty);
+
         It should_create_a_new_PropertySettingsContainer_with_the_same_Id_as_the_PageDefinitions_SettingsId =
             () =>
             GetPageDefinitionsPropertySettingsContainer().ShouldNotBeNull();
@@ -320,6 +324,14 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                     SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
                     SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
                 };
+
+        It should_assign_PageDefinitions_SettingsId =
+            () =>
+            SyncContext.PageDefinitionRepository.List().First().SettingsID.ShouldNotBeNull();
+
+        It should_assign_PageDefinitions_SettingsId_to_non_empty_value =
+            () =>
+            SyncContext.PageDefinitionRepository.List().First().SettingsID.ShouldNotEqual(Guid.Empty);
 
         It should_set_the_propertys_PropertySettingsContainer_to_use_matching_global_settings_for_the_type =
             () =>

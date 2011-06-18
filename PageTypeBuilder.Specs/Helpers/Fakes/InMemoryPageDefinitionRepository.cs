@@ -71,5 +71,11 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                     return exposedPageDefinition;
                 });
         }
+
+
+        public PageDefinition Load(int id)
+        {
+            return List().Where(x => x.ID == id).FirstOrDefault();
+        }
     }
 }
