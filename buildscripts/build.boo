@@ -46,6 +46,11 @@ target deploy:
     .ForEach def(file):
       file.CopyToDirectory(release_versiondir)
 
+  with FileList("PageTypeBuilder.Migrations/bin/${configuration}"):
+    .Include("*.{dll}")
+    .ForEach def(file):
+      file.CopyToDirectory(release_versiondir)
+
 desc "Generating specifications"
 target generate_specs:
   mkdir(release_versiondir)
