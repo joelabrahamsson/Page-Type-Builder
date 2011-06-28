@@ -17,6 +17,7 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
+        private List<IPageType> _newlyCreatedPageTypes;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeRepository pageTypeRepository, 
@@ -28,6 +29,7 @@ namespace PageTypeBuilder.Synchronization
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
             _pageTypeLocator = pageTypeLocator;
+            _newlyCreatedPageTypes = new List<IPageType>();
         }
 
         protected internal virtual IPageType GetExistingPageType(PageTypeDefinition definition)
@@ -60,6 +62,7 @@ namespace PageTypeBuilder.Synchronization
             
             PageTypeRepository.Save(pageType);
 
+            _newlyCreatedPageTypes.Add(pageType);
             return pageType;
         }
 
@@ -81,9 +84,12 @@ namespace PageTypeBuilder.Synchronization
             UpdateDefaultStopPublishOffset(pageType, attribute);
             UpdateDefaultVisibleInMenu(pageType, attribute);
             UpdateFrame(pageType, attribute);
-            UpdateAvailablePageTypes(pageType, attribute.AvailablePageTypes);
+
+            if (CanModifyProperty(pageType, attribute.AvailablePageTypesSet))
+                UpdateAvailablePageTypes(pageType, attribute.AvailablePageTypes);
             
             string newValuesString = SerializeValues(pageType);
+
             if (newValuesString != oldValueString)
                 PageTypeRepository.Save(pageType);
         }
@@ -127,6 +133,11 @@ namespace PageTypeBuilder.Synchronization
             return builder.ToString();
         }
 
+        private bool CanModifyProperty(IPageType pageType, bool propertySet)
+        {
+            return _newlyCreatedPageTypes.Any(current => current.GUID.Equals(pageType.GUID)) || propertySet;
+        }
+
         protected internal virtual void UpdateName(IPageType pageType, PageTypeDefinition definition)
         {
             pageType.Name = definition.GetPageTypeName();
@@ -134,6 +145,9 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateFilename(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.FilenameSet))
+                return;
+
             string filename = GetFilename(attribute);
             pageType.FileName = filename;
         }
@@ -150,22 +164,34 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateSortOrder(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.SortOrderSet))
+                return;
+
             pageType.SortOrder = attribute.SortOrder;
         }
 
         protected internal virtual void UpdateDescription(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DescriptionSet))
+                return;
+
             pageType.Description = attribute.Description;
         }
 
         protected internal virtual void UpdateIsAvailable(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.AvailableInEditModeSet))
+                return;
+
             pageType.IsAvailable = attribute.AvailableInEditMode;
         }
 
         protected internal virtual void UpdateDefaultArchivePageLink(IPageType pageType, PageTypeAttribute attribute)
         {
-            if(attribute.DefaultArchiveToPageID != PageTypeAttribute.DefaultDefaultArchiveToPageID)
+            if (!CanModifyProperty(pageType, attribute.DefaultArchiveToPageIDSet))
+                return;
+
+            if (attribute.DefaultArchiveToPageID != PageTypeAttribute.DefaultDefaultArchiveToPageID)
                 pageType.DefaultArchivePageLink = new PageReference(attribute.DefaultArchiveToPageID);
             else
                 pageType.DefaultArchivePageLink = null;
@@ -173,16 +199,25 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateDefaultChildOrderRule(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultChildSortOrderSet))
+                return;
+
             pageType.DefaultChildOrderRule = attribute.DefaultChildSortOrder;
         }
 
         protected internal virtual void UpdateDefaultPageName(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultPageNameSet))
+                return;
+
             pageType.DefaultPageName = attribute.DefaultPageName;
         }
 
         protected internal virtual void UpdateDefaultPeerOrder(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultSortIndexSet))
+                return;
+
             if (attribute.DefaultSortIndex != PageTypeAttribute.DefaultDefaultSortIndex)
                 pageType.DefaultPeerOrder = attribute.DefaultSortIndex;
             else
@@ -191,16 +226,25 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateDefaultStartPublishOffset(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultStartPublishOffsetMinutesSet))
+                return;
+
             pageType.DefaultStartPublishOffset = new TimeSpan(0, 0, attribute.DefaultStartPublishOffsetMinutes, 0);
         }
 
         protected internal virtual void UpdateDefaultStopPublishOffset(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultStopPublishOffsetMinutesSet))
+                return;
+
             pageType.DefaultStopPublishOffset = new TimeSpan(0, 0, attribute.DefaultStopPublishOffsetMinutes, 0);
         }
 
         protected internal virtual void UpdateDefaultVisibleInMenu(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultVisibleInMenuSet))
+                return;
+
             if (attribute.DefaultVisibleInMenu != PageTypeAttribute.DefaultDefaultVisibleInMenu)
                 pageType.DefaultVisibleInMenu = attribute.DefaultVisibleInMenu;
             else
@@ -209,13 +253,16 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateFrame(IPageType pageType, PageTypeAttribute attribute)
         {
+            if (!CanModifyProperty(pageType, attribute.DefaultFrameIDSet))
+                return;
+
             if (attribute.DefaultFrameID != 0)
                 pageType.DefaultFrameID = attribute.DefaultFrameID;
         }
 
         protected internal virtual void UpdateAvailablePageTypes(IPageType pageType, Type[] availablePageTypes)
         {
-            if(availablePageTypes == null)
+            if (availablePageTypes == null)
             {
                 pageType.AllowedPageTypes = null;
                 return;
@@ -233,7 +280,6 @@ namespace PageTypeBuilder.Synchronization
         }
 
         public IPageTypeRepository PageTypeRepository { get; set; }
-
         internal string DefaultFilename { get; set; }
     }
 }

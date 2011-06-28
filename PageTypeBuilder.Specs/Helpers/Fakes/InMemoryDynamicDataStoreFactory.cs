@@ -65,5 +65,10 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
         {
             throw new NotImplementedException();
         }
+
+        public override string GetStoreNameForType(Type type)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
