@@ -191,5 +191,6 @@
         internal bool DisplayInEditModeSet { get; set; }
 
         internal bool SortOrderSet { get; set; }
+
     }
 }
