@@ -234,8 +234,8 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         static string propertyName = "PropertyName";
         static string pageTypeName = "PageTypeName";
         static PageTypePropertyAttribute propertyAttribute;
-        static string tabName = "NameOfTheTab";
-        static string secondTabName = "NameOfTheSecondTab";
+        static string tabName = "TabOne";
+        static string secondTabName = "TabTwo";
 
         Establish context = () =>
         {
@@ -257,10 +257,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
             SyncContext.TabDefinitionRepository.SaveTabDefinition(tabTwo);
 
-            var tabClass = TabClassFactory.CreateTabClass("NameOfClass", tabName, AccessLevel.Undefined, 0);
+            var tabClass = TabClassFactory.CreateTabClass("TabClassOne", tabName, AccessLevel.Undefined, 0);
             SyncContext.AssemblyLocator.Add(tabClass.Assembly);
 
-            var secondTabClass = TabClassFactory.CreateTabClass("SecondTabClass", secondTabName, AccessLevel.Undefined, 0);
+            var secondTabClass = TabClassFactory.CreateTabClass("TabClassTwo", secondTabName, AccessLevel.Undefined, 0);
             SyncContext.AssemblyLocator.Add(secondTabClass.Assembly);
 
             PageTypeAttribute pageTypeAttribute = AttributeHelper.CreatePageTypeAttributeWithOnlyGuidAndNameSpecified(SyncContext);
