@@ -39,9 +39,7 @@ namespace PageTypeBuilder.Specs.Helpers.Fakes
                                         "Date",  null, null/*"EPiServer.Core.PropertyDate",
                                         "EPiServer"*/),
 
-                new PageDefinitionType(6, PropertyDataType.String,
-                                        "String",  null, null/*"EPiServer.Core.PropertyString",
-                                        "EPiServer"*/),
+                new PageDefinitionType(6, PropertyDataType.String, "String", "EPiServer.Core.PropertyString", "EPiServer"),
 
                 new PageDefinitionType(7, PropertyDataType.LongString,
                                         "LongString", null, null /*"EPiServer.Core.PropertyLongString",

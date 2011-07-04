@@ -1,21 +1,20 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using EPiServer.Core;
-using EPiServer.DataAbstraction;
-using EPiServer.Editor;
-using EPiServer.Security;
-using EPiServer.SpecializedProperties;
-using Machine.Specifications;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Specs.Helpers;
-using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
-using Refraction;
-
-namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization.ValueSetting
+﻿namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.PropertySynchronization.ValueSetting
 {
+    using System;
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using EPiServer.Core;
+    using EPiServer.DataAbstraction;
+    using EPiServer.Security;
+    using EPiServer.SpecializedProperties;
+    using Machine.Specifications;
+    using Abstractions;
+    using Helpers;
+    using Helpers.TypeBuildingDsl;
+    using Refraction;
+
     [Subject("Synchronization")]
     public class when_a_new_property_with_PageTypePropertyAttribute_has_been_added_to_a_page_type_class
         : SynchronizationSpecs
@@ -257,32 +256,17 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
             SyncContext.TabDefinitionRepository.SaveTabDefinition(tabTwo);
 
-            var tabClass = TabClassFactory.CreateTabClass("TabClassOne", tabName, AccessLevel.Undefined, 0);
-            SyncContext.AssemblyLocator.Add(tabClass.Assembly);
-
-            var secondTabClass = TabClassFactory.CreateTabClass("TabClassTwo", secondTabName, AccessLevel.Undefined, 0);
-            SyncContext.AssemblyLocator.Add(secondTabClass.Assembly);
-
             PageTypeAttribute pageTypeAttribute = AttributeHelper.CreatePageTypeAttributeWithOnlyGuidAndNameSpecified(SyncContext);
             pageTypeAttribute.AvailablePageTypes = new Type[] { };
 
-            PageTypePropertyAttribute dynamicPageTypePropertyAttribute = new PageTypePropertyAttribute
-                {
-                    Type = typeof(PropertyString),
-                    EditCaption = propertyName + "New",
-                    HelpText = "This is the updated help text",
-                    Tab = secondTabClass,
-                    Required = true,
-                    Searchable = true,
-                    DefaultValue = "This is the new default value",
-                    DefaultValueType = DefaultValueType.Value,
-                    DisplayInEditMode = true,
-                    SortOrder = 200,
-                    UniqueValuePerLanguage = true
-                };
-
             var assembly = Create.Assembly(with =>
             {
+                var tab = with.Class(secondTabName)
+                    .Inheriting<Tab>()
+                    .Property<string>(x => x.Named("Name").GetterBody(string.Format("return \"{0}\";", secondTabName)).IsOverride())
+                    .Property<AccessLevel>(x => x.Named("RequiredAccess").GetterBody(string.Format("return {0};", 0)).IsOverride())
+                    .Property<int>(x => x.Named("SortIndex").GetterBody(string.Format("return {0};", 100)).IsOverride());
+
                 with.Class(pageTypeName)
                     .Inheriting<TypedPageData>()
                     .AnnotatedWith<PageTypeAttribute>(
@@ -291,7 +275,20 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
                     .AutomaticProperty<string>(x =>
                                                 x.Named(propertyName)
                                                     .AnnotatedWith
-                                                    <PageTypePropertyAttribute>(dynamicPageTypePropertyAttribute));
+                                                    <PageTypePropertyAttribute>(new
+                                                    {
+                                                        Type = typeof(PropertyUrl),
+                                                        EditCaption = propertyName + "New",
+                                                        HelpText = "This is the updated help text",
+                                                        Tab = tab,
+                                                        Required = true,
+                                                        Searchable = true,
+                                                        DefaultValue = "This is the new default value",
+                                                        DefaultValueType = DefaultValueType.Value,
+                                                        DisplayInEditMode = true,
+                                                        SortOrder = 200,
+                                                        UniqueValuePerLanguage = true
+                                                    }));
             });
 
             SyncContext.AssemblyLocator.Add(assembly);
@@ -301,12 +298,12 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             SyncContext.PageTypeRepository.Save(existingPageType);
 
             IEnumerable<Assembly> assemblies = SyncContext.AssemblyLocator.GetAssemblies();
-            Type pageTypeType = assemblies.ElementAt(2).GetTypes()[0];
+            Type pageTypeType = assemblies.ElementAt(assemblies.Count() - 1).GetTypes()[1];
             PropertyInfo property = pageTypeType.GetProperty(propertyName);
             propertyAttribute = property.GetCustomAttributes(typeof(PageTypePropertyAttribute), false).First() as PageTypePropertyAttribute;
 
             var existingPageDefinition = new PageDefinition();
-            existingPageDefinition.Type = SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType<PropertyXhtmlString>();
+            existingPageDefinition.Type = SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType<PropertyString>();
             existingPageDefinition.PageTypeID = existingPageType.ID;
             existingPageDefinition.Name = propertyName;
             existingPageDefinition.EditCaption = propertyName;
@@ -329,7 +326,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
             () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
 
         It should_update_page_definition_Type =
-            () => SyncContext.PageDefinitionRepository.List().First().Type.ShouldEqual(SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType(propertyAttribute.Type));
+            () => SyncContext.PageDefinitionRepository.List().First().Type.ID.ShouldEqual(SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType(propertyAttribute.Type).ID);
 
         It should_update_page_definition_EditCaption =
             () => SyncContext.PageDefinitionRepository.List().First().EditCaption.ShouldEqual(propertyAttribute.EditCaption);
