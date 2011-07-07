@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
@@ -46,7 +47,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         protected virtual PageDefinition GetExistingPageDefinition(IPageType pageType, PageTypePropertyDefinition propertyDefinition)
         {
-            return pageType.Definitions.FirstOrDefault(definition => definition.Name == propertyDefinition.Name);
+            return pageType.Definitions.FirstOrDefault(definition => string.Equals(definition.Name, propertyDefinition.Name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

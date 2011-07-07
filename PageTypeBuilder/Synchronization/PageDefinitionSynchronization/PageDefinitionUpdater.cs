@@ -70,6 +70,9 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         {
             StringBuilder builder = new StringBuilder();
 
+            builder.Append("Name: ");
+            builder.Append(pageDefinition.Name);
+            builder.Append("|");
             builder.Append("Type: ");
             builder.Append(pageDefinition.Type.TypeName);
             builder.Append("|");
@@ -119,6 +122,8 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         protected virtual void UpdatePageDefinitionValues(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
         {
+            pageDefinition.Name = pageTypePropertyDefinition.Name;
+
             PageTypePropertyAttribute propertyAttribute = pageTypePropertyDefinition.PageTypePropertyAttribute;
             
             var specifiedType = GetPageDefinitionType(pageTypePropertyDefinition);
