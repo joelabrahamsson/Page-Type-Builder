@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PageTypeBuilder.Abstractions
 {
@@ -7,6 +8,7 @@ namespace PageTypeBuilder.Abstractions
         IPageType Load(string name);
         IPageType Load(Guid guid);
         IPageType Load(int id);
+        IEnumerable<IPageType> List();
         void Save(IPageType pageTypeToSave);
         IPageType CreateNew();
         void Delete(IPageType pageType);

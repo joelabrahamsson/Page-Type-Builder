@@ -110,6 +110,7 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
             PageTypeDefinitionValidator pageTypeValidator = fakes.PartialMock<PageTypeDefinitionValidator>((PageDefinitionTypeMapper)null);
             pageTypeValidator.Stub(validator => validator.ValidateInheritsFromBasePageType(pageTypeDefinition));
             pageTypeValidator.Stub(validator => validator.ValidateAvailablePageTypes(pageTypeDefinition, null));
+            pageTypeValidator.Stub(validator => validator.ValidateExcludedPageTypes(pageTypeDefinition, null));
             pageTypeValidator.Stub(validator => validator.ValidateNameLength(pageTypeDefinition));
             pageTypeValidator.Replay();
             pageTypeValidator.PropertiesValidator = fakes.Stub<PageTypeDefinitionPropertiesValidator>((PageDefinitionTypeMapper)null);
@@ -175,20 +176,21 @@ namespace PageTypeBuilder.Tests.Synchronization.Validation
         [Fact]
         public void GivenPageTypeDefinitionWithUndefinedTypeInAllowedPageTypes_ValidatePageTypeDefinition_ThrowsException()
         {
-            PageTypeDefinition definition = new PageTypeDefinition
-            {
-                Type = typeof(TypedPageData),
-                Attribute = new PageTypeAttribute
-                {
-                    AvailablePageTypes = new[] { typeof(TestPageType) }
-                }
-            };
-            List<PageTypeDefinition> allPageTypes = new List<PageTypeDefinition>();
-            PageTypeDefinitionValidator validator = new PageTypeDefinitionValidator(null);
+            // NO LONGER RELEVANT
+            //PageTypeDefinition definition = new PageTypeDefinition
+            //{
+            //    Type = typeof(TypedPageData),
+            //    Attribute = new PageTypeAttribute
+            //    {
+            //        AvailablePageTypes = new[] { typeof(TestPageType) }
+            //    }
+            //};
+            //List<PageTypeDefinition> allPageTypes = new List<PageTypeDefinition>();
+            //PageTypeDefinitionValidator validator = new PageTypeDefinitionValidator(null);
 
-            Exception exception = Record.Exception(() => validator.ValidatePageTypeDefinition(definition, allPageTypes));
+            //Exception exception = Record.Exception(() => validator.ValidatePageTypeDefinition(definition, allPageTypes));
 
-            Assert.NotNull(exception);
+            //Assert.NotNull(exception);
         }
     }
 }

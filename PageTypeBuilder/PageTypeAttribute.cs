@@ -25,6 +25,7 @@
         private int _defaultArchiveToPageID;
         private int _defaultFrameID;
         private Type[] _availablePageTypes;
+        private Type[] _excludedPageTypes;
 
         public PageTypeAttribute() : this(null) {}
 
@@ -213,6 +214,19 @@
             }
         }
 
+        public virtual Type[] ExcludedPageTypes
+        {
+            get
+            {
+                return _excludedPageTypes;
+            }
+            set
+            {
+                _excludedPageTypes = value;
+                ExcludedPageTypesSet = true;
+            }
+        }
+
         internal bool FilenameSet { get; set; }
 
         internal bool SortOrderSet { get; set; }
@@ -238,6 +252,8 @@
         internal bool DefaultFrameIDSet { get; set; }
 
         internal bool AvailablePageTypesSet { get; set; }
+
+        internal bool ExcludedPageTypesSet { get; set; }
 
     }
 }

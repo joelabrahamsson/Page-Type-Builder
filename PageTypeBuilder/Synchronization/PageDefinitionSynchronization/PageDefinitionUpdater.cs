@@ -134,6 +134,8 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
             if (CanModifyProperty(pageDefinition, propertyAttribute.EditCaptionSet))
                 pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
+            else if (!propertyAttribute.EditCaptionSet && string.IsNullOrEmpty(pageDefinition.EditCaption))
+                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
 
             if (CanModifyProperty(pageDefinition, propertyAttribute.HelpTextSet))
                 pageDefinition.HelpText = propertyAttribute.HelpText ?? string.Empty;

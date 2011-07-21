@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EPiServer.Core;
+using EPiServer.DataAbstraction;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
+using PageTypeBuilder.Reflection;
 
 namespace PageTypeBuilder.Synchronization
 {
@@ -17,7 +19,7 @@ namespace PageTypeBuilder.Synchronization
         private IPageTypeLocator _pageTypeLocator;
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
-        private List<IPageType> _newlyCreatedPageTypes;
+        internal List<IPageType> NewlyCreatedPageTypes;
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeRepository pageTypeRepository, 
@@ -29,7 +31,7 @@ namespace PageTypeBuilder.Synchronization
             DefaultFilename = DefaultPageTypeFilename;
             _pageTypeValueExtractor = pageTypeValueExtractor;
             _pageTypeLocator = pageTypeLocator;
-            _newlyCreatedPageTypes = new List<IPageType>();
+            NewlyCreatedPageTypes = new List<IPageType>();
         }
 
         protected internal virtual IPageType GetExistingPageType(PageTypeDefinition definition)
@@ -62,7 +64,7 @@ namespace PageTypeBuilder.Synchronization
             
             PageTypeRepository.Save(pageType);
 
-            _newlyCreatedPageTypes.Add(pageType);
+            NewlyCreatedPageTypes.Add(pageType);
             return pageType;
         }
 
@@ -85,9 +87,19 @@ namespace PageTypeBuilder.Synchronization
             UpdateDefaultVisibleInMenu(pageType, attribute);
             UpdateFrame(pageType, attribute);
 
+            bool availablePageTypesSet = false;
+
             if (CanModifyProperty(pageType, attribute.AvailablePageTypesSet))
+            {
                 UpdateAvailablePageTypes(pageType, attribute.AvailablePageTypes);
-            
+
+                if (attribute.AvailablePageTypes != null && attribute.AvailablePageTypes.Length > 0)
+                    availablePageTypesSet = true;
+            }
+
+            if (!availablePageTypesSet && CanModifyProperty(pageType, attribute.ExcludedPageTypesSet) && attribute.ExcludedPageTypes != null)
+                UpdateAvailablePageTypesExcluded(pageType, attribute.ExcludedPageTypes);
+
             string newValuesString = SerializeValues(pageType);
 
             if (newValuesString != oldValueString)
@@ -135,7 +147,7 @@ namespace PageTypeBuilder.Synchronization
 
         private bool CanModifyProperty(IPageType pageType, bool propertySet)
         {
-            return _newlyCreatedPageTypes.Any(current => current.GUID.Equals(pageType.GUID)) || propertySet;
+            return NewlyCreatedPageTypes.Any(current => current.GUID.Equals(pageType.GUID)) || propertySet;
         }
 
         protected internal virtual void UpdateName(IPageType pageType, PageTypeDefinition definition)
@@ -145,7 +157,12 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void UpdateFilename(IPageType pageType, PageTypeAttribute attribute)
         {
-            if (!CanModifyProperty(pageType, attribute.FilenameSet))
+            bool setFileName = false;
+
+            if (string.IsNullOrEmpty(pageType.FileName))
+                setFileName = true;
+
+            if (!CanModifyProperty(pageType, attribute.FilenameSet) && !setFileName)
                 return;
 
             string filename = GetFilename(attribute);
@@ -260,23 +277,97 @@ namespace PageTypeBuilder.Synchronization
                 pageType.DefaultFrameID = attribute.DefaultFrameID;
         }
 
-        protected internal virtual void UpdateAvailablePageTypes(IPageType pageType, Type[] availablePageTypes)
+        protected internal virtual void UpdateAvailablePageTypes(IPageType pageType, Type[] availablePageTypeTypes)
         {
-            if (availablePageTypes == null)
+            if (availablePageTypeTypes == null)
             {
                 pageType.AllowedPageTypes = null;
                 return;
             }
-            int[] availablePageTypeIDs = new int[availablePageTypes.Length];
-            for (int i = 0; i < availablePageTypes.Length; i++)
+            
+            List<int> availablePageTypeIds = new List<int>();
+
+            foreach (Type availablePageTypeType in availablePageTypeTypes)
             {
-                Type availablePageTypeType = availablePageTypes[i];
-                PageTypeDefinition availablePageTypeDefinition = _pageTypeDefinitions.First(
-                    definitions => definitions.Type.GUID == availablePageTypeType.GUID);
-                IPageType availablePageType = GetExistingPageType(availablePageTypeDefinition);
-                availablePageTypeIDs[i] = availablePageType.ID;
+                Type currentAvailablePageTypeType = availablePageTypeType;
+
+                if (IsValidPageType(currentAvailablePageTypeType))
+                {
+                    IPageType availablePageType = GetExistingPageType(_pageTypeDefinitions.
+                        First(definition => definition.Type.GUID == currentAvailablePageTypeType.GUID));
+
+                    if (!availablePageTypeIds.Contains(availablePageType.ID))
+                        availablePageTypeIds.Add(availablePageType.ID);
+                }
+                else if (currentAvailablePageTypeType.IsSubclassOf(typeof(TypedPageData)))
+                {
+                    availablePageTypeIds.AddRange(GetPageDefinitionsThatInheritFromType(_pageTypeDefinitions, currentAvailablePageTypeType)
+                        .Where(id => !availablePageTypeIds.Contains(id)));
+                }
+                else if (currentAvailablePageTypeType.IsInterface)
+                {
+                    availablePageTypeIds.AddRange(GetPageDefinitionsThatImplementInteface(_pageTypeDefinitions, currentAvailablePageTypeType)
+                        .Where(id => !availablePageTypeIds.Contains(id)));
+                }
             }
-            pageType.AllowedPageTypes = availablePageTypeIDs;
+
+            pageType.AllowedPageTypes = availablePageTypeIds.ToArray();
+        }
+
+        protected internal void UpdateAvailablePageTypesExcluded(IPageType pageType, Type[] excludedPageTypeTypes)
+        {
+            if (excludedPageTypeTypes == null || excludedPageTypeTypes.Length == 0)
+            {
+                pageType.AllowedPageTypes = null;
+                return;
+            }
+            List<int> availablePageTypeIds = PageTypeRepository.List().Select(currentPageType => currentPageType.ID).ToList();
+
+            foreach (Type excludedPageTypeType in excludedPageTypeTypes)
+            {
+                Type currentExcludedPageTypeType = excludedPageTypeType;
+
+                if (IsValidPageType(currentExcludedPageTypeType))
+                {
+                    IPageType availablePageType = GetExistingPageType(_pageTypeDefinitions.
+                        First(definition => definition.Type.GUID == currentExcludedPageTypeType.GUID));
+
+                    if (availablePageTypeIds.Contains(availablePageType.ID))
+                        availablePageTypeIds.Remove(availablePageType.ID);
+                }
+                else if (currentExcludedPageTypeType.IsSubclassOf(typeof(TypedPageData)))
+                {
+                    foreach (int pageTypeId in GetPageDefinitionsThatInheritFromType(_pageTypeDefinitions, currentExcludedPageTypeType).Where(availablePageTypeIds.Contains))
+                        availablePageTypeIds.Remove(pageTypeId);
+                }
+                else if (currentExcludedPageTypeType.IsInterface)
+                {
+                    foreach (int pageTypeId in GetPageDefinitionsThatImplementInteface(_pageTypeDefinitions, currentExcludedPageTypeType).Where(availablePageTypeIds.Contains))
+                        availablePageTypeIds.Remove(pageTypeId);
+                }
+            }
+
+            pageType.AllowedPageTypes = availablePageTypeIds.ToArray();
+        }
+
+        private IEnumerable<int> GetPageDefinitionsThatInheritFromType(IEnumerable<PageTypeDefinition> pageTypeDefinitions, Type subClassType)
+        {
+            return pageTypeDefinitions
+                .Where(definition => definition.Type.IsSubclassOf(subClassType))
+                .Select(definition => GetExistingPageType(definition).ID);
+        }
+
+        private IEnumerable<int> GetPageDefinitionsThatImplementInteface(IEnumerable<PageTypeDefinition> pageTypeDefinitions, Type interfaceType)
+        {
+            return pageTypeDefinitions
+                .Where(definition => definition.Type.GetInterfaces().Any(currentInterface => currentInterface.Equals(interfaceType)))
+                .Select(definition => GetExistingPageType(definition).ID);
+        }
+        
+        protected internal virtual bool IsValidPageType(Type type)
+        {
+            IEnumerable<Type> types = new List<Type> { type };
+            return types.WithAttribute<PageTypeAttribute>().Count() > 0 && !type.IsAbstract;
         }
 
         public IPageTypeRepository PageTypeRepository { get; set; }

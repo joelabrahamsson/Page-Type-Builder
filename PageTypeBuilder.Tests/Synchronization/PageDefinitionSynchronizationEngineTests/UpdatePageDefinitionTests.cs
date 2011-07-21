@@ -21,6 +21,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             string newEditCaption = TestValueUtility.CreateRandomString();
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.Name = newEditCaption;
+            pageDefinitionToUpdate.EditCaption = null;
 
             pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
@@ -62,6 +63,7 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             var pageDefinitionUpdater = GetPageDefinitionUpdater();
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
+            propertyDefinition.PageTypePropertyAttribute.HelpText = null;
 
             pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 

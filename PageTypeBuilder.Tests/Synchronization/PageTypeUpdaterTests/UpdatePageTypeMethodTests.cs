@@ -205,6 +205,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             IPageType pageType = new NativePageType();
             pageType.DefaultArchivePageLink = new PageReference(1);
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
+            pageTypeUpdater.NewlyCreatedPageTypes.Add(pageType);
 
             pageTypeUpdater.UpdateDefaultArchivePageLink(pageType, attribute);
 
@@ -318,7 +319,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             IPageType pageType = new NativePageType();
             pageType.DefaultPeerOrder = 1;
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
-
+            pageTypeUpdater.NewlyCreatedPageTypes.Add(pageType);
             pageTypeUpdater.UpdateDefaultPeerOrder(pageType, attribute);
 
             Assert.Equal<int>(PageTypeUpdater.DefaultDefaultPageTypePeerOrder, pageType.DefaultPeerOrder);
@@ -415,6 +416,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             IPageType pageType = new NativePageType();
             pageType.DefaultVisibleInMenu = !PageTypeUpdater.DefaultDefaultVisibleInMenu;
             PageTypeUpdater pageTypeUpdater = CreatePageTypeUpdater();
+            pageTypeUpdater.NewlyCreatedPageTypes.Add(pageType);
 
             pageTypeUpdater.UpdateDefaultVisibleInMenu(pageType, new PageTypeAttribute());
 
@@ -437,8 +439,8 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
         public void WhenUpdatePageTypeCalled_CallsUpdateAvailablePageTypes()
         {
             PageTypeDefinition definition = PageTypeUpdaterTestsUtility.CreateBasicPageTypeDefinition();
+            definition.Attribute.AvailablePageTypes = new Type[] {};
             PageTypeUpdater pageTypeUpdater = CreateFakePageTypeUpdaterWithUpdatePageTypeMethodHelperStubs();
-
             pageTypeUpdater.UpdatePageType(definition);
 
             pageTypeUpdater.AssertWasCalled(updater => updater.UpdateAvailablePageTypes(Arg<IPageType>.Is.Anything, Arg<Type[]>.Is.Anything));
@@ -468,6 +470,9 @@ namespace PageTypeBuilder.Tests.Synchronization.PageTypeUpdaterTests
             IPageType allowedPageType = new NativePageType();
             allowedPageType.ID = 1;
             pageTypeUpdater.Stub(updater => updater.GetExistingPageType(definitionToReturn)).Return(allowedPageType);
+
+            pageTypeUpdater.Stub(updater => updater.IsValidPageType(typeof (object))).Return(true);
+
             pageTypeUpdater.Replay();
 
             pageTypeUpdater.UpdateAvailablePageTypes(existingPageType, definition.Attribute.AvailablePageTypes);
