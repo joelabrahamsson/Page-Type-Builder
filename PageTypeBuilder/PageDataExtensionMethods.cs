@@ -60,6 +60,21 @@ namespace PageTypeBuilder
             return (TProperty)value;
         }
 
+        public static PropertyData GetProperty<TPageData>(this TPageData pageData, Expression<Func<TPageData, object>> expression)
+            where TPageData : PageData
+        {
+            return GetProperty<TPageData, PropertyData>(pageData, expression);
+        }
+
+        public static TPropertyData GetProperty<TPageData, TPropertyData>(this TPageData pageData, Expression<Func<TPageData, object>> expression)
+            where TPageData : PageData
+            where TPropertyData : PropertyData
+        {
+            MemberExpression memberExpression = GetMemberExpression(expression);
+            PropertyData propertyData = pageData.Property[memberExpression.Member.Name];
+            return (TPropertyData)propertyData;
+        }
+
         public static TProperty GetPropertyValue<TPageData, TProperty>(this TPageData pageData, Expression<Func<TPageData, object>> expression) 
             where TPageData : PageData
         {

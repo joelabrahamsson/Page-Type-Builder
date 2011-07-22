@@ -67,6 +67,7 @@ namespace PageTypeBuilder.Reflection
             T attribute = null;
 
             object[] attributes = type.GetCustomAttributes(true);
+
             foreach (object attributeInType in attributes)
             {
                 if (typeof(T).IsAssignableFrom(attributeInType.GetType()))

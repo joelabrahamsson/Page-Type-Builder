@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using Machine.Specifications;
 using PageTypeBuilder.Abstractions;
+using PageTypeBuilder.Reflection;
 using PageTypeBuilder.Specs.Helpers;
+using Refraction;
 
 namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ValueSetting
 {
@@ -101,6 +103,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ValueSet
             .ShouldEqual(pageTypeAttribute.DefaultArchiveToPageID);
     }
 
+
     [Subject("Synchronization")]
     public class when_a_page_type_class_matches_existing_PageType_but_everything_specified_in_its_attribute_is_different_than_corresponding_values_in_the_PageType
         : SynchronizationSpecs
@@ -146,6 +149,10 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ValueSet
             SyncContext.PageTypeRepository.Load(idOfExistingPageType).AllowedPageTypes
             .ShouldContainOnly(pageTypeAttribute.AvailablePageTypes
                 .Select(type => SyncContext.PageTypeResolver.GetPageTypeID(type).Value));
+
+        It should_update_the_PageType_to_have_Filename_set_to_the_value_of_the_attibutes_Filename = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).FileName
+            .ShouldEqual(pageTypeAttribute.Filename);
 
         It should_update_the_PageType_to_have_IsAvailable_set_to_the_value_of_the_attibutes_AvailableInEditMode = () =>
             SyncContext.PageTypeRepository.Load(idOfExistingPageType).IsAvailable
@@ -195,4 +202,98 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.ValueSet
             SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultArchivePageLink.ID
             .ShouldEqual(pageTypeAttribute.DefaultArchiveToPageID);
     }
+
+    [Subject("Synchronization")]
+    public class when_a_page_type_class_matches_existing_PageType_but_everything_specified_in_its_attribute_is_different_than_corresponding_values_in_the_PageType_and_no_properties_are_marked_as_being_set
+        : SynchronizationSpecs
+    {
+        static string pageTypeName = "NameOfTheClass";
+        static PageTypeAttribute pageTypeAttribute;
+        static int idOfExistingPageType;
+
+        Establish context = () =>
+                                {
+            pageTypeAttribute = AttributeHelper.CreatePageTypeAttributeWithOnlyGuidAndNameSpecified(SyncContext);
+
+            var assembly = Create.Assembly(with =>
+                {
+                    with.Class(pageTypeName)
+                        .Inheriting<TypedPageData>()
+                        .AnnotatedWith<PageTypeAttribute>(new { Name = pageTypeAttribute.Name }, pageTypeAttribute.Guid.ToString());
+                });
+
+            SyncContext.AssemblyLocator.Add(assembly);
+
+            IPageType existingPageType = PageTypeMother.CreatePageTypeWithEverythingButGuidDifferentThanAttribute(SyncContext, pageTypeAttribute, true);
+
+            SyncContext.PageTypeRepository.Save(existingPageType);
+            SyncContext.PageTypeRepository.ResetNumberOfSaves();
+
+            idOfExistingPageType = existingPageType.ID;
+        };
+
+        Because of = () =>
+            SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        It should_save_the_PageType = () =>
+            SyncContext.PageTypeRepository.GetNumberOfSaves(idOfExistingPageType).ShouldEqual(1);
+
+        It should_update_the_PageType_to_have_the_same_Name_as_the_attibutes_Name_property = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).Name
+            .ShouldEqual(pageTypeAttribute.Name);
+
+        It should_not_update_the_PageType_so_that_its_AllowedPageTypes_contains_exactly_the_ids_of_the_page_types_matching_the_page_type_classes_in_the_attributes_AvailablePageTypes = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).AllowedPageTypes
+            .ShouldBeEmpty();
+
+        It should_not_update_the_PageType_to_have_IsAvailable_set_to_the_value_of_the_attibutes_AvailableInEditMode = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).IsAvailable
+            .ShouldNotEqual(pageTypeAttribute.AvailableInEditMode);
+
+        It should_not_update_the_PageType_to_have_the_same_Description_as_in_the_attibute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).Description
+            .ShouldNotEqual(pageTypeAttribute.Description);
+
+        It should_not_update_the_PageType_to_have_the_same_SortOrder_as_in_the_attibute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).SortOrder
+            .ShouldNotEqual(pageTypeAttribute.SortOrder);
+
+        It should_not_update_the_PageType_to_have_the_same_DefaultPageName_as_in_the_attibute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultPageName
+            .ShouldNotEqual(pageTypeAttribute.DefaultPageName);
+
+        It should_not_update_the_PageType_so_that_its_DefaultStartPublishOffsets_converted_to_minutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultStartPublishOffset.TotalMinutes
+            .ShouldNotEqual(pageTypeAttribute.DefaultStartPublishOffsetMinutes);
+
+        It should_not_update_the_PageType_so_that_its_DefaultStopPublishOffsets_converted_to_minutes_is_equal_to_DefaultStartPublishOffsetMinutes_in_the_attibute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultStopPublishOffset.TotalMinutes
+            .ShouldNotEqual(pageTypeAttribute.DefaultStopPublishOffsetMinutes);
+
+        It should_not_update_the_PageType_to_have_the_same_DefaultVisibleInMenu_as_in_the_attibute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultVisibleInMenu
+            .ShouldNotEqual(pageTypeAttribute.DefaultVisibleInMenu);
+
+        It should_not_update_the_PageType_so_that_its_DefaultChildSortOrderRule_equals_the_attributes_DefaultChildSortOrder = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultChildOrderRule
+            .ShouldNotEqual(pageTypeAttribute.DefaultChildSortOrder);
+
+        It should_not_update_the_PageType_so_that_its_DefaultSortIndex_equals_the_attributes_DefaultChildSortOrder = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultPeerOrder
+            .ShouldNotEqual(pageTypeAttribute.DefaultSortIndex);
+
+        It should_not_update_the_PageType_so_that_its_FileName_equals_the_attributes_Filename = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).FileName
+            .ShouldNotEqual(pageTypeAttribute.Filename);
+
+        It should_not_update_the_PageType_to_have_the_same_DefaultFrameID_as_in_the_attribute = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultFrameID
+            .ShouldNotEqual(pageTypeAttribute.DefaultFrameID);
+
+        It should_not_update_the_PageType_so_that_its_DefaultArchivePageLink_has_an_ID_equal_to_the_attributes_DefaultArchiveToPageID = () =>
+            SyncContext.PageTypeRepository.Load(idOfExistingPageType).DefaultArchivePageLink.ID
+            .ShouldNotEqual(pageTypeAttribute.DefaultArchiveToPageID);
+    }
+
+
 }

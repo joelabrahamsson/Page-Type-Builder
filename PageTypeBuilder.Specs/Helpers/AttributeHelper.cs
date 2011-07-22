@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EPiServer.Filters;
 using PageTypeBuilder.Specs.Helpers.Fakes;
 using PageTypeBuilder.Specs.Helpers.TypeBuildingDsl;
@@ -44,6 +45,13 @@ namespace PageTypeBuilder.Specs.Helpers
             pageTypeAttribute.Filename = "~/TemplateForThePageType.aspx";
             pageTypeAttribute.Name = "Page type name";
 
+            return pageTypeAttribute;
+        }
+
+        public static PageTypeAttribute CreatePageTypeAttributeWithOnlyGuidAndNameSpecified(InMemoryContext syncContext)
+        {
+            var pageTypeAttribute = new  PageTypeAttribute(Guid.NewGuid().ToString());
+            pageTypeAttribute.Name = "Page type name";
             return pageTypeAttribute;
         }
     }

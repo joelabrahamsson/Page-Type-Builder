@@ -20,6 +20,7 @@ namespace PageTypeBuilder.UI
         public new T CurrentPage
         {
             get { return (T)base.CurrentPage; }
+            set { CurrentPageHandler.CurrentPage = value; }
         }
     }
 }

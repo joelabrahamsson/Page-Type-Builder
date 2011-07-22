@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EPiServer.DataAbstraction;
@@ -14,6 +15,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         private IPageDefinitionRepository pageDefinitionRepository;
         private ITabDefinitionRepository tabDefinitionRepository;
         private PageDefinitionTypeMapper pageDefinitionTypeMapper;
+        private List<string> newlyCreatedPageDefinitions;
 
         public PageDefinitionUpdater(
             IPageDefinitionRepository pageDefinitionRepository, 
@@ -23,6 +25,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             this.pageDefinitionRepository = pageDefinitionRepository;
             this.tabDefinitionRepository = tabDefinitionRepository;
             this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
+            newlyCreatedPageDefinitions = new List<string>();
         }
 
         public virtual void CreateNewPageDefinition(PageTypePropertyDefinition propertyDefinition)
@@ -32,7 +35,8 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             pageDefinition.Name = propertyDefinition.Name;
             pageDefinition.EditCaption = propertyDefinition.GetEditCaptionOrName();
             SetPageDefinitionType(pageDefinition, propertyDefinition);
-
+            
+            newlyCreatedPageDefinitions.Add(GetPageDefinitionKey(pageDefinition));
             UpdatePageDefinitionValues(pageDefinition, propertyDefinition);
 
             pageDefinitionRepository.Save(pageDefinition);
@@ -66,6 +70,9 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         {
             StringBuilder builder = new StringBuilder();
 
+            builder.Append("Name: ");
+            builder.Append(pageDefinition.Name);
+            builder.Append("|");
             builder.Append("Type: ");
             builder.Append(pageDefinition.Type.TypeName);
             builder.Append("|");
@@ -103,40 +110,73 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             return builder.ToString();
         }
 
+        private bool CanModifyProperty(PageDefinition pageDefinition, bool propertySet)
+        {
+            return newlyCreatedPageDefinitions.Contains(GetPageDefinitionKey(pageDefinition)) || propertySet;
+        }
+
+        private string GetPageDefinitionKey(PageDefinition pageDefinition)
+        {
+            return string.Format("{0}_{1}", pageDefinition.PageTypeID, pageDefinition.Name);
+        }
+
         protected virtual void UpdatePageDefinitionValues(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
         {
+            pageDefinition.Name = pageTypePropertyDefinition.Name;
+
             PageTypePropertyAttribute propertyAttribute = pageTypePropertyDefinition.PageTypePropertyAttribute;
             
             var specifiedType = GetPageDefinitionType(pageTypePropertyDefinition);
             var currentType = pageDefinition.Type;
+            
             if(specifiedType.DataType == currentType.DataType)
-            {
                 pageDefinition.Type = specifiedType;
-            }
 
-            pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
-            pageDefinition.HelpText = propertyAttribute.HelpText ?? string.Empty;
-            pageDefinition.Required = propertyAttribute.Required;
-            pageDefinition.Searchable = propertyAttribute.Searchable;
-            pageDefinition.DefaultValue = propertyAttribute.DefaultValue != null ? propertyAttribute.DefaultValue.ToString() : string.Empty;
-            pageDefinition.DefaultValueType = propertyAttribute.DefaultValueType;
-            pageDefinition.LanguageSpecific = propertyAttribute.UniqueValuePerLanguage;
-            pageDefinition.DisplayEditUI = propertyAttribute.DisplayInEditMode;
-            pageDefinition.FieldOrder = GetFieldOrder(pageDefinition, propertyAttribute);
-            UpdatePageDefinitionTab(pageDefinition, propertyAttribute);
+            if (CanModifyProperty(pageDefinition, propertyAttribute.EditCaptionSet))
+                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
+            else if (!propertyAttribute.EditCaptionSet && string.IsNullOrEmpty(pageDefinition.EditCaption))
+                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.HelpTextSet))
+                pageDefinition.HelpText = propertyAttribute.HelpText ?? string.Empty;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.RequiredSet))
+                pageDefinition.Required = propertyAttribute.Required;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.SearchableSet))
+                pageDefinition.Searchable = propertyAttribute.Searchable;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.DefaultValueSet))
+                pageDefinition.DefaultValue = propertyAttribute.DefaultValue != null ? propertyAttribute.DefaultValue.ToString() : string.Empty;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.DefaultValueTypeSet))
+                pageDefinition.DefaultValueType = propertyAttribute.DefaultValueType;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.UniqueValuePerLanguageSet))
+                pageDefinition.LanguageSpecific = propertyAttribute.UniqueValuePerLanguage;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.DisplayInEditModeSet))
+                pageDefinition.DisplayEditUI = propertyAttribute.DisplayInEditMode;
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.SortOrderSet))
+                pageDefinition.FieldOrder = GetFieldOrder(pageDefinition, propertyAttribute);
+
+            if (CanModifyProperty(pageDefinition, propertyAttribute.TabSet))
+                UpdatePageDefinitionTab(pageDefinition, propertyAttribute);
         }
 
         protected virtual int GetFieldOrder(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
         {
             int fieldOrder = propertyAttribute.SortOrder;
-            if(fieldOrder == PageTypePropertyAttribute.SortOrderNoValue)
+
+            if (fieldOrder == PageTypePropertyAttribute.SortOrderNoValue)
             {
                 fieldOrder = 0;
-                if(pageDefinition.FieldOrder != 0)
-                {
+
+                if (pageDefinition.FieldOrder != 0)
                     fieldOrder = pageDefinition.FieldOrder;
-                }
             }
+
             return fieldOrder;
         }
 

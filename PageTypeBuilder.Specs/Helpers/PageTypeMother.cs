@@ -37,10 +37,25 @@ namespace PageTypeBuilder.Specs.Helpers
 
         public static IPageType CreatePageTypeWithEverythingButGuidDifferentThanAttribute(InMemoryContext syncContext, PageTypeAttribute pageTypeAttribute)
         {
+            return CreatePageTypeWithEverythingButGuidDifferentThanAttribute(syncContext, pageTypeAttribute, false);
+        }
+
+        public static IPageType CreatePageTypeWithEverythingButGuidDifferentThanAttribute(InMemoryContext syncContext, PageTypeAttribute pageTypeAttribute, bool createDifferentAvailablePageTypes)
+        {
             var pageType = syncContext.PageTypeRepository.CreateNew();
             pageType.GUID = pageTypeAttribute.Guid.Value;
-            if(pageTypeAttribute.AvailablePageTypes.Length == 0)
-                throw new Exception("This method only supports attributes that have atleast one type in AvailablePageTypes");
+            
+            if (!createDifferentAvailablePageTypes)
+            {
+                if (pageTypeAttribute.AvailablePageTypes.Length == 0)
+                    throw new Exception("This method only supports attributes that have atleast one type in AvailablePageTypes");
+            }
+            else
+            {
+                if (pageTypeAttribute.AvailablePageTypes == null)    
+                    pageTypeAttribute.AvailablePageTypes = new Type[] { typeof(TypedPageData) };
+            }
+            
             pageType.AllowedPageTypes = new int[0];
             pageType.Description = pageTypeAttribute.Description + " more text";
             pageType.IsAvailable = !pageTypeAttribute.AvailableInEditMode;

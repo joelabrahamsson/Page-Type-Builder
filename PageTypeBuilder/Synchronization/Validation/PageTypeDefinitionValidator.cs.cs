@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
 using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 
@@ -61,6 +62,8 @@ namespace PageTypeBuilder.Synchronization.Validation
 
             ValidateAvailablePageTypes(definition, allPageTypeDefinitions);
 
+            ValidateExcludedPageTypes(definition, allPageTypeDefinitions);
+
             PropertiesValidator.ValidatePageTypeProperties(definition);
         }
 
@@ -90,18 +93,35 @@ namespace PageTypeBuilder.Synchronization.Validation
 
         protected internal virtual void ValidateAvailablePageTypes(PageTypeDefinition definition, IEnumerable<PageTypeDefinition> allPageTypeDefinitions)
         {
-            if(definition.Attribute.AvailablePageTypes == null)
+            ValidateAvailableOrExcludedPageTypes(definition, allPageTypeDefinitions, true);
+        }
+
+        protected internal virtual void ValidateExcludedPageTypes(PageTypeDefinition definition, IEnumerable<PageTypeDefinition> allPageTypeDefinitions)
+        {
+            ValidateAvailableOrExcludedPageTypes(definition, allPageTypeDefinitions, false);
+        }
+
+        private void ValidateAvailableOrExcludedPageTypes(PageTypeDefinition definition, IEnumerable<PageTypeDefinition> allPageTypeDefinitions, bool availblePageTypes)
+        {
+            Type[] pageTypes = availblePageTypes ? definition.Attribute.AvailablePageTypes : definition.Attribute.ExcludedPageTypes;
+            string propertyName = availblePageTypes ? "AvailablePageType" : "ExcludedPageType";
+
+            if (pageTypes == null)
                 return;
 
-            foreach (Type availablePageType in definition.Attribute.AvailablePageTypes)
+            foreach (Type pageTypeType in pageTypes)
             {
-                if (definition.Attribute.AvailablePageTypes.Count(t => t == availablePageType) > 1)
-                    throw new PageTypeBuilderException(string.Format(CultureInfo.InvariantCulture, "The page type {0}'s AvailablePageType attribute contains the type {1} several times.", 
-                        definition.Type.FullName, availablePageType.FullName));
+                if (pageTypes.Count(t => t == pageTypeType) > 1)
+                {
+                    throw new PageTypeBuilderException(string.Format(CultureInfo.InvariantCulture, "The page type {0}'s {1} attribute contains the type {2} several times.",
+                        definition.Type.FullName, propertyName, pageTypeType.FullName));
+                }
 
-                if (allPageTypeDefinitions.Count(d => d.Type.GUID == availablePageType.GUID) == 0)
-                    throw new PageTypeBuilderException(string.Format(CultureInfo.InvariantCulture, "The page type {0} has the type {1} specified in it's AvailablePageType attribute "
-                        + "which is not a defined page type", definition.Type.FullName, availablePageType.FullName));
+                if (allPageTypeDefinitions.Count(d => d.Type.GUID == pageTypeType.GUID) == 0 && !pageTypeType.IsSubclassOf(typeof(TypedPageData)) && !pageTypeType.IsInterface)
+                {
+                    throw new PageTypeBuilderException(string.Format(CultureInfo.InvariantCulture, "The page type {0} has the type {1} specified in it's {2} attribute "
+                        + "which is not a defined page type", definition.Type.FullName, pageTypeType.FullName, propertyName));
+                }
             }
         }
 

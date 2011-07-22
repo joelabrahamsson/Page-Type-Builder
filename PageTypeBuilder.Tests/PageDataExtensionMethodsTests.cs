@@ -32,11 +32,28 @@ namespace PageTypeBuilder.Tests
             TestPageType typedPageData = new TestPageType();
             string propertyValue = "Test";
             typedPageData.Property.Add(propertyName, new PropertyString(propertyValue));
-            
 
             string returnedValue = typedPageData.GetPropertyValue(page => page.StringTestProperty);
 
             Assert.Equal<string>(propertyValue, returnedValue);
+        }
+
+        [Fact]
+        public void GetProperty_ReturnsProperty()
+        {
+            Expression<Func<TestPageType, string>> expression = page => page.StringTestProperty;
+
+            MemberExpression methodExpression = (MemberExpression)expression.Body;
+            string propertyName = methodExpression.Member.Name;
+            TestPageType typedPageData = new TestPageType();
+            string propertyValue = "Test";
+            typedPageData.Property.Add(propertyName, new PropertyString(propertyValue));
+
+            PropertyData propertyData = typedPageData.GetProperty(page => page.StringTestProperty);
+            Assert.Equal(typedPageData.Property[propertyName], propertyData);
+
+            PropertyString propertyString = typedPageData.GetProperty<TestPageType, PropertyString>(page => page.StringTestProperty);
+            Assert.Equal(typedPageData.Property[propertyName], propertyString);
         }
 
         [Fact]

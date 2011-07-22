@@ -1,4 +1,6 @@
-﻿using EPiServer.DataAbstraction;
+﻿using System.Collections.Generic;
+using System.Linq;
+using EPiServer.DataAbstraction;
 
 namespace PageTypeBuilder.Abstractions
 {
@@ -28,6 +30,11 @@ namespace PageTypeBuilder.Abstractions
             return new WrappedPageType(pageType);
         }
 
+        public virtual IEnumerable<IPageType> List()
+        {
+            return PageType.List().Select(pageType => new WrappedPageType(pageType)).Cast<IPageType>();
+        }
+
         public virtual void Save(IPageType pageTypeToSave)
         {
             pageTypeToSave.Save();
@@ -37,7 +44,6 @@ namespace PageTypeBuilder.Abstractions
         {
             return new NativePageType();
         }
-
 
         public void Delete(IPageType pageType)
         {

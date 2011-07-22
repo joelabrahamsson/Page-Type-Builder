@@ -67,7 +67,6 @@ namespace PageTypeBuilder.Synchronization
             else
             {
                 UpdatePageTypes(pageTypeDefinitions);
-
                 UpdatePageTypePropertyDefinitions(pageTypeDefinitions);
             }
 
@@ -88,10 +87,9 @@ namespace PageTypeBuilder.Synchronization
         protected internal virtual void CreateNonExistingPageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
             IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
+
             foreach (PageTypeDefinition definition in nonExistingPageTypes)
-            {
                 PageTypeUpdater.CreateNewPageType(definition);
-            }
         }
 
         protected internal virtual IEnumerable<PageTypeDefinition> GetNonExistingPageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
