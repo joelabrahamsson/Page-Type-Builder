@@ -161,7 +161,7 @@ namespace PageTypeBuilder.Tests
             typedPageData.Property.Add(propertyName, new PropertyNumber(propertyValue.Value));
 
 
-            int returnedValue = typedPageData.GetPropertyValue<TestPageType, int>(page => page.NullableIntTestProperty, false);
+            int returnedValue = typedPageData.GetPropertyValue<TestPageType, int?>(page => page.NullableIntTestProperty, false).Value;
 
             Assert.Equal<int>(propertyValue.Value, returnedValue);
         }
@@ -178,7 +178,7 @@ namespace PageTypeBuilder.Tests
             typedPageData.Property.Add(propertyName, new PropertyNumber(propertyValue.Value));
 
 
-            int returnedValue = typedPageData.GetPropertyValue<TestPageType, int>(page => page.NullableIntTestProperty, true);
+            int returnedValue = typedPageData.GetPropertyValue<TestPageType, int?>(page => page.NullableIntTestProperty, true).Value;
 
             Assert.Equal<int>(propertyValue.Value, returnedValue);
         }
