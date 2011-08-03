@@ -142,6 +142,7 @@
     <Compile Include="PageTypeBuilderException.cs" />
     <Compile Include="PageTypePropertyGroup.cs" />
     <Compile Include="PageTypePropertyGroupAttribute.cs" />
+    <Compile Include="PageTypePropertyGroupExtensions.cs" />
     <Compile Include="PageTypePropertyGroupHierarchy.cs" />
     <Compile Include="Reflection\AppDomainAssemblyLocator.cs" />
     <Compile Include="Reflection\AssemblyExtensions.cs" />
