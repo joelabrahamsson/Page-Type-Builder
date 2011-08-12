@@ -28,7 +28,18 @@
             properties = pageTypeType.GetPageTypePropertyGroupProperties();
 
             foreach (PropertyInfo property in properties.Where(property => property.PropertyType.BaseType == typeof(PageTypePropertyGroup)))
-                pageTypePropertyDefinitions.AddRange(GetPropertyGroupPropertyDefinitions(pageType, property));
+            {
+                PageTypePropertyGroupAttribute pageTypePropertyGroupAttribute = GetPropertyAttribute<PageTypePropertyGroupAttribute>(property);
+                List<PageTypePropertyDefinition> definitions = GetPropertyGroupPropertyDefinitions(pageType, property).ToList();
+
+
+                for (int i = 0; i < definitions.Count; i++)
+                {
+                    definitions[i].PageTypePropertyAttribute.Tab = pageTypePropertyGroupAttribute.Tab;
+                }
+
+                pageTypePropertyDefinitions.AddRange(definitions);
+            }
 
             return pageTypePropertyDefinitions;
         }

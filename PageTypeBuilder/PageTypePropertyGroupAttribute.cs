@@ -12,5 +12,6 @@
 
         public virtual string EditCaptionPrefix { get; set; }
         public virtual int StartSortOrderFrom { get; set; }
+        public virtual Type Tab { get; set; }
     }
 }
