@@ -74,9 +74,9 @@
       <HintPath>c:\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Machine.Specifications, Version=0.4.13.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
+    <Reference Include="Machine.Specifications, Version=0.4.24.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Machine.Specifications-Signed.0.4.13.0\lib\Machine.Specifications.dll</HintPath>
+      <HintPath>..\packages\Machine.Specifications-Signed.0.4.24.0\lib\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.3.1.416.3\lib\Moq.dll</HintPath>

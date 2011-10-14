@@ -30,8 +30,12 @@ namespace PageTypeBuilder.Synchronization
                     {
                         updater.UpdateSettings(wrapper.PropertySettings);
                     }
+                    var existingWrapperValues = WrapperValuesSerialized(wrapper);
                     UpdateWrapperValues(updater, wrapper);
-                    propertySettingsRepository.SaveGlobal(wrapper);
+                    if(updater.OverWriteExisting || !WrapperValuesSerialized(wrapper).Equals(existingWrapperValues))
+                    {
+                        propertySettingsRepository.SaveGlobal(wrapper);
+                    }
                 });
 
                 if (matchingWrappers.Count() == 0)
@@ -43,6 +47,11 @@ namespace PageTypeBuilder.Synchronization
                     propertySettingsRepository.SaveGlobal(newWrapper);
                 }
             }
+        }
+
+        static string WrapperValuesSerialized(PropertySettingsWrapper wrapper)
+        {
+            return (wrapper.Description ?? "null") + "||" + wrapper.IsDefault;
         }
 
         private void UpdateWrapperValues(GlobalPropertySettingsUpdater updater, PropertySettingsWrapper wrapper)

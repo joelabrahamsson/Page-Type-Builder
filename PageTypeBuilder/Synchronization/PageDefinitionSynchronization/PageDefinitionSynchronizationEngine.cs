@@ -12,15 +12,18 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         private PageTypePropertyDefinitionLocator pageTypePropertyDefinitionLocator;
         private IPageDefinitionUpdater pageDefinitionUpdater;
         PageDefinitionSpecificPropertySettingsUpdater pageDefinitionSpecificPropertySettingsUpdater;
+        IPageTypeRepository pageTypeRepository;
 
         public PageDefinitionSynchronizationEngine(
             IPageDefinitionUpdater pageDefinitionUpdater,
             PageTypePropertyDefinitionLocator pageTypePropertyDefinitionLocator,
-            PageDefinitionSpecificPropertySettingsUpdater pageDefinitionSpecificPropertySettingsUpdater)
+            PageDefinitionSpecificPropertySettingsUpdater pageDefinitionSpecificPropertySettingsUpdater,
+            IPageTypeRepository pageTypeRepository)
         {
             this.pageTypePropertyDefinitionLocator = pageTypePropertyDefinitionLocator;
             this.pageDefinitionUpdater = pageDefinitionUpdater;
             this.pageDefinitionSpecificPropertySettingsUpdater = pageDefinitionSpecificPropertySettingsUpdater;
+            this.pageTypeRepository = pageTypeRepository;
         }
 
         protected internal virtual void UpdatePageTypePropertyDefinitions(IPageType pageType, PageTypeDefinition pageTypeDefinition)
@@ -47,7 +50,8 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         protected virtual PageDefinition GetExistingPageDefinition(IPageType pageType, PageTypePropertyDefinition propertyDefinition)
         {
-            return pageType.Definitions.FirstOrDefault(definition => string.Equals(definition.Name, propertyDefinition.Name, StringComparison.OrdinalIgnoreCase));
+            var definitions = pageTypeRepository.Load(pageType.ID).Definitions;
+            return definitions.FirstOrDefault(definition => string.Equals(definition.Name, propertyDefinition.Name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

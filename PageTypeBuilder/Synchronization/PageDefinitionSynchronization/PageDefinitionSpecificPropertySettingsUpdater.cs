@@ -82,10 +82,16 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 var wrapper = propertySettingsRepository.GetGlobals(globalSettingsUpdater.SettingsType)
                     .Where(w => globalSettingsUpdater.Match(w))
                     .First();
-                container.Settings[globalSettingsUpdater.SettingsType.FullName] = wrapper;
-                //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
-                //container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
-                propertySettingsRepository.Save(container);
+                PropertySettingsWrapper existingWrapper = container.Settings.ContainsKey(globalSettingsUpdater.SettingsType.FullName)
+                    ? container.Settings[globalSettingsUpdater.SettingsType.FullName]
+                    : null;
+                if (existingWrapper == null || existingWrapper.Id != wrapper.Id)
+                {
+                    container.Settings[globalSettingsUpdater.SettingsType.FullName] = wrapper;
+                    //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
+                    //container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
+                    propertySettingsRepository.Save(container);
+                }
             }
         }
 
