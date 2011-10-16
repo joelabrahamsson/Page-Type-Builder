@@ -1,4 +1,10 @@
-﻿namespace PageTypeBuilder
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using PageTypeBuilder.Activation;
+using PageTypeBuilder.Reflection;
+
+namespace PageTypeBuilder
 {
     using EPiServer.Core;
     using EPiServer.Filters;
@@ -98,6 +104,18 @@
                 object value = GetValue("PageTargetFrame");
                 return value == null ? string.Empty : value as string;
             }
+        }
+
+        /// <summary>
+        /// Creates a writable clone of the PageData object
+        /// </summary>
+        /// <returns></returns>
+        public new PageData CreateWritableClone()
+        {
+            PageData page = base.CreateWritableClone();
+            IEnumerable<PropertyInfo> properties = page.GetType().GetPageTypePropertyGroupProperties();
+            new TypedPageActivator().CreateAndPopulateNestedPropertyGroupInstances(page as TypedPageData, page, properties, string.Empty);
+            return page;
         }
 
     }
