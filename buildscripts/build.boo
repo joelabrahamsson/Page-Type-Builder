@@ -1,6 +1,6 @@
 solution_file = "PageTypeBuilder.sln"
 configuration = "release"
-mspec_path = "packages/Machine.Specifications-Signed.0.4.13.0/tools/mspec-clr4.exe"
+mspec_path = "packages/Machine.Specifications-Signed.0.4.24.0/tools/mspec-clr4.exe"
 short_release_name = env("releasename")
 release_name = "PageTypeBuilder-" + short_release_name
 release_dir = "build"
@@ -9,7 +9,7 @@ release_versiondir = release_dir + "/" + release_name
 target default, (compile):
   pass
 
-target release, (compile, generate_specs, deploy, package):
+target release, (compile, generate_specs, deploy, package, nuget):
   pass
 
 desc "Compiles the solution"
@@ -18,19 +18,10 @@ target compile:
 
 desc "Build NuGet packages"
 target nuget:
-
-  with FileList("PageTypeBuilder/bin/${configuration}"):
-    .Include("PageTypeBuilder.dll")
-    .ForEach def(file):
-      file.CopyToDirectory("nugetpackages/" + release_name + "/lib/net20")
-
-  with FileList("PageTypeBuilder.Activation.StructureMap/bin/${configuration}"):
-    .Include("PageTypeBuilder.Activation.StructureMap.dll")
-    .ForEach def(file):
-      file.CopyToDirectory("nugetpackages/PageTypeBuilder.Activation.StructureMap" + env("releasename") + "/lib/net20")
-
-  exec("Libraries/NuGet/NuGet.exe","pack nugetpackages\\PageTypeBuilder.1.3.0.0\\PageTypeBuilder.nuspec /o nugetpackages")
-  exec("Libraries/NuGet/NuGet.exe","pack nugetpackages\\PageTypeBuilder.Activation.StructureMap.1.3.0.0\\PageTypeBuilder.Activation.StructureMap.nuspec /o nugetpackages")
+ 
+  exec("packages/NuGet.CommandLine.1.5.21005.9019/tools/nuget.exe", "pack \"PageTypeBuilder\\PageTypeBuilder.csproj\" -Prop Configuration=Release -Verbose /o ${release_dir}")  
+  exec("packages/NuGet.CommandLine.1.5.21005.9019/tools/nuget.exe", "pack \"PageTypeBuilder.Migrations\\PageTypeBuilder.Migrations.csproj\" -Prop Configuration=Release -Verbose /o ${release_dir}")  
+  exec("packages/NuGet.CommandLine.1.5.21005.9019/tools/nuget.exe", "pack \"PageTypeBuilder.Activation.StructureMap\\PageTypeBuilder.Activation.StructureMap.csproj\" -Prop Configuration=Release -Verbose /o ${release_dir}")
 
 desc "Copies the binaries to the 'build' directory"
 target deploy:

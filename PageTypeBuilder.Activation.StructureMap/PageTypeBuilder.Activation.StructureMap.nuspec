@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Page Type Builder StructureMap integration</title>
+    <authors>Joel Abrahamsson</authors> 
+    <owners>Joel Abrahamsson</owners>
+    <description>Allows dependency injection into PageData objects by resolving dependencies using a StructureMap container.</description> 
+    <licenseUrl>http://pagetypebuilder.codeplex.com/license</licenseUrl>
+    <projectUrl>http://http://pagetypebuilder.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<dependencies>
+	  <dependency id="EPiServer.CMS.Core" version="6.1.379.0" />
+	  <dependency id="PageTypeBuilder" version="$version$" />
+    </dependencies>
+    <tags>EPiServer, PageTypeBuilder, PTB, StructureMap, DependencyInjection</tags>
+  </metadata>
+</package>

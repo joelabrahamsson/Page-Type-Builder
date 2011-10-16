@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Page Type Builder</title>
+    <authors>Joel Abrahamsson, Lee Crowe</authors> 
+    <owners>Joel Abrahamsson</owners>
+    <description>Page Type Builder allows developers to define EPiServer page types in code which eliminates the need to synchronize page types between different servers.</description> 
+    <licenseUrl>http://pagetypebuilder.codeplex.com/license</licenseUrl>
+    <projectUrl>http://http://pagetypebuilder.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<dependencies>
+	  <dependency id="EPiServer.CMS.Core" version="6.1.379.0" />
+    </dependencies>
+    <tags>EPiServer, PageTypeBuilder, PTB</tags>
+  </metadata>
+</package>
