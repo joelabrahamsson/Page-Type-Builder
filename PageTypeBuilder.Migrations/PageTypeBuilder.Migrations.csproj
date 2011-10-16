@@ -60,6 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="ExecutedMigrations.cs" />
     <Compile Include="IMigration.cs" />
     <Compile Include="IMigrationContext.cs" />
