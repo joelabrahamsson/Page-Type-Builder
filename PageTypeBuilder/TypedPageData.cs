@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using PageTypeBuilder.Activation;
 using PageTypeBuilder.Reflection;
 
 namespace PageTypeBuilder
@@ -111,22 +113,8 @@ namespace PageTypeBuilder
         public new PageData CreateWritableClone()
         {
             PageData page = base.CreateWritableClone();
-
-            foreach (PropertyInfo property in page.GetType().GetPageTypePropertyGroupProperties())
-            {
-                Type propertyType = property.PropertyType;
-
-                if (!(propertyType.IsSubclassOf(typeof(PageTypePropertyGroup))))
-                    continue;
-
-                PageTypePropertyGroup propertyGroup = property.GetValue(this, null) as PageTypePropertyGroup;
-
-                if (propertyGroup == null)
-                    continue;
-
-                propertyGroup.TypedPageData = page as TypedPageData;
-            }
-
+            IEnumerable<PropertyInfo> properties = page.GetType().GetPageTypePropertyGroupProperties();
+            new TypedPageActivator().CreateAndPopulateNestedPropertyGroupInstances(page as TypedPageData, page, properties, string.Empty);
             return page;
         }
 

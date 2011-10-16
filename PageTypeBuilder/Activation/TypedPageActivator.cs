@@ -53,7 +53,7 @@
             return (PageTypePropertyGroup)_generator.CreateClassProxy(typedPropertyGroup, new Type[] { }, _options, ctorArguments, _interceptors);
         }
 
-        private void CreateAndPopulateNestedPropertyGroupInstances(TypedPageData typedPage, object classInstance,
+        internal void CreateAndPopulateNestedPropertyGroupInstances(TypedPageData typedPage, object classInstance,
             IEnumerable<PropertyInfo> properties, string hierarchy)
         {
             foreach (PropertyInfo property in properties.Where(current => current.PropertyType.BaseType == typeof(PageTypePropertyGroup)))
