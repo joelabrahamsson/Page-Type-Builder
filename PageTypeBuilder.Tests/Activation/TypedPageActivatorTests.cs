@@ -49,6 +49,69 @@ namespace PageTypeBuilder.Tests.Activation
         }
 
         [Fact]
+        public void GivenANullableIntProperty_WhenAccessedWithCompilerGeneratedPropertyGetter_ShouldReturnTheUnderlyingValue()
+        {
+            TypedPageActivator activator = new TypedPageActivator();
+            TestPageType page = (TestPageType)activator.CreateAndPopulateTypedInstance(new PageData(), typeof(TestPageType));
+            var property = new PropertyNumber();
+            page.Property.Add("NullableIntTestProperty", property);
+            int propertyValue = 123;
+            page.SetValue("NullableIntTestProperty", propertyValue);
+
+            int returnedPropertyValue = page.NullableIntTestProperty.Value;
+
+            Assert.Equal<int>(propertyValue, returnedPropertyValue);
+        }
+
+        [Fact]
+        public void GivenANullableDoubleProperty_WhenAccessedWithCompilerGeneratedPropertyGetter_ShouldReturnTheUnderlyingValue()
+        {
+            TypedPageActivator activator = new TypedPageActivator();
+            var originalPage = new PageData();
+            var property = new PropertyFloatNumber();
+            originalPage.Property.Add("NullableDoubleTestProperty", property);
+            double propertyValue = 123.45;
+            originalPage.SetValue("NullableDoubleTestProperty", propertyValue);
+            
+            TestPageType page = (TestPageType)activator.CreateAndPopulateTypedInstance(originalPage, typeof(TestPageType));
+            
+
+            double returnedPropertyValue = page.NullableDoubleTestProperty.Value;
+
+            Assert.Equal<double>(propertyValue, returnedPropertyValue);
+        }
+
+        [Fact]
+        public void GivenANullableDoubleProperty_WhenSetAndAccessedWithCompilerGeneratedPropertyGetter_ShouldReturnTheSetValue()
+        {
+            TypedPageActivator activator = new TypedPageActivator();
+            var originalPage = new PageData();
+            var property = new PropertyFloatNumber();
+            originalPage.Property.Add("NullableDoubleTestProperty", property);
+
+            TestPageType page = (TestPageType)activator.CreateAndPopulateTypedInstance(originalPage, typeof(TestPageType));
+            double propertyValue = 123.45;
+            page.NullableDoubleTestProperty = propertyValue;
+
+            double returnedPropertyValue = page.NullableDoubleTestProperty.Value;
+
+            Assert.Equal<double>(propertyValue, returnedPropertyValue);
+        }
+
+        [Fact]
+        public void GivenANullableDoublePropertyWithNullValue_WhenAccessedWithCompilerGeneratedPropertyGetter_ShouldReturnTheUnderlyingValue()
+        {
+            TypedPageActivator activator = new TypedPageActivator();
+            TestPageType page = (TestPageType)activator.CreateAndPopulateTypedInstance(new PageData(), typeof(TestPageType));
+            var property = new PropertyFloatNumber();
+            page.Property.Add("NullableDoubleTestProperty", property);
+            
+            double? returnedPropertyValue = page.NullableDoubleTestProperty;
+
+            Assert.False(returnedPropertyValue.HasValue);
+        }
+
+        [Fact]
         public void GivenPageWithPropertyValueAndPropertyGroups_CreateAndPopulateTypedInstance_ReturnsTypedInstanceWithPropertyValues()
         {
             PageData sourcePage = new PageData();

@@ -9,7 +9,11 @@ namespace PageTypeBuilder.Tests
         [PageTypeProperty]
         public string StringTestProperty { get; set; }
 
-        public int? NullableIntTestProperty { get; set; }
+        [PageTypeProperty]
+        public virtual int? NullableIntTestProperty { get; set; }
+
+        [PageTypeProperty]
+        public virtual double? NullableDoubleTestProperty { get; set; }
 
         public int IntTestProperty { get; set; }
 
