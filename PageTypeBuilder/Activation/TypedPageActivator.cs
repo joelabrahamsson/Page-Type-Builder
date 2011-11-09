@@ -15,13 +15,48 @@
         private IInterceptor[] _interceptors;
 
         public TypedPageActivator()
+            : this(CreateDefaultProxyInterceptors(), CreateDefaultProxyGenerationOptions(), CreateDefaultProxyGenerator())
         {
-            _generator = new ProxyGenerator();
-            _options = new ProxyGenerationOptions(new PageTypePropertiesProxyGenerationHook());
-            _interceptors = new IInterceptor[] 
-                               {
-                                   new PageTypePropertyInterceptor()
-                               };
+        }
+
+        public TypedPageActivator(IInterceptor[] interceptors)
+            : this(interceptors, CreateDefaultProxyGenerationOptions())
+        {
+        }
+
+        public TypedPageActivator(ProxyGenerationOptions options)
+            : this(CreateDefaultProxyInterceptors(), options, CreateDefaultProxyGenerator())
+        {
+        }
+        
+        public TypedPageActivator(IInterceptor[] interceptors, ProxyGenerationOptions options)
+            : this(interceptors, options, CreateDefaultProxyGenerator())
+        {
+        }
+
+        public TypedPageActivator(IInterceptor[] interceptors, ProxyGenerationOptions options, ProxyGenerator generator)
+        {
+            _generator = generator;
+            _options = options;
+            _interceptors = interceptors;
+        }
+
+        protected static IInterceptor[] CreateDefaultProxyInterceptors()
+        {
+            return new IInterceptor[]
+            {
+                new PageTypePropertyInterceptor()
+            };
+        }
+
+        protected static ProxyGenerationOptions CreateDefaultProxyGenerationOptions()
+        {
+            return new ProxyGenerationOptions(new PageTypePropertiesProxyGenerationHook());
+        }
+
+        protected static ProxyGenerator CreateDefaultProxyGenerator()
+        {
+            return new ProxyGenerator();
         }
 
         public virtual TypedPageData CreateAndPopulateTypedInstance(PageData originalPage, Type typedType)
