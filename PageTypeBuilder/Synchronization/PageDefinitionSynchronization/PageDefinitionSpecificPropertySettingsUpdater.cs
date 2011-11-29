@@ -11,9 +11,9 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
     public class PageDefinitionSpecificPropertySettingsUpdater
     {
-        IPropertySettingsRepository propertySettingsRepository;
-        IGlobalPropertySettingsLocator globalPropertySettingsLocator;
-        IPageDefinitionRepository pageDefinitionRepository;
+        private readonly IPropertySettingsRepository propertySettingsRepository;
+        private readonly IGlobalPropertySettingsLocator globalPropertySettingsLocator;
+        private readonly IPageDefinitionRepository pageDefinitionRepository;
 
         public PageDefinitionSpecificPropertySettingsUpdater(
             IPropertySettingsRepository propertySettingsRepository,
@@ -33,61 +33,78 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         void UpdatePageDefinitionsLocalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PageDefinition pageDefinition)
         {
-            List<PropertySettingsUpdater> settingsUpdaters = GetPropertySettingsUpdaters(pageTypeDefinition, propertyDefinition);
-            if(!settingsUpdaters.Any())
+            var settingsUpdaters = GetPropertySettingsUpdaters(pageTypeDefinition, propertyDefinition);
+            if (settingsUpdaters.Count == 0)
             {
                 return;
             }
+
             var container = GetPropertySettingsContainer(pageDefinition);
             settingsUpdaters.ForEach(updater =>
+            {
+                var wrapper = container.GetSetting(updater.SettingsType);
+                if (wrapper == null)
                 {
-                    var wrapper = container.GetSetting(updater.SettingsType);
-                    if (wrapper == null)
+                    var settingsTypeName = updater.SettingsType.FullName;
+                    if (settingsTypeName == null)
                     {
-                        wrapper = new PropertySettingsWrapper();
-                        container.Settings[updater.SettingsType.FullName] = wrapper;
-                        //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
-                        //container.Settings.Add(updater.SettingsType.FullName, wrapper);
+                        throw new PageTypeBuilderException("Missing full type name for PropertySettingsUpdater.SettingsType (FullName is null).");
                     }
 
-                    bool settingsAlreadyExists = true;
-                    if (wrapper.PropertySettings == null)
-                    {
-                        wrapper.PropertySettings = ((IPropertySettings)Activator.CreateInstance(updater.SettingsType)).GetDefaultValues();
-                        settingsAlreadyExists = false;
-                    }
+                    wrapper = new PropertySettingsWrapper();
+                    container.Settings[settingsTypeName] = wrapper;
+                    //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
+                    //container.Settings.Add(updater.SettingsType.FullName, wrapper);
+                }
 
-                    if (settingsAlreadyExists && !updater.OverWriteExisting)
-                        return;
+                bool settingsAlreadyExists = true;
+                if (wrapper.PropertySettings == null)
+                {
+                    wrapper.PropertySettings = ((IPropertySettings)Activator.CreateInstance(updater.SettingsType)).GetDefaultValues();
+                    settingsAlreadyExists = false;
+                }
 
-                    int hashBeforeUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
-                    updater.UpdateSettings(wrapper.PropertySettings);
-                    int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
-                    if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
-                    {
-                        propertySettingsRepository.Save(container);
-                    }
-                });
+                if (settingsAlreadyExists && !updater.OverWriteExisting)
+                {
+                    return;
+                }
+
+                int hashBeforeUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                updater.UpdateSettings(wrapper.PropertySettings);
+                int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
+                if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
+                {
+                    propertySettingsRepository.Save(container);
+                }
+            });
         }
 
         void UpdatePageDefinitionsGlobalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PageDefinition pageDefinition)
         {
-            object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
+            IEnumerable<object> attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
             var useGlobalSettingsAttribute = attributes.OfType<UseGlobalSettingsAttribute>().FirstOrDefault();
             if (useGlobalSettingsAttribute != null)
             {
                 var container = GetPropertySettingsContainer(pageDefinition);
+
                 //TODO: Should validate not null and valid type at startup
-                var globalSettingsUpdater = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters().Where(u => u.WrappedInstanceType == useGlobalSettingsAttribute.Type).First();
+                var globalSettingsUpdater = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters()
+                    .First(u => u.WrappedInstanceType == useGlobalSettingsAttribute.Type);
                 var wrapper = propertySettingsRepository.GetGlobals(globalSettingsUpdater.SettingsType)
-                    .Where(w => globalSettingsUpdater.Match(w))
-                    .First();
-                PropertySettingsWrapper existingWrapper = container.Settings.ContainsKey(globalSettingsUpdater.SettingsType.FullName)
-                    ? container.Settings[globalSettingsUpdater.SettingsType.FullName]
+                    .First(globalSettingsUpdater.Match);
+
+                var settingsTypeName = globalSettingsUpdater.SettingsType.FullName;
+                if (settingsTypeName == null)
+                {
+                    throw new PageTypeBuilderException("Missing full type name for SettingsType (FullName is null).");
+                }
+
+                PropertySettingsWrapper existingWrapper = container.Settings.ContainsKey(settingsTypeName)
+                    ? container.Settings[settingsTypeName]
                     : null;
                 if (existingWrapper == null || existingWrapper.Id != wrapper.Id)
                 {
-                    container.Settings[globalSettingsUpdater.SettingsType.FullName] = wrapper;
+                    container.Settings[settingsTypeName] = wrapper;
                     //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
                     //container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
                     propertySettingsRepository.Save(container);
@@ -115,47 +132,57 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             return container;
         }
 
-        private List<PropertySettingsUpdater> GetPropertySettingsUpdaters(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition)
+        private static List<PropertySettingsUpdater> GetPropertySettingsUpdaters(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition)
         {
-            object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
-            var settingsUpdaters = new List<PropertySettingsUpdater>();
-            foreach (var attribute in attributes)
-            {
-                foreach (var interfaceType in attribute.GetType().GetInterfaces())
-                {
-                    if (!interfaceType.IsGenericType)
-                        continue;
+            var updaters =
+                from attribute in GetPropertyAttributes(propertyDefinition, pageTypeDefinition)
+                from interfaceType in attribute.GetType().GetInterfaces()
+                where interfaceType.IsGenericType
+                    && typeof(IUpdatePropertySettings<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition())
+                let settingsType = interfaceType.GetGenericArguments().First()
+                select new PropertySettingsUpdater(settingsType, attribute);
 
-                    if (!typeof(IUpdatePropertySettings<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition()))
-                        continue;
-                    var settingsType = interfaceType.GetGenericArguments().First();
-                    var updater = new PropertySettingsUpdater(settingsType, attribute);
-                    settingsUpdaters.Add(updater);
-                }
-            }
-            return settingsUpdaters;
+            return updaters.ToList();
         }
 
-        private object[] GetPropertyAttributes(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition)
+        private static IEnumerable<object> GetPropertyAttributes(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition)
         {
-            PropertyInfo prop;
+            // Binding flags supporting both public and non-public instance properties
+            const BindingFlags propertyBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            if (propertyDefinition.Name.Contains("-"))
+            PropertyInfo prop;
+            int hyphenIndex = propertyDefinition.Name.IndexOf("-", StringComparison.Ordinal);
+            if (hyphenIndex >= 0)
             {
                 // the property definition is a property belonging to a property group
-                int index = propertyDefinition.Name.IndexOf("-");
-                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
-                string propertyName = propertyDefinition.Name.Substring(index + 1);
+                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, hyphenIndex);
+                string propertyName = propertyDefinition.Name.Substring(hyphenIndex + 1);
 
-                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties().Where(p => String.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
-                prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => String.Equals(p.Name, propertyName)).FirstOrDefault();
+                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties(propertyBindingFlags)
+                    .FirstOrDefault(p => String.Equals(p.Name, propertyGroupPropertyName, StringComparison.Ordinal));
+                if (propertyGroupProperty == null)
+                {
+                    var message = String.Format("Unable to locate the property group-property \"{0}\" in PageType \"{1}\".",
+                        propertyGroupPropertyName, pageTypeDefinition.GetPageTypeName());
+                    throw new PageTypeBuilderException(message);
+                }
+
+                prop = propertyGroupProperty.PropertyType.GetProperties(propertyBindingFlags)
+                    .FirstOrDefault(p => String.Equals(p.Name, propertyName, StringComparison.Ordinal));
             }
             else
             {
-                prop =
-                    pageTypeDefinition.Type.GetProperties().Where(p => String.Equals(p.Name, propertyDefinition.Name)).
-                        FirstOrDefault();
+                prop = pageTypeDefinition.Type.GetProperties(propertyBindingFlags)
+                    .FirstOrDefault(p => String.Equals(p.Name, propertyDefinition.Name, StringComparison.Ordinal));
             }
+
+            if (prop == null)
+            {
+                var message = String.Format("Unable to locate the property \"{0}\" in PageType \"{1}\".",
+                    propertyDefinition.Name, pageTypeDefinition.GetPageTypeName());
+                throw new PageTypeBuilderException(message);
+            }
+
             return prop.GetCustomAttributes(true);
         }
     }
