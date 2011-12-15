@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using EPiServer.DataAbstraction;
+﻿using EPiServer.DataAbstraction;
 using Moq;
 using PageTypeBuilder.Abstractions;
 using PageTypeBuilder.Discovery;
-using PageTypeBuilder.Synchronization;
 using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
 using Xunit;
 using Xunit.Extensions;
 
-namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
+namespace PageTypeBuilder.Tests.Synchronization.UpdatePageDefinitionTests
 {
     public class UpdatePageDefinitionTests
     {
