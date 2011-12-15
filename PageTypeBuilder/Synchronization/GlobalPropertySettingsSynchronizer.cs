@@ -26,13 +26,14 @@ namespace PageTypeBuilder.Synchronization
 
                 matchingWrappers.ForEach(wrapper =>
                 {
+                    var existingWrapperValues = WrapperValuesSerialized(updater, wrapper);
                     if (updater.OverWriteExisting)
                     {
                         updater.UpdateSettings(wrapper.PropertySettings);
                     }
-                    var existingWrapperValues = WrapperValuesSerialized(wrapper);
                     UpdateWrapperValues(updater, wrapper);
-                    if(updater.OverWriteExisting || !WrapperValuesSerialized(wrapper).Equals(existingWrapperValues))
+                    var isChanged = !WrapperValuesSerialized(updater, wrapper).Equals(existingWrapperValues);
+                    if (updater.OverWriteExisting && isChanged)
                     {
                         propertySettingsRepository.SaveGlobal(wrapper);
                     }
@@ -49,9 +50,10 @@ namespace PageTypeBuilder.Synchronization
             }
         }
 
-        static string WrapperValuesSerialized(PropertySettingsWrapper wrapper)
+        static string WrapperValuesSerialized(GlobalPropertySettingsUpdater updater, PropertySettingsWrapper wrapper)
         {
-            return (wrapper.Description ?? "null") + "||" + wrapper.IsDefault;
+            var hashCode = updater.GetSettingsHashCode(wrapper.PropertySettings);
+            return string.Concat((wrapper.Description ?? "null"), "||", wrapper.IsDefault, "||", hashCode);
         }
 
         private void UpdateWrapperValues(GlobalPropertySettingsUpdater updater, PropertySettingsWrapper wrapper)
