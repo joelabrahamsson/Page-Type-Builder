@@ -78,10 +78,9 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             {
                 var container = GetPropertySettingsContainer(pageDefinition);
                 //TODO: Should validate not null and valid type at startup
-                var globalSettingsUpdater = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters().Where(u => u.WrappedInstanceType == useGlobalSettingsAttribute.Type).First();
+                var globalSettingsUpdater = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters().First(u => u.WrappedInstanceType == useGlobalSettingsAttribute.Type);
                 var wrapper = _propertySettingsRepositoryMethod().GetGlobals(globalSettingsUpdater.SettingsType)
-                    .Where(w => globalSettingsUpdater.Match(w))
-                    .First();
+                    .First(w => globalSettingsUpdater.Match(w));
                 PropertySettingsWrapper existingWrapper = container.Settings.ContainsKey(globalSettingsUpdater.SettingsType.FullName)
                     ? container.Settings[globalSettingsUpdater.SettingsType.FullName]
                     : null;
@@ -150,7 +149,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
                 string propertyName = propertyDefinition.Name.Substring(index + 1);
 
-                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties(propertyBindingFlags).Where(p => String.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
+                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties(propertyBindingFlags).FirstOrDefault(p => String.Equals(p.Name, propertyGroupPropertyName));
                 //if (propertyGroupProperty == null)
                 //{
                 //    // TODO: Enable exceptions for a development fail-fast mode?
@@ -160,14 +159,13 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 //}
                 if (propertyGroupProperty != null)
                 {
-                    prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => String.Equals(p.Name, propertyName)).FirstOrDefault();
+                    prop = propertyGroupProperty.PropertyType.GetProperties().FirstOrDefault(p => String.Equals(p.Name, propertyName));
                 }
             }
             else
             {
                 prop =
-                    pageTypeDefinition.Type.GetProperties(propertyBindingFlags).Where(p => String.Equals(p.Name, propertyDefinition.Name)).
-                        FirstOrDefault();
+                    pageTypeDefinition.Type.GetProperties(propertyBindingFlags).FirstOrDefault(p => String.Equals(p.Name, propertyDefinition.Name));
             }
 
             if (prop == null)
