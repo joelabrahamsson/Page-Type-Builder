@@ -142,12 +142,12 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             
             PropertyInfo prop = null;
 
-            if (propertyDefinition.Name.Contains("-"))
+            int propertyGroupDashIndex = propertyDefinition.Name.IndexOf("-", StringComparison.Ordinal);
+            if (propertyGroupDashIndex >= 0)
             {
                 // the property definition is a property belonging to a property group
-                int index = propertyDefinition.Name.IndexOf("-");
-                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
-                string propertyName = propertyDefinition.Name.Substring(index + 1);
+                string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, propertyGroupDashIndex);
+                string propertyName = propertyDefinition.Name.Substring(propertyGroupDashIndex + 1);
 
                 PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties(propertyBindingFlags).FirstOrDefault(p => String.Equals(p.Name, propertyGroupPropertyName));
                 //if (propertyGroupProperty == null)
