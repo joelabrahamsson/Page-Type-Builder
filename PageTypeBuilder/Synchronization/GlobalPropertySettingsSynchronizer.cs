@@ -7,12 +7,12 @@ namespace PageTypeBuilder.Synchronization
 {
     public class GlobalPropertySettingsSynchronizer
     {
-        private IPropertySettingsRepository propertySettingsRepository;
+        private Func<IPropertySettingsRepository> _propertySettingsRepositoryMethod;
         private IGlobalPropertySettingsLocator globalPropertySettingsLocator;
 
-        public GlobalPropertySettingsSynchronizer(IPropertySettingsRepository propertySettingsRepository, IGlobalPropertySettingsLocator globalPropertySettingsLocator)
+        public GlobalPropertySettingsSynchronizer(Func<IPropertySettingsRepository> propertySettingsRepositoryMethod, IGlobalPropertySettingsLocator globalPropertySettingsLocator)
         {
-            this.propertySettingsRepository = propertySettingsRepository;
+            this._propertySettingsRepositoryMethod = propertySettingsRepositoryMethod;
             this.globalPropertySettingsLocator = globalPropertySettingsLocator;
         }
 
@@ -21,7 +21,7 @@ namespace PageTypeBuilder.Synchronization
             var updaters = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters();
             foreach (var updater in updaters)
             {
-                var existingWrappers = propertySettingsRepository.GetGlobals(updater.SettingsType);
+                var existingWrappers = _propertySettingsRepositoryMethod().GetGlobals(updater.SettingsType);
                 var matchingWrappers = existingWrappers.Where(wrapper => updater.Match(wrapper)).ToList();
 
                 matchingWrappers.ForEach(wrapper =>
@@ -35,7 +35,7 @@ namespace PageTypeBuilder.Synchronization
                     var isChanged = !WrapperValuesSerialized(updater, wrapper).Equals(existingWrapperValues);
                     if (updater.OverWriteExisting && isChanged)
                     {
-                        propertySettingsRepository.SaveGlobal(wrapper);
+                        _propertySettingsRepositoryMethod().SaveGlobal(wrapper);
                     }
                 });
 
@@ -45,7 +45,7 @@ namespace PageTypeBuilder.Synchronization
                     updater.UpdateSettings(settings);
                     var newWrapper = new PropertySettingsWrapper(updater.DisplayName, updater.Description, updater.IsDefault.GetValueOrDefault(), true, settings);
                     UpdateWrapperValues(updater, newWrapper);
-                    propertySettingsRepository.SaveGlobal(newWrapper);
+                    _propertySettingsRepositoryMethod().SaveGlobal(newWrapper);
                 }
             }
         }

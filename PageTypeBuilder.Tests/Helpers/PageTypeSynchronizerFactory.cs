@@ -30,7 +30,7 @@ namespace PageTypeBuilder.Tests.Helpers
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
                 TabLocatorFactory.Create(),
-                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())),
+                new GlobalPropertySettingsSynchronizer(() => new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())),
                 new HooksHandler(new AppDomainAssemblyLocator()));
         }
 
@@ -64,7 +64,7 @@ namespace PageTypeBuilder.Tests.Helpers
                 PageTypeUpdaterFactory.Create(),
                 TabDefinitionUpdaterFactory.Create(),
                 TabLocatorFactory.Create(),
-                new GlobalPropertySettingsSynchronizer(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())),
+                new GlobalPropertySettingsSynchronizer(() => new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator())),
                 new HooksHandler(new AppDomainAssemblyLocator()));
         }
     }

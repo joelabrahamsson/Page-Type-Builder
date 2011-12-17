@@ -11,16 +11,16 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
     public class PageDefinitionSpecificPropertySettingsUpdater
     {
-        IPropertySettingsRepository propertySettingsRepository;
+        Func<IPropertySettingsRepository> _propertySettingsRepositoryMethod;
         IGlobalPropertySettingsLocator globalPropertySettingsLocator;
         IPageDefinitionRepository pageDefinitionRepository;
 
         public PageDefinitionSpecificPropertySettingsUpdater(
-            IPropertySettingsRepository propertySettingsRepository,
+            Func<IPropertySettingsRepository> propertySettingsRepositoryMethod,
             IGlobalPropertySettingsLocator globalPropertySettingsLocator,
             IPageDefinitionRepository pageDefinitionRepository)
         {
-            this.propertySettingsRepository = propertySettingsRepository;
+            this._propertySettingsRepositoryMethod = propertySettingsRepositoryMethod;
             this.globalPropertySettingsLocator = globalPropertySettingsLocator;
             this.pageDefinitionRepository = pageDefinitionRepository;
         }
@@ -65,7 +65,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                     int hashAfterUpdate = updater.GetSettingsHashCode(wrapper.PropertySettings);
                     if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
                     {
-                        propertySettingsRepository.Save(container);
+                        _propertySettingsRepositoryMethod().Save(container);
                     }
                 });
         }
@@ -79,7 +79,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 var container = GetPropertySettingsContainer(pageDefinition);
                 //TODO: Should validate not null and valid type at startup
                 var globalSettingsUpdater = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters().Where(u => u.WrappedInstanceType == useGlobalSettingsAttribute.Type).First();
-                var wrapper = propertySettingsRepository.GetGlobals(globalSettingsUpdater.SettingsType)
+                var wrapper = _propertySettingsRepositoryMethod().GetGlobals(globalSettingsUpdater.SettingsType)
                     .Where(w => globalSettingsUpdater.Match(w))
                     .First();
                 PropertySettingsWrapper existingWrapper = container.Settings.ContainsKey(globalSettingsUpdater.SettingsType.FullName)
@@ -90,7 +90,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                     container.Settings[globalSettingsUpdater.SettingsType.FullName] = wrapper;
                     //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
                     //container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
-                    propertySettingsRepository.Save(container);
+                    _propertySettingsRepositoryMethod().Save(container);
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             }
             else
             {
-                if (!propertySettingsRepository.TryGetContainer(pageDefinition.SettingsID, out container))
+                if (!_propertySettingsRepositoryMethod().TryGetContainer(pageDefinition.SettingsID, out container))
                 {
                     container = new PropertySettingsContainer(pageDefinition.SettingsID);
                 }

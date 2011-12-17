@@ -15,7 +15,7 @@ namespace PageTypeBuilder.Tests.Helpers
             return new PageDefinitionSynchronizationEngine(
                 new PageDefinitionUpdater(new PageDefinitionRepository(), new TabDefinitionRepository(), new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()),
+                new PageDefinitionSpecificPropertySettingsUpdater(() => new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()),
                 new PageTypeRepository());
         }
 
@@ -24,15 +24,15 @@ namespace PageTypeBuilder.Tests.Helpers
             return fakesRepository.PartialMock<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionUpdater(new PageDefinitionRepository(), new TabDefinitionRepository(), new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
                 new PageTypePropertyDefinitionLocator(),
-                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()));
+                new PageDefinitionSpecificPropertySettingsUpdater(() => new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()));
         }
 
         public static PageDefinitionSynchronizationEngine Stub(MockRepository fakesRepository)
         {
             return fakesRepository.Stub<PageDefinitionSynchronizationEngine>(
                 new PageDefinitionUpdater(new PageDefinitionRepository(), new TabDefinitionRepository(), new PageDefinitionTypeMapper(new PageDefinitionTypeRepository(), new NativePageDefinitionsMap())),
-                new PageTypePropertyDefinitionLocator(), 
-                new PageDefinitionSpecificPropertySettingsUpdater(new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()),
+                new PageTypePropertyDefinitionLocator(),
+                new PageDefinitionSpecificPropertySettingsUpdater(() => new PropertySettingsRepository(), new GlobalPropertySettingsLocator(new AppDomainAssemblyLocator()), new PageDefinitionRepository()),
                 new PageTypeRepository());
         }
     }
