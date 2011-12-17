@@ -15,36 +15,17 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 {
     //TODO: Add spec for validating that new settings are created with GetDefaultValues
 
-    [Subject("Synchronization")]
-    public class when_a_page_type_property_is_annotated_with_Attribute_implementing_IPropertySettingsUpdater
-        : SynchronizationSpecs
+    // Shared behaviors for:
+    // when_a_page_type_property_is_annotated_with_Attribute_implementing_IPropertySettingsUpdater
+    // when_a_non_public_page_type_property_is_annotated_with_Attribute_implementing_IPropertySettingsUpdater
+    [Behaviors]
+    public class PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors
     {
-        static string propertyName = "MainBody";
-        static string pageTypeName = "PageTypeName";
-        static string settingsClassName = "MyTinyMceSettings";
-        Establish context = () =>
-        {
-            var assembly = Create.Assembly(with =>
-            {
-                var settingsUpdater = with.TinyMceSettingsAttribute(
-                    updateSettingsImplementation: "settings.Width = int.MaxValue",
-                    matchMethodBody: "return settings.Width == int.MaxValue",
-                    className: settingsClassName,
-                    overwriteExistingSettings: false);
+        public const string PropertyName = "MainBody";
+        public const string PageTypeName = "PageTypeName";
+        public const string SettingsClassName = "MyTinyMceSettings";
 
-                with.Class(pageTypeName)
-                    .Inheriting<TypedPageData>()
-                    .AnnotatedWith<PageTypeAttribute>()
-                    .AutomaticProperty<string>(x =>
-                        x.Named(propertyName)
-                         .AnnotatedWith<PageTypePropertyAttribute>()
-                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object()));
-            });
-            SyncContext.AssemblyLocator.Add(assembly);
-        };
-
-        Because of =
-            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+        protected static InMemoryContext SyncContext;
 
         It should_assign_PageDefinitions_SettingsId =
             () =>
@@ -65,7 +46,7 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
 
         It should_create_PropertySettings_of_the_type_specified_as_type_parameter_to_IPropertySettingsUpdater =
             () =>
-            SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(propertyName, pageTypeName)
+            SyncContext.GetPageDefinitionsPropertySettings<TinyMCESettings>(PropertyName, PageTypeName)
                 .ShouldNotBeNull();
 
         static PropertySettingsContainer GetPageDefinitionsPropertySettingsContainer()
@@ -78,6 +59,75 @@ namespace PageTypeBuilder.Specs.Synchronization.PageTypeSynchronization.Property
         static Guid GetPageDefinitionsPropertySettingsId()
         {
             return SyncContext.PageDefinitionRepository.List().First().SettingsID;
+        }
+    }
+
+    [Subject("Synchronization")]
+    public class when_a_page_type_property_is_annotated_with_Attribute_implementing_IPropertySettingsUpdater
+        : SynchronizationSpecs
+    {
+        Establish context = () =>
+        {
+            var assembly = Create.Assembly(with =>
+            {
+                var settingsUpdater = with.TinyMceSettingsAttribute(
+                    updateSettingsImplementation: "settings.Width = int.MaxValue",
+                    matchMethodBody: "return settings.Width == int.MaxValue",
+                    className: PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors.SettingsClassName,
+                    overwriteExistingSettings: false);
+
+                with.Class(PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors.PageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        x.Named(PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors.PropertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object()));
+            });
+            SyncContext.AssemblyLocator.Add(assembly);
+        };
+
+        Because of =
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        Behaves_like<PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors> an_annotated_page_type_property;
+    }
+
+    [Subject("Synchronization")]
+    public class when_a_non_public_page_type_property_is_annotated_with_Attribute_implementing_IPropertySettingsUpdater
+        : SynchronizationSpecs
+    {
+        Establish context = () =>
+        {
+            var assembly = Create.Assembly(with =>
+            {
+                var settingsUpdater = with.TinyMceSettingsAttribute(
+                    updateSettingsImplementation: "settings.Width = int.MaxValue",
+                    matchMethodBody: "return settings.Width == int.MaxValue",
+                    className: PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors.SettingsClassName,
+                    overwriteExistingSettings: false);
+
+                with.Class(PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors.PageTypeName)
+                    .Inheriting<TypedPageData>()
+                    .AnnotatedWith<PageTypeAttribute>()
+                    .AutomaticProperty<string>(x =>
+                        Protected(x.Named(PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors.PropertyName)
+                         .AnnotatedWith<PageTypePropertyAttribute>()
+                         .AnnotatedWith(new CodeTypeReference(settingsUpdater.Name), new object())));
+            });
+            SyncContext.AssemblyLocator.Add(assembly);
+        };
+
+        Because of =
+            () => SyncContext.PageTypeSynchronizer.SynchronizePageTypes();
+
+        Behaves_like<PageTypePropertyAnnotatedWithIPropertySettingsUpdaterAttributeBehaviors> an_annotated_page_type_property;
+
+        // TODO: Should better be part of Refraction's CodeMemberPropertyExtensions
+        public static CodeMemberProperty Protected(/* this */ CodeMemberProperty property)
+        {
+            property.Attributes = property.Attributes | MemberAttributes.Family;
+            return property;
         }
     }
 

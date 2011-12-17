@@ -138,7 +138,10 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         private object[] GetPropertyAttributes(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition)
         {
-            PropertyInfo prop;
+            // Binding flags supporting both public and non-public instance properties
+            const BindingFlags propertyBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            
+            PropertyInfo prop = null;
 
             if (propertyDefinition.Name.Contains("-"))
             {
@@ -147,15 +150,35 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 string propertyGroupPropertyName = propertyDefinition.Name.Substring(0, index);
                 string propertyName = propertyDefinition.Name.Substring(index + 1);
 
-                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties().Where(p => String.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
-                prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => String.Equals(p.Name, propertyName)).FirstOrDefault();
+                PropertyInfo propertyGroupProperty = pageTypeDefinition.Type.GetProperties(propertyBindingFlags).Where(p => String.Equals(p.Name, propertyGroupPropertyName)).FirstOrDefault();
+                //if (propertyGroupProperty == null)
+                //{
+                //    // TODO: Enable exceptions for a development fail-fast mode?
+                //    var message = String.Format("Unable to locate the property group-property \"{0}\" in PageType \"{1}\".",
+                //        propertyGroupPropertyName, pageTypeDefinition.GetPageTypeName());
+                //    throw new PageTypeBuilderException(message);
+                //}
+                if (propertyGroupProperty != null)
+                {
+                    prop = propertyGroupProperty.PropertyType.GetProperties().Where(p => String.Equals(p.Name, propertyName)).FirstOrDefault();
+                }
             }
             else
             {
                 prop =
-                    pageTypeDefinition.Type.GetProperties().Where(p => String.Equals(p.Name, propertyDefinition.Name)).
+                    pageTypeDefinition.Type.GetProperties(propertyBindingFlags).Where(p => String.Equals(p.Name, propertyDefinition.Name)).
                         FirstOrDefault();
             }
+
+            if (prop == null)
+            {
+                // TODO: Enable exceptions for a development fail-fast mode? This is a serious error that could else be harder to find.
+                //var message = String.Format("Unable to locate the property \"{0}\" in PageType \"{1}\".",
+                //    propertyDefinition.Name, pageTypeDefinition.GetPageTypeName());
+                //throw new PageTypeBuilderException(message);
+                return new object[0];
+            }
+
             return prop.GetCustomAttributes(true);
         }
     }
