@@ -72,7 +72,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
         void UpdatePageDefinitionsGlobalPropertySettings(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition, PageDefinition pageDefinition)
         {
-            object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
+            IEnumerable<object> attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
             var useGlobalSettingsAttribute = attributes.OfType<UseGlobalSettingsAttribute>().FirstOrDefault();
             if (useGlobalSettingsAttribute != null)
             {
@@ -114,28 +114,20 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             return container;
         }
 
-        private List<PropertySettingsUpdater> GetPropertySettingsUpdaters(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition)
+        private static List<PropertySettingsUpdater> GetPropertySettingsUpdaters(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition)
         {
-            object[] attributes = GetPropertyAttributes(propertyDefinition, pageTypeDefinition);
-            var settingsUpdaters = new List<PropertySettingsUpdater>();
-            foreach (var attribute in attributes)
-            {
-                foreach (var interfaceType in attribute.GetType().GetInterfaces())
-                {
-                    if (!interfaceType.IsGenericType)
-                        continue;
+            var settingsUpdaters =
+                from attribute in GetPropertyAttributes(propertyDefinition, pageTypeDefinition)
+                from interfaceType in attribute.GetType().GetInterfaces()
+                where interfaceType.IsGenericType
+                    && typeof(IUpdatePropertySettings<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition())
+                let settingsType = interfaceType.GetGenericArguments().First()
+                select new PropertySettingsUpdater(settingsType, attribute);
 
-                    if (!typeof(IUpdatePropertySettings<>).IsAssignableFrom(interfaceType.GetGenericTypeDefinition()))
-                        continue;
-                    var settingsType = interfaceType.GetGenericArguments().First();
-                    var updater = new PropertySettingsUpdater(settingsType, attribute);
-                    settingsUpdaters.Add(updater);
-                }
-            }
-            return settingsUpdaters;
+            return settingsUpdaters.ToList();
         }
 
-        private object[] GetPropertyAttributes(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition)
+        private static IEnumerable<object> GetPropertyAttributes(PageTypePropertyDefinition propertyDefinition, PageTypeDefinition pageTypeDefinition)
         {
             // Binding flags supporting both public and non-public instance properties
             const BindingFlags propertyBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
@@ -174,7 +166,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                 //var message = String.Format("Unable to locate the property \"{0}\" in PageType \"{1}\".",
                 //    propertyDefinition.Name, pageTypeDefinition.GetPageTypeName());
                 //throw new PageTypeBuilderException(message);
-                return new object[0];
+                return Enumerable.Empty<object>();
             }
 
             return prop.GetCustomAttributes(true);
