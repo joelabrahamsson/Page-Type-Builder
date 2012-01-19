@@ -92,9 +92,11 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="CreateInstanceTests.cs" />
+    <Compile Include="PageTypeThatHasPropertyGroup.cs" />
     <Compile Include="PageTypeWithNoPublicConstructor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PageTypeWithStringCtorParam.cs" />
+    <Compile Include="PropertyGroupWithStringCtorParam.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PageTypeBuilder.Activation.StructureMap\PageTypeBuilder.Activation.StructureMap.csproj">

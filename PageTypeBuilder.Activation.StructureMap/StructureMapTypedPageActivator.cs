@@ -24,6 +24,15 @@ namespace PageTypeBuilder.Activation.StructureMap
             return base.CreateInstance(typedType, ctorParameters);
         }
 
+        public override PageTypePropertyGroup CreatePropertyGroupInstance(Type typedType)
+        {
+            ParameterInfo[] expectedParameters = GetCtorParameters(typedType);
+
+            object[] ctorParameters = GetResolvedParameters(expectedParameters);
+
+            return base.CreatePropertyGroupInstance(typedType, ctorParameters);
+        }
+
         private static ParameterInfo[] GetCtorParameters(Type typedType)
         {
             ConstructorInfo constructor = GetConstructorWithMostParameters(typedType);

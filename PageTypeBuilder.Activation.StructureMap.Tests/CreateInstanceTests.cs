@@ -21,6 +21,19 @@ namespace PageTypeBuilder.Activation.StructureMap.Tests
         }
 
         [Fact]
+        public void CreateInstance_UsesInjectedContainerToCreateInstanceOfPropertyGroupInRequestedType()
+        {
+            string expectedCtorParam = Guid.NewGuid().ToString();
+            Mock<IContainer> fakeContainer = new Mock<IContainer>();
+            fakeContainer.Setup(container => container.GetInstance(typeof(string))).Returns(expectedCtorParam);
+            StructureMapTypedPageActivator activator = new StructureMapTypedPageActivator(fakeContainer.Object);
+
+            PageTypeThatHasPropertyGroup pageData = (PageTypeThatHasPropertyGroup)activator.CreateAndPopulateTypedInstance(new PageTypeThatHasPropertyGroup(), typeof(PageTypeThatHasPropertyGroup));
+
+            Assert.Equal<string>(expectedCtorParam, pageData.PropertyGroup.Injected);
+        }
+
+        [Fact]
         public void CreateInstance_ThrowsPageTypeBuilderExceptionForTypeWithNoPublicCtor()
         {
             StructureMapTypedPageActivator activator = new StructureMapTypedPageActivator(null);
