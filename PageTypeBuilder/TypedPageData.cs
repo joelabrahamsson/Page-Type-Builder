@@ -114,9 +114,8 @@ namespace PageTypeBuilder
         {
             PageData page = base.CreateWritableClone();
             IEnumerable<PropertyInfo> properties = page.GetType().GetPageTypePropertyGroupProperties();
-            new TypedPageActivator().CreateAndPopulateNestedPropertyGroupInstances(page as TypedPageData, page, properties, string.Empty);
+            PageTypeResolver.Instance.Activator.CreateAndPopulateNestedPropertyGroupInstances(page as TypedPageData, page, properties, string.Empty);
             return page;
         }
-
     }
 }
