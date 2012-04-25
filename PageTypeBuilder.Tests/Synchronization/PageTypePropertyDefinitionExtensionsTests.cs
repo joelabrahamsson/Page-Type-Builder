@@ -1,22 +1,20 @@
-﻿using EPiServer.DataAbstraction;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Discovery;
-using PageTypeBuilder.Synchronization;
-using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
-using Xunit;
-
-namespace PageTypeBuilder.Tests.Synchronization
+﻿namespace PageTypeBuilder.Tests.Synchronization
 {
+    using Abstractions;
+    using PageTypeBuilder.Discovery;
+    using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
+    using Xunit;
+
     public class PageTypePropertyDefinitionExtensionsTests
     {
         [Fact]
         public void GivenPageTypePropertyDefinitionWithNoEditCaption_GetEditCaptionOrName_ReturnsName()
         {
             string propertyName = TestValueUtility.CreateRandomString();
-            PageTypePropertyDefinition definition = 
-                new PageTypePropertyDefinition(propertyName, typeof(string), new NativePageType(), new PageTypePropertyAttribute());
+            PageTypePropertyDefinition definition =
+                new PageTypePropertyDefinition(propertyName, typeof(string), new NativePageType(), new PageTypePropertyAttribute(), null);
 
-            string returnedEditCaption = definition.GetEditCaptionOrName();
+            string returnedEditCaption = definition.GetEditCaptionOrName(false);
 
             Assert.Equal<string>(propertyName, returnedEditCaption);
         }
@@ -25,12 +23,11 @@ namespace PageTypeBuilder.Tests.Synchronization
         public void GivenPageTypePropertyDefinitionWithEditCaption_GetEditCaptionOrName_ReturnsEditCaptionFromAttribute()
         {
             PageTypePropertyDefinition definition =
-                new PageTypePropertyDefinition(
-                    TestValueUtility.CreateRandomString(), typeof(string), new NativePageType(), new PageTypePropertyAttribute());
+                new PageTypePropertyDefinition(TestValueUtility.CreateRandomString(), typeof(string), new NativePageType(), new PageTypePropertyAttribute(), null);
             string editCaption = TestValueUtility.CreateRandomString();
             definition.PageTypePropertyAttribute.EditCaption = editCaption;
 
-            string returnedEditCaption = definition.GetEditCaptionOrName();
+            string returnedEditCaption = definition.GetEditCaptionOrName(false);
 
             Assert.Equal<string>(editCaption, returnedEditCaption);
         }

@@ -19,9 +19,9 @@
                 PageTypePropertyAttribute attribute = GetPageTypePropertyAttribute(property);
 
                 if (attribute == null)
-                    continue; 
+                    continue;
 
-                pageTypePropertyDefinitions.Add(new PageTypePropertyDefinition(property.Name, property.PropertyType, pageType, attribute));
+                pageTypePropertyDefinitions.Add(new PageTypePropertyDefinition(property.Name, property.PropertyType, pageType, attribute, null));
             }
 
             // add all page type group property definitions
@@ -54,6 +54,13 @@
             return propertyInfo.GetCustomAttributes<T>().FirstOrDefault();
         }
 
+        internal PageTypePropertyGroupPropertyOverrideAttribute GetPropertyGroupPropertyOverrideAttribute(PropertyInfo propertyGroupProperty, PropertyInfo property)
+        {
+            return propertyGroupProperty
+                .GetCustomAttributes<PageTypePropertyGroupPropertyOverrideAttribute>()
+                .FirstOrDefault(c => string.Equals(c.PropertyName, property.Name));
+        }
+
         private IEnumerable<PageTypePropertyDefinition> GetPropertyGroupPropertyDefinitions(IPageType pageType, PropertyInfo propertyGroupProperty)
         {
             PageTypePropertyGroupAttribute groupAttribute = GetPropertyAttribute<PageTypePropertyGroupAttribute>(propertyGroupProperty);
@@ -69,7 +76,12 @@
                 string resolvedPropertyName = PageTypePropertyGroupHierarchy.ResolvePropertyName(propertyGroupProperty.Name, property.Name);
                 attribute = AdjustPropertyGroupAttributeProperties(attribute, groupAttribute);
 
-                yield return new PageTypePropertyDefinition(resolvedPropertyName, property.PropertyType, pageType, attribute);
+                PageTypePropertyGroupPropertyOverrideAttribute overrideAttribute = GetPropertyGroupPropertyOverrideAttribute(propertyGroupProperty, property);
+
+                if (overrideAttribute != null)
+                    overrideAttribute = AdjustPropertyGroupAttributeProperties(overrideAttribute, groupAttribute) as PageTypePropertyGroupPropertyOverrideAttribute;
+
+                yield return new PageTypePropertyDefinition(resolvedPropertyName, property.PropertyType, pageType, attribute, overrideAttribute);
             }
         }
 
@@ -77,10 +89,12 @@
         {
             if (groupAttribute != null)
             {
-                if (!string.IsNullOrEmpty(groupAttribute.EditCaptionPrefix))
+                bool overriding = (attribute is PageTypePropertyGroupPropertyOverrideAttribute);
+
+                if (!string.IsNullOrEmpty(groupAttribute.EditCaptionPrefix) && (!overriding || attribute.EditCaptionSet))
                     attribute.EditCaption = groupAttribute.EditCaptionPrefix + attribute.EditCaption;
 
-                if (groupAttribute.StartSortOrderFrom > 0)
+                if (!overriding && groupAttribute.StartSortOrderFrom > 0)
                     attribute.SortOrder = groupAttribute.StartSortOrderFrom + attribute.SortOrder;
             }
             return attribute;
