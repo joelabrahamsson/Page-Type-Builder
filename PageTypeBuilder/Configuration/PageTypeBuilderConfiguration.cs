@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using EPiServer.Framework.Configuration;
 
 namespace PageTypeBuilder.Configuration
 {
@@ -6,7 +7,7 @@ namespace PageTypeBuilder.Configuration
     {
         public static PageTypeBuilderConfiguration GetConfiguration()
         {
-            PageTypeBuilderConfiguration configuration = ConfigurationManager.GetSection("pageTypeBuilder") as PageTypeBuilderConfiguration;
+            var configuration = ConfigurationManager.GetSection("pageTypeBuilder") as PageTypeBuilderConfiguration;
 
             if (configuration != null)
                 return configuration;
@@ -20,6 +21,15 @@ namespace PageTypeBuilder.Configuration
             get
             {
                 return (bool)this["disablePageTypeUpdation"];
+            }
+        }
+
+        [ConfigurationProperty("scanAssembly", IsRequired = false)]
+        public AssemblyElementCollection ScanAssembly
+        {
+            get
+            {
+                return (AssemblyElementCollection)this["scanAssembly"];
             }
         }
 
