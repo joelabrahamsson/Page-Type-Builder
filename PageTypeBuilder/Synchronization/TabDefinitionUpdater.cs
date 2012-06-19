@@ -6,9 +6,13 @@ namespace PageTypeBuilder.Synchronization
 {
     public class TabDefinitionUpdater
     {
+
+        internal List<int> updatedTabIds; 
+
         public TabDefinitionUpdater(ITabDefinitionRepository tabDefinitionRepository)
         {
             TabDefinitionRepository = tabDefinitionRepository;
+            updatedTabIds = new List<int>();
         }
 
         public virtual void UpdateTabDefinitions(IEnumerable<Tab> tabs)
@@ -21,6 +25,7 @@ namespace PageTypeBuilder.Synchronization
                 {
                     UpdateTabDefinition(tabDefinition, tab);
                     TabDefinitionRepository.SaveTabDefinition(tabDefinition);
+                    updatedTabIds.Add(tabDefinition.ID);
                 }
             }
         }

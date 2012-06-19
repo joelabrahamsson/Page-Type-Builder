@@ -168,6 +168,9 @@
             PropertyInfo property = pageTypeType.GetProperty(propertyName);
             propertyAttribute = property.GetCustomAttributes(typeof(PageTypePropertyAttribute), false).First() as PageTypePropertyAttribute;
 
+            propertyAttribute.DefaultValue = "true";
+            propertyAttribute.DefaultValueType = DefaultValueType.Value;
+
             var existingPageDefinition = new PageDefinition();
             existingPageDefinition.Type = SyncContext.PageDefinitionTypeRepository.GetPageDefinitionType<PropertyXhtmlString>();
             existingPageDefinition.PageTypeID = existingPageType.ID;
@@ -177,8 +180,10 @@
             existingPageDefinition.Tab = SyncContext.TabDefinitionRepository.GetTabDefinition(tabName);
             existingPageDefinition.Required = !propertyAttribute.Required;
             existingPageDefinition.Searchable = !propertyAttribute.Searchable;
-            existingPageDefinition.DefaultValue = "asdf";
-            existingPageDefinition.DefaultValueType = DefaultValueType.Inherit;
+
+            existingPageDefinition.DefaultValue = propertyAttribute.DefaultValue.ToString();
+            existingPageDefinition.DefaultValueType = propertyAttribute.DefaultValueType;
+
             existingPageDefinition.DisplayEditUI = !propertyAttribute.DisplayInEditMode;
             existingPageDefinition.FieldOrder = propertyAttribute.SortOrder + 100;
             existingPageDefinition.LanguageSpecific = !propertyAttribute.UniqueValuePerLanguage;

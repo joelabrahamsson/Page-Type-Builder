@@ -21,11 +21,17 @@ namespace PageTypeBuilder.Synchronization.Validation
 
         public virtual void ValidatePageTypeDefinitions(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
-            ValidatePageTypesHaveGuidOrUniqueName(pageTypeDefinitions);
-            
+            using (new TimingsLogger("ValidatePagetypesHaveGuidOrUniqueName"))
+            {
+                ValidatePageTypesHaveGuidOrUniqueName(pageTypeDefinitions);
+            }
+
             foreach (PageTypeDefinition definition in pageTypeDefinitions)
             {
-                ValidatePageTypeDefinition(definition, pageTypeDefinitions); 
+                using (new TimingsLogger("ValidatePageTypeDefinition"))
+                {
+                    ValidatePageTypeDefinition(definition, pageTypeDefinitions);
+                }
             }
         }
 
@@ -57,13 +63,9 @@ namespace PageTypeBuilder.Synchronization.Validation
         public virtual void ValidatePageTypeDefinition(PageTypeDefinition definition, IEnumerable<PageTypeDefinition> allPageTypeDefinitions)
         {
             ValidateNameLength(definition);
-
             ValidateInheritsFromBasePageType(definition);
-
             ValidateAvailablePageTypes(definition, allPageTypeDefinitions);
-
             ValidateExcludedPageTypes(definition, allPageTypeDefinitions);
-
             PropertiesValidator.ValidatePageTypeProperties(definition);
         }
 

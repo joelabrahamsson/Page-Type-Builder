@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using EPiServer.Core.PropertySettings;
@@ -14,6 +15,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         Func<IPropertySettingsRepository> _propertySettingsRepositoryMethod;
         IGlobalPropertySettingsLocator globalPropertySettingsLocator;
         IPageDefinitionRepository pageDefinitionRepository;
+        internal List<string> updatedPropertySettingsCacheKeys; 
 
         public PageDefinitionSpecificPropertySettingsUpdater(
             Func<IPropertySettingsRepository> propertySettingsRepositoryMethod,
@@ -23,6 +25,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             this._propertySettingsRepositoryMethod = propertySettingsRepositoryMethod;
             this.globalPropertySettingsLocator = globalPropertySettingsLocator;
             this.pageDefinitionRepository = pageDefinitionRepository;
+            updatedPropertySettingsCacheKeys = new List<string>();
         }
 
         protected internal virtual void UpdatePropertySettings(PageTypeDefinition pageTypeDefinition, PageTypePropertyDefinition propertyDefinition, PageDefinition pageDefinition)
@@ -66,6 +69,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                     if (hashBeforeUpdate != hashAfterUpdate || !settingsAlreadyExists)
                     {
                         _propertySettingsRepositoryMethod().Save(container);
+                        AddToUpdatedCacheKeys(container);
                     }
                 });
         }
@@ -90,8 +94,16 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
                     //TODO: Add spec validating that exception is thrown with the below uncommented (An item with the same key has already been added.)
                     //container.Settings.Add(globalSettingsUpdater.SettingsType.FullName, wrapper);
                     _propertySettingsRepositoryMethod().Save(container);
+                    AddToUpdatedCacheKeys(container);
                 }
             }
+        }
+
+        private void AddToUpdatedCacheKeys(PropertySettingsContainer container)
+        {
+            string cacheKey = string.Format(CultureInfo.InvariantCulture, "EP:{0}", new object[] { typeof(PropertySettingsRepository).FullName });
+            cacheKey = string.Format(CultureInfo.InvariantCulture, "{0}_{1}", new object[] { cacheKey, container.Id });
+            updatedPropertySettingsCacheKeys.Add(cacheKey);
         }
 
         private PropertySettingsContainer GetPropertySettingsContainer(PageDefinition pageDefinition)

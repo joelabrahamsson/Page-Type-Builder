@@ -9,6 +9,11 @@ namespace PageTypeBuilder.Discovery
     {
         private IAssemblyLocator assemblyLocator;
 
+        public IAssemblyLocator AssemblyLocator
+        {
+            get { return assemblyLocator; }
+        }
+
         public TabLocator(IAssemblyLocator assemblyLocator)
         {
             this.assemblyLocator = assemblyLocator;

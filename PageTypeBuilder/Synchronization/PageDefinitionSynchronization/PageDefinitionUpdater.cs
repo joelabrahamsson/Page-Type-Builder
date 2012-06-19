@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EPiServer.DataAbstraction;
-using log4net;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Discovery;
-
-namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
+﻿namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using EPiServer.Core;
+    using EPiServer.DataAbstraction;
+    using log4net;
+    using Abstractions;
+    using Discovery;
+
     public class PageDefinitionUpdater : IPageDefinitionUpdater
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(PageDefinitionSynchronizationEngine));
@@ -16,6 +17,12 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         private ITabDefinitionRepository tabDefinitionRepository;
         private PageDefinitionTypeMapper pageDefinitionTypeMapper;
         private List<string> newlyCreatedPageDefinitions;
+        private List<int> updatedPageDefinitions;
+
+        public List<int> UpdatedPageDefinitions
+        {
+            get { return updatedPageDefinitions; }
+        }
 
         public PageDefinitionUpdater(
             IPageDefinitionRepository pageDefinitionRepository,
@@ -26,6 +33,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             this.tabDefinitionRepository = tabDefinitionRepository;
             this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
             newlyCreatedPageDefinitions = new List<string>();
+            updatedPageDefinitions = new List<int>();
         }
 
         public virtual void CreateNewPageDefinition(PageTypePropertyDefinition propertyDefinition)
@@ -52,18 +60,60 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             return pageDefinitionTypeMapper.GetPageDefinitionType(definition);
         }
 
+        private void HandleDefaultValues(PageDefinition pageDefinition)
+        {
+            if (pageDefinition.DefaultValue != null && pageDefinition.DefaultValue == string.Empty)
+                pageDefinition.DefaultValue = null;
+
+            if (pageDefinition.DefaultValue != null)
+            {
+                object value;
+
+                try
+                {
+                    value = PropertyData.CreatePropertyDataObject(pageDefinition.Type.DataType).ParseToObject(pageDefinition.DefaultValue).Value;
+                }
+                catch
+                {
+                    value = null;
+                }
+
+                if (value == null)
+                {
+                    pageDefinition.DefaultValue = null;
+                }
+            }
+
+            if (pageDefinition.DefaultValue == null && pageDefinition.DefaultValueType == DefaultValueType.Value && pageDefinition.Type.DataType != PropertyDataType.Boolean)
+                pageDefinition.DefaultValueType = DefaultValueType.None;
+        }
+
         public virtual void UpdateExistingPageDefinition(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
         {
+            // LC: Reset default value if no default value type is defined
+            if (pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValueSet && pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValueType == DefaultValueType.None || pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValueType == DefaultValueType.Inherit)
+                pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValue = null;
+
             string oldValues = SerializeValues(pageDefinition);
 
             UpdatePageDefinitionValues(pageDefinition, pageTypePropertyDefinition);
 
+            // LC: Change to follow logic in PageDefintion.Save for resetting default values and default value types
+            HandleDefaultValues(pageDefinition);
+
             string updatedValues = SerializeValues(pageDefinition);
-            if (updatedValues != oldValues)
+
+            if (updatedValues == oldValues) 
+                return;
+
+            log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
+                
+            using (new TimingsLogger(string.Format("Updating page definition '{0}', page type: {1}{2}{3}{2}{4}", pageDefinition.Name, pageDefinition.PageTypeID, Environment.NewLine, oldValues, updatedValues)))
             {
-                log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
                 pageDefinitionRepository.Save(pageDefinition);
             }
+
+            updatedPageDefinitions.Add(pageDefinition.ID);
         }
 
         protected virtual string SerializeValues(PageDefinition pageDefinition)
@@ -74,7 +124,8 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             builder.Append(pageDefinition.Name);
             builder.Append("|");
             builder.Append("Type: ");
-            builder.Append(pageDefinition.Type.TypeName);
+            //builder.Append(pageDefinition.Type.TypeName);
+            builder.Append(string.Format("{0}_{1}", pageDefinition.Type.ID, pageDefinition.Type.Name));
             builder.Append("|");
             builder.Append("EditCaption:");
             builder.Append(pageDefinition.EditCaption);
@@ -89,7 +140,13 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             builder.Append(pageDefinition.Searchable);
             builder.Append("|");
             builder.Append("DefaultValue:");
-            builder.Append(pageDefinition.DefaultValue);
+            
+            string defaultValue = pageDefinition.DefaultValue;
+
+            if (pageDefinition.Type.DataType == PropertyDataType.Boolean && string.Equals(defaultValue, "true", StringComparison.OrdinalIgnoreCase) || string.Equals(defaultValue, "false", StringComparison.OrdinalIgnoreCase))
+                defaultValue = defaultValue.ToLower();
+
+            builder.Append(defaultValue);
             builder.Append("|");
             builder.Append("DefaultValueType:");
             builder.Append(pageDefinition.DefaultValueType);

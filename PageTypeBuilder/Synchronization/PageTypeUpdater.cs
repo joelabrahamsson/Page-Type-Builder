@@ -20,6 +20,7 @@ namespace PageTypeBuilder.Synchronization
         private IEnumerable<PageTypeDefinition> _pageTypeDefinitions;
         private IPageTypeValueExtractor _pageTypeValueExtractor;
         internal List<IPageType> NewlyCreatedPageTypes;
+        internal List<int> UpdatedPageTypeIds; 
 
         public PageTypeUpdater(IPageTypeDefinitionLocator pageTypeDefinitionLocator, 
             IPageTypeRepository pageTypeRepository, 
@@ -32,6 +33,7 @@ namespace PageTypeBuilder.Synchronization
             _pageTypeValueExtractor = pageTypeValueExtractor;
             _pageTypeLocator = pageTypeLocator;
             NewlyCreatedPageTypes = new List<IPageType>();
+            UpdatedPageTypeIds = new List<int>();
         }
 
         protected internal virtual IPageType GetExistingPageType(PageTypeDefinition definition)
@@ -56,10 +58,13 @@ namespace PageTypeBuilder.Synchronization
                 pageType.GUID = definition.Attribute.Guid.Value;
 
             string filename = attribute.Filename;
-            if (string.IsNullOrEmpty(filename))
-            {
+
+            Version version = typeof(PageData).Assembly.GetName().Version;
+            bool cms6R2AndAbove = version.Major >= 6 && version.Minor >= 1;
+
+            if (string.IsNullOrEmpty(filename) && cms6R2AndAbove)
                 filename = DefaultFilename;
-            }
+
             pageType.FileName = filename;
             
             PageTypeRepository.Save(pageType);
@@ -102,8 +107,11 @@ namespace PageTypeBuilder.Synchronization
 
             string newValuesString = SerializeValues(pageType);
 
-            if (newValuesString != oldValueString)
-                PageTypeRepository.Save(pageType);
+            if (newValuesString == oldValueString) 
+                return;
+
+            UpdatedPageTypeIds.Add(pageType.ID);
+            PageTypeRepository.Save(pageType);
         }
 
         protected internal virtual string SerializeValues(IPageType pageType)
