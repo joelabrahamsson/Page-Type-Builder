@@ -75,7 +75,7 @@
                 {
                     using (new TimingsLogger("Waiting for synchornization to finish on synching site."))
                     {
-                        while (SynchronizationHelper.IsBeingSynchronized(out iAmSynching))
+                        while (SynchronizationHelper.IsBeingSynchronized(out iAmSynching) && !iAmSynching)
                             Thread.Sleep(_configuration.OneTimeSynchornizationPollTime);
                     }
                 }
