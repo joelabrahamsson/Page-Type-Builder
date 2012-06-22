@@ -16,8 +16,8 @@ namespace PageTypeBuilder.Tests.Discovery
             string name = TestValueUtility.CreateRandomString();
             Type propertyType = typeof(string);
             IPageType pageType = new NativePageType();
-            
-            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
+
+            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute, null);
 
 
             Assert.Equal<string>(name, definition.Name);
@@ -31,7 +31,7 @@ namespace PageTypeBuilder.Tests.Discovery
             Type propertyType = typeof(string);
             IPageType pageType = new NativePageType();
 
-            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
+            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute, null);
 
 
             Assert.Equal<Type>(propertyType, definition.PropertyType);
@@ -46,7 +46,7 @@ namespace PageTypeBuilder.Tests.Discovery
             IPageType pageType = new NativePageType();
             pageType.GUID = Guid.NewGuid();
 
-            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
+            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute, null);
 
 
             Assert.Equal<IPageType>(pageType, definition.PageType, new PageTypeComparer());
@@ -73,10 +73,10 @@ namespace PageTypeBuilder.Tests.Discovery
             Type propertyType = typeof(string);
             IPageType pageType = new NativePageType();
 
-            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute);
+            PageTypePropertyDefinition definition = new PageTypePropertyDefinition(name, propertyType, pageType, attribute, null);
 
 
-            Assert.Equal<PageTypePropertyAttribute>(attribute, definition.PageTypePropertyAttribute, 
+            Assert.Equal<PageTypePropertyAttribute>(attribute, definition.PageTypePropertyAttribute,
                                                     new PageTypePropertyComparer());
         }
 

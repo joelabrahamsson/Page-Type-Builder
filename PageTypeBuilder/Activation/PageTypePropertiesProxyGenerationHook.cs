@@ -17,6 +17,7 @@ namespace PageTypeBuilder.Activation
         public bool ShouldInterceptMethod(Type type, System.Reflection.MethodInfo memberInfo)
         {
             return memberInfo.IsGetterOrSetterForPropertyWithAttribute(typeof(PageTypePropertyAttribute))
+                && !memberInfo.IsGetterOrSetterForPropertyWithAttribute(typeof(PageTypePropertyGroupPropertyOverrideAttribute))
                 && memberInfo.IsCompilerGenerated();
         }
 
@@ -26,7 +27,7 @@ namespace PageTypeBuilder.Activation
 
         public override bool Equals(object obj)
         {
-            return ((obj != null) && (obj.GetType() == typeof(PageTypePropertiesProxyGenerationHook))); 
+            return ((obj != null) && (obj.GetType() == typeof(PageTypePropertiesProxyGenerationHook)));
         }
 
         public override int GetHashCode()

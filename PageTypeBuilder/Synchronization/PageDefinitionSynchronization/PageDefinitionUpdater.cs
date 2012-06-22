@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EPiServer.DataAbstraction;
-using log4net;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Discovery;
-
-namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
+﻿namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using EPiServer.Core;
+    using EPiServer.DataAbstraction;
+    using log4net;
+    using Abstractions;
+    using Discovery;
+
     public class PageDefinitionUpdater : IPageDefinitionUpdater
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(PageDefinitionSynchronizationEngine));
@@ -16,9 +17,15 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         private ITabDefinitionRepository tabDefinitionRepository;
         private PageDefinitionTypeMapper pageDefinitionTypeMapper;
         private List<string> newlyCreatedPageDefinitions;
+        private List<int> updatedPageDefinitions;
+
+        public List<int> UpdatedPageDefinitions
+        {
+            get { return updatedPageDefinitions; }
+        }
 
         public PageDefinitionUpdater(
-            IPageDefinitionRepository pageDefinitionRepository, 
+            IPageDefinitionRepository pageDefinitionRepository,
             ITabDefinitionRepository tabDefinitionRepository,
             PageDefinitionTypeMapper pageDefinitionTypeMapper)
         {
@@ -26,6 +33,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             this.tabDefinitionRepository = tabDefinitionRepository;
             this.pageDefinitionTypeMapper = pageDefinitionTypeMapper;
             newlyCreatedPageDefinitions = new List<string>();
+            updatedPageDefinitions = new List<int>();
         }
 
         public virtual void CreateNewPageDefinition(PageTypePropertyDefinition propertyDefinition)
@@ -33,9 +41,9 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             PageDefinition pageDefinition = new PageDefinition();
             pageDefinition.PageTypeID = propertyDefinition.PageType.ID;
             pageDefinition.Name = propertyDefinition.Name;
-            pageDefinition.EditCaption = propertyDefinition.GetEditCaptionOrName();
+            pageDefinition.EditCaption = propertyDefinition.GetEditCaptionOrName(false);
             SetPageDefinitionType(pageDefinition, propertyDefinition);
-            
+
             newlyCreatedPageDefinitions.Add(GetPageDefinitionKey(pageDefinition));
             UpdatePageDefinitionValues(pageDefinition, propertyDefinition);
 
@@ -52,18 +60,60 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             return pageDefinitionTypeMapper.GetPageDefinitionType(definition);
         }
 
+        private void HandleDefaultValues(PageDefinition pageDefinition)
+        {
+            if (pageDefinition.DefaultValue != null && pageDefinition.DefaultValue == string.Empty)
+                pageDefinition.DefaultValue = null;
+
+            if (pageDefinition.DefaultValue != null)
+            {
+                object value;
+
+                try
+                {
+                    value = PropertyData.CreatePropertyDataObject(pageDefinition.Type.DataType).ParseToObject(pageDefinition.DefaultValue).Value;
+                }
+                catch
+                {
+                    value = null;
+                }
+
+                if (value == null)
+                {
+                    pageDefinition.DefaultValue = null;
+                }
+            }
+
+            if (pageDefinition.DefaultValue == null && pageDefinition.DefaultValueType == DefaultValueType.Value && pageDefinition.Type.DataType != PropertyDataType.Boolean)
+                pageDefinition.DefaultValueType = DefaultValueType.None;
+        }
+
         public virtual void UpdateExistingPageDefinition(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
         {
+            // LC: Reset default value if no default value type is defined
+            if (pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValueSet && pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValueType == DefaultValueType.None || pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValueType == DefaultValueType.Inherit)
+                pageTypePropertyDefinition.PageTypePropertyAttribute.DefaultValue = null;
+
             string oldValues = SerializeValues(pageDefinition);
 
             UpdatePageDefinitionValues(pageDefinition, pageTypePropertyDefinition);
 
+            // LC: Change to follow logic in PageDefintion.Save for resetting default values and default value types
+            HandleDefaultValues(pageDefinition);
+
             string updatedValues = SerializeValues(pageDefinition);
-            if (updatedValues != oldValues)
+
+            if (updatedValues == oldValues) 
+                return;
+
+            log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
+                
+            using (new TimingsLogger(string.Format("Updating page definition '{0}', page type: {1}{2}{3}{2}{4}", pageDefinition.Name, pageDefinition.PageTypeID, Environment.NewLine, oldValues, updatedValues)))
             {
-                log.Debug(string.Format("Updating PageDefintion, old values: {0}, new values: {1}.", oldValues, updatedValues));
                 pageDefinitionRepository.Save(pageDefinition);
             }
+
+            updatedPageDefinitions.Add(pageDefinition.ID);
         }
 
         protected virtual string SerializeValues(PageDefinition pageDefinition)
@@ -74,7 +124,8 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             builder.Append(pageDefinition.Name);
             builder.Append("|");
             builder.Append("Type: ");
-            builder.Append(pageDefinition.Type.TypeName);
+            //builder.Append(pageDefinition.Type.TypeName);
+            builder.Append(string.Format("{0}_{1}", pageDefinition.Type.ID, pageDefinition.Type.Name));
             builder.Append("|");
             builder.Append("EditCaption:");
             builder.Append(pageDefinition.EditCaption);
@@ -89,7 +140,13 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             builder.Append(pageDefinition.Searchable);
             builder.Append("|");
             builder.Append("DefaultValue:");
-            builder.Append(pageDefinition.DefaultValue);
+            
+            string defaultValue = pageDefinition.DefaultValue;
+
+            if (pageDefinition.Type.DataType == PropertyDataType.Boolean && string.Equals(defaultValue, "true", StringComparison.OrdinalIgnoreCase) || string.Equals(defaultValue, "false", StringComparison.OrdinalIgnoreCase))
+                defaultValue = defaultValue.ToLower();
+
+            builder.Append(defaultValue);
             builder.Append("|");
             builder.Append("DefaultValueType:");
             builder.Append(pageDefinition.DefaultValueType);
@@ -105,7 +162,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             builder.Append("|");
             builder.Append("Tab.ID:");
             builder.Append(pageDefinition.Tab.ID);
-            builder.Append("|"); 
+            builder.Append("|");
 
             return builder.ToString();
         }
@@ -120,22 +177,35 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             return string.Format("{0}_{1}", pageDefinition.PageTypeID, pageDefinition.Name);
         }
 
-        protected virtual void UpdatePageDefinitionValues(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
+        protected virtual void UpdatePageDefinitionValues(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition,
+            bool propertyGroupOverride)
         {
-            pageDefinition.Name = pageTypePropertyDefinition.Name;
+            if (!propertyGroupOverride)
+                pageDefinition.Name = pageTypePropertyDefinition.Name;
 
-            PageTypePropertyAttribute propertyAttribute = pageTypePropertyDefinition.PageTypePropertyAttribute;
-            
-            var specifiedType = GetPageDefinitionType(pageTypePropertyDefinition);
-            var currentType = pageDefinition.Type;
-            
-            if(specifiedType.DataType == currentType.DataType)
-                pageDefinition.Type = specifiedType;
+            PageTypePropertyAttribute propertyAttribute = propertyGroupOverride
+                                                              ? pageTypePropertyDefinition.PageTypePropertyGroupPropertyOverrideAttribute
+                                                              : pageTypePropertyDefinition.PageTypePropertyAttribute;
+
+            if (!propertyGroupOverride)
+            {
+                var specifiedType = GetPageDefinitionType(pageTypePropertyDefinition);
+                var currentType = pageDefinition.Type;
+
+                if (specifiedType.DataType == currentType.DataType)
+                    pageDefinition.Type = specifiedType;
+
+                if (CanModifyProperty(pageDefinition, propertyAttribute.TabSet))
+                    UpdatePageDefinitionTab(pageDefinition, propertyAttribute);
+
+                if (CanModifyProperty(pageDefinition, propertyAttribute.SortOrderSet))
+                    pageDefinition.FieldOrder = GetFieldOrder(pageDefinition, propertyAttribute);
+            }
 
             if (CanModifyProperty(pageDefinition, propertyAttribute.EditCaptionSet))
-                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
+                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName(propertyGroupOverride);
             else if (!propertyAttribute.EditCaptionSet && string.IsNullOrEmpty(pageDefinition.EditCaption))
-                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName();
+                pageDefinition.EditCaption = pageTypePropertyDefinition.GetEditCaptionOrName(propertyGroupOverride);
 
             if (CanModifyProperty(pageDefinition, propertyAttribute.HelpTextSet))
                 pageDefinition.HelpText = propertyAttribute.HelpText ?? string.Empty;
@@ -157,12 +227,14 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
 
             if (CanModifyProperty(pageDefinition, propertyAttribute.DisplayInEditModeSet))
                 pageDefinition.DisplayEditUI = propertyAttribute.DisplayInEditMode;
+        }
 
-            if (CanModifyProperty(pageDefinition, propertyAttribute.SortOrderSet))
-                pageDefinition.FieldOrder = GetFieldOrder(pageDefinition, propertyAttribute);
+        protected virtual void UpdatePageDefinitionValues(PageDefinition pageDefinition, PageTypePropertyDefinition pageTypePropertyDefinition)
+        {
+            UpdatePageDefinitionValues(pageDefinition, pageTypePropertyDefinition, false);
 
-            if (CanModifyProperty(pageDefinition, propertyAttribute.TabSet))
-                UpdatePageDefinitionTab(pageDefinition, propertyAttribute);
+            if (pageTypePropertyDefinition.PageTypePropertyGroupPropertyOverrideAttribute != null)
+                UpdatePageDefinitionValues(pageDefinition, pageTypePropertyDefinition, true);
         }
 
         protected virtual int GetFieldOrder(PageDefinition pageDefinition, PageTypePropertyAttribute propertyAttribute)
@@ -185,7 +257,7 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             var tab = tabDefinitionRepository.List().First();
             if (propertyAttribute.Tab != null)
             {
-                Tab definedTab = (Tab) Activator.CreateInstance(propertyAttribute.Tab);
+                Tab definedTab = (Tab)Activator.CreateInstance(propertyAttribute.Tab);
                 tab = tabDefinitionRepository.GetTabDefinition(definedTab.Name);
             }
             pageDefinition.Tab = tab;

@@ -45,9 +45,7 @@ namespace PageTypeBuilder.Synchronization.Validation
         protected internal virtual void ValidatePageTypeProperty(PropertyInfo propertyInfo)
         {
             ValidateCompilerGeneratedProperty(propertyInfo);
-
             ValidatePageTypePropertyAttribute(propertyInfo);
-
             ValidatePageTypePropertyType(propertyInfo);
         }
 

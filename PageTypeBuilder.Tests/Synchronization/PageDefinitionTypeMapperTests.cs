@@ -107,7 +107,7 @@ namespace PageTypeBuilder.Tests.Synchronization
             PageDefinitionTypeMapper mapper = new PageDefinitionTypeMapper(null, new NativePageDefinitionsMap());
             Type unmappedType = typeof(StringBuilder);
             PageTypePropertyDefinition definition = new PageTypePropertyDefinition(
-                TestValueUtility.CreateRandomString(), unmappedType, new NativePageType(), new PageTypePropertyAttribute());
+                TestValueUtility.CreateRandomString(), unmappedType, new NativePageType(), new PageTypePropertyAttribute(), null);
 
             Exception exception = Record.Exception(() => { mapper.GetPageDefinitionType(definition); });
 

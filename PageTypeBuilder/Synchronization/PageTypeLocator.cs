@@ -8,6 +8,11 @@ namespace PageTypeBuilder.Synchronization
     {
         private IPageTypeRepository pageTypeRepository;
 
+        public IPageTypeRepository PageTypeRepository
+        {
+            get { return pageTypeRepository; }
+        }
+
         public PageTypeLocator(IPageTypeRepository pageTypeRepository)
         {
             this.pageTypeRepository = pageTypeRepository;
@@ -19,21 +24,16 @@ namespace PageTypeBuilder.Synchronization
             Type type = definition.Type;
             PageTypeAttribute attribute = definition.Attribute;
             if (attribute.Guid.HasValue)
-            {
                 existingPageType = pageTypeRepository.Load(attribute.Guid.Value);
-            }
 
             if (existingPageType == null && attribute.Name != null)
-            {
                 existingPageType = pageTypeRepository.Load(attribute.Name);
-            }
 
             if (existingPageType == null)
-            {
                 existingPageType = pageTypeRepository.Load(type.Name);
-            }
 
-            return existingPageType;
+            return existingPageType; 
         }
+
     }
 }

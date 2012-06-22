@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EPiServer.Core.PropertySettings;
 using PageTypeBuilder.Discovery;
@@ -9,6 +10,7 @@ namespace PageTypeBuilder.Synchronization
     {
         private Func<IPropertySettingsRepository> _propertySettingsRepositoryMethod;
         private IGlobalPropertySettingsLocator globalPropertySettingsLocator;
+        internal List<Guid> globalSettingsIds = new List<Guid>();
 
         public GlobalPropertySettingsSynchronizer(Func<IPropertySettingsRepository> propertySettingsRepositoryMethod, IGlobalPropertySettingsLocator globalPropertySettingsLocator)
         {
@@ -19,6 +21,7 @@ namespace PageTypeBuilder.Synchronization
         public void Synchronize()
         {
             var updaters = globalPropertySettingsLocator.GetGlobalPropertySettingsUpdaters();
+
             foreach (var updater in updaters)
             {
                 var existingWrappers = _propertySettingsRepositoryMethod().GetGlobals(updater.SettingsType);
@@ -27,15 +30,20 @@ namespace PageTypeBuilder.Synchronization
                 matchingWrappers.ForEach(wrapper =>
                 {
                     var existingWrapperValues = WrapperValuesSerialized(updater, wrapper);
+
                     if (updater.OverWriteExisting)
                     {
                         updater.UpdateSettings(wrapper.PropertySettings);
                     }
+
                     UpdateWrapperValues(updater, wrapper);
                     var isChanged = !WrapperValuesSerialized(updater, wrapper).Equals(existingWrapperValues);
+                    
                     if (updater.OverWriteExisting && isChanged)
                     {
                         _propertySettingsRepositoryMethod().SaveGlobal(wrapper);
+                        globalSettingsIds.Add(wrapper.Id);
+                        //globalSettingsIds.Add(wrapper.PropertySettings.Id);
                     }
                 });
 

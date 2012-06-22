@@ -14,6 +14,16 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
         PageDefinitionSpecificPropertySettingsUpdater pageDefinitionSpecificPropertySettingsUpdater;
         IPageTypeRepository pageTypeRepository;
 
+        internal IPageDefinitionUpdater PageDefinitionUpdater
+        {
+            get { return pageDefinitionUpdater; }
+        }
+
+        internal PageDefinitionSpecificPropertySettingsUpdater PageDefinitionSpecificPropertySettingsUpdater
+        {
+            get { return pageDefinitionSpecificPropertySettingsUpdater; }
+        }
+
         public PageDefinitionSynchronizationEngine(
             IPageDefinitionUpdater pageDefinitionUpdater,
             PageTypePropertyDefinitionLocator pageTypePropertyDefinitionLocator,
@@ -34,10 +44,14 @@ namespace PageTypeBuilder.Synchronization.PageDefinitionSynchronization
             foreach (PageTypePropertyDefinition propertyDefinition in definitions)
             {
                 PageDefinition pageDefinition = GetExistingPageDefinition(pageType, propertyDefinition);
+             
                 if (pageDefinition == null)
                 {
-                    pageDefinitionUpdater.CreateNewPageDefinition(propertyDefinition);
-                    pageDefinition = GetExistingPageDefinition(pageType, propertyDefinition);
+                    using (new TimingsLogger(string.Format("Creating new page definition '{0}' for page type {1}: ", propertyDefinition.Name, pageType.Name)))
+                    {
+                        pageDefinitionUpdater.CreateNewPageDefinition(propertyDefinition);
+                        pageDefinition = GetExistingPageDefinition(pageType, propertyDefinition);
+                    }
                 }
                 else
                 {

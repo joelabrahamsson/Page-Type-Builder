@@ -12,7 +12,7 @@ namespace PageTypeBuilder.Tests.Synchronization.PageDefinitionSynchronizationEng
             Type type = typeof(string);
             IPageType pageType = new NativePageType();
             PageTypePropertyAttribute attribute = new PageTypePropertyAttribute();
-            return new PageTypePropertyDefinition(name, type, pageType, attribute);
+            return new PageTypePropertyDefinition(name, type, pageType, attribute, null);
         }
     }
 }

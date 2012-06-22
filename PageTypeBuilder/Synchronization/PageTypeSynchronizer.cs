@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using PageTypeBuilder.Abstractions;
-using PageTypeBuilder.Configuration;
-using PageTypeBuilder.Discovery;
-using PageTypeBuilder.Synchronization.Hooks;
-using PageTypeBuilder.Synchronization.PageDefinitionSynchronization;
-using PageTypeBuilder.Synchronization.Validation;
-
-namespace PageTypeBuilder.Synchronization
+﻿namespace PageTypeBuilder.Synchronization
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using Abstractions;
+    using Configuration;
+    using Discovery;
+    using Hooks;
+    using PageDefinitionSynchronization;
+    using Validation;
+
     public class PageTypeSynchronizer
     {
         private IPageTypeLocator _pageTypeLocator;
@@ -33,7 +35,12 @@ namespace PageTypeBuilder.Synchronization
             this.pageTypeResolver = pageTypeResolver;
             TabLocator = tabLocator;
             TabDefinitionUpdater = tabDefinitionUpdater;
-            _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
+
+            using (new TimingsLogger("Getting page type definitions"))
+            {
+                _pageTypeDefinitions = pageTypeDefinitionLocator.GetPageTypeDefinitions();
+            }
+
             PageTypeUpdater = pageTypeUpdater;
             PageDefinitionSynchronizationEngine = pageDefinitionSynchronizationEngine;
             PageTypeDefinitionValidator = pageTypeDefinitionValidator;
@@ -42,35 +49,124 @@ namespace PageTypeBuilder.Synchronization
             this.hooksHandler = hooksHandler;
         }
 
-        internal void SynchronizePageTypes()
+
+        public void SynchronizePageTypes()
         {
-            hooksHandler.InvokePreSynchronizationHooks();
+            SynchronizePageTypes(false);
+        }
 
-            if (!_configuration.DisablePageTypeUpdation)
+        public void SynchronizePageTypes(bool forcePageTypeUpdation)
+        {
+            SynchronizationHelper.AssemblyLocator = TabLocator.AssemblyLocator;
+            bool disablePageTypeUpdation = _configuration.DisablePageTypeUpdation;
+
+            if (forcePageTypeUpdation)
+                disablePageTypeUpdation = false;
+
+            bool oneTimeSynchornizationEnabled = !disablePageTypeUpdation && SynchronizationHelper.OneTimeSynchornizationEnabled;
+            bool iAmSynching = true;
+            
+            if (oneTimeSynchornizationEnabled)
             {
-                UpdateTabDefinitions();
-                globalPropertySettingsSynchronizer.Synchronize();
+                SynchronizationHelper.ClearLogInfo();
+                bool isBeingSynchronized = SynchronizationHelper.IsBeingSynchronized(out iAmSynching);
+
+                if (isBeingSynchronized && !iAmSynching)
+                {
+                    using (new TimingsLogger("Waiting for synchornization to finish on synching site."))
+                    {
+                        while (SynchronizationHelper.IsBeingSynchronized(out iAmSynching) && !iAmSynching)
+                            Thread.Sleep(_configuration.OneTimeSynchornizationPollTime);
+                    }
+                }
             }
 
-            IEnumerable<PageTypeDefinition> pageTypeDefinitions = _pageTypeDefinitions;
-
-            ValidatePageTypeDefinitions(pageTypeDefinitions);
-
-            if (!_configuration.DisablePageTypeUpdation)
-                CreateNonExistingPageTypes(pageTypeDefinitions);
-
-            if (_configuration.DisablePageTypeUpdation)
+            try
             {
-                IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
-                pageTypeDefinitions = pageTypeDefinitions.Except(nonExistingPageTypes).ToList();
-            }
-            else
-            {
-                UpdatePageTypes(pageTypeDefinitions);
-                UpdatePageTypePropertyDefinitions(pageTypeDefinitions);
-            }
+                using (new TimingsLogger("Pre synchoronization hooks"))
+                {
+                    if (iAmSynching)
+                        hooksHandler.InvokePreSynchronizationHooks();
+                }
 
-            AddPageTypesToResolver(pageTypeDefinitions);
+                if (!disablePageTypeUpdation && iAmSynching)
+                {
+                    using (new TimingsLogger("updating tab definitions"))
+                    {
+                        UpdateTabDefinitions();
+                    }
+
+                    using (new TimingsLogger("updating global property settings"))
+                    {
+                        globalPropertySettingsSynchronizer.Synchronize();
+                    }
+                }
+
+                IEnumerable<PageTypeDefinition> pageTypeDefinitions = _pageTypeDefinitions.ToList();
+
+                if (!disablePageTypeUpdation && _configuration.PerformValidation && iAmSynching)
+                {
+                    using (new TimingsLogger("Validating page type definitions"))
+                    {
+                        ValidatePageTypeDefinitions(pageTypeDefinitions);
+                    }
+                }
+
+                if (!disablePageTypeUpdation && iAmSynching)
+                {
+                    using (new TimingsLogger("Creating non existing page types"))
+                    {
+                        CreateNonExistingPageTypes(pageTypeDefinitions);
+                    }
+                }
+
+                if (disablePageTypeUpdation || !iAmSynching)
+                {
+                    using (new TimingsLogger("Getting non existing page types"))
+                    {
+                        IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
+                        pageTypeDefinitions = pageTypeDefinitions.Except(nonExistingPageTypes).ToList();
+                    }
+                }
+                else
+                {
+                    using (new TimingsLogger("Updating page types"))
+                    {
+                        UpdatePageTypes(pageTypeDefinitions);
+                    }
+
+                    using (new TimingsLogger("Updating page type property definitions"))
+                    {
+                        UpdatePageTypePropertyDefinitions(pageTypeDefinitions);
+                    }
+                }
+
+                using (new TimingsLogger("Adding page types to resolver"))
+                {
+                    AddPageTypesToResolver(pageTypeDefinitions);
+                }
+
+                if (oneTimeSynchornizationEnabled && iAmSynching)
+                {
+                    SynchronizationHelper.UpateSynchronizationCache(PageTypeUpdater.UpdatedPageTypeIds, 
+                        PageDefinitionSynchronizationEngine.PageDefinitionUpdater.UpdatedPageDefinitions,
+                        TabDefinitionUpdater.updatedTabIds,
+                        PageDefinitionSynchronizationEngine.PageDefinitionSpecificPropertySettingsUpdater.updatedPropertySettingsCacheKeys,
+                        globalPropertySettingsSynchronizer.globalSettingsIds);
+
+                    SynchronizationHelper.SynchingComplete();
+                }
+
+                if (oneTimeSynchornizationEnabled && !iAmSynching)
+                    SynchronizationHelper.InvalidateCache();
+            }
+            catch (Exception)
+            {
+                if (oneTimeSynchornizationEnabled && iAmSynching)
+                    SynchronizationHelper.RevertSyncronizationStatus();
+
+                throw;
+            }
         }
 
         protected internal virtual void UpdateTabDefinitions()
@@ -86,10 +182,18 @@ namespace PageTypeBuilder.Synchronization
 
         protected internal virtual void CreateNonExistingPageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)
         {
-            IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
+            IEnumerable<PageTypeDefinition> nonExistingPageTypes;
+            
+            using (new TimingsLogger("GetNonExistingPageTypes"))
+            {
+                nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions).ToList();
+            }
 
-            foreach (PageTypeDefinition definition in nonExistingPageTypes)
-                PageTypeUpdater.CreateNewPageType(definition);
+            using (new TimingsLogger("PageTypeUpdater.CreateNewPageTypes"))
+            {
+                foreach (PageTypeDefinition definition in nonExistingPageTypes)
+                    PageTypeUpdater.CreateNewPageType(definition);
+            }
         }
 
         protected internal virtual IEnumerable<PageTypeDefinition> GetNonExistingPageTypes(IEnumerable<PageTypeDefinition> pageTypeDefinitions)

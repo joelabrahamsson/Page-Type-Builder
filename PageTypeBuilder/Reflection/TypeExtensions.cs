@@ -14,7 +14,9 @@ namespace PageTypeBuilder.Reflection
 
         internal static IEnumerable<PropertyInfo> GetPageTypePropertiesOnClass(this Type pageTypeType)
         {
-            return pageTypeType.GetPublicOrPrivateProperties().Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyAttribute)));
+            return pageTypeType.GetPublicOrPrivateProperties()
+                .Where(propertyInfo => propertyInfo.HasAttribute(typeof(PageTypePropertyAttribute)) &&
+                    !propertyInfo.HasAttribute(typeof(PageTypePropertyGroupPropertyOverrideAttribute)));
         }
 
         internal static IEnumerable<PropertyInfo> GetPageTypePropertyGroupProperties(this Type pageTypeType)

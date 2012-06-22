@@ -162,7 +162,11 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             var pageDefinitionUpdater = GetPageDefinitionUpdater();
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
-            propertyDefinition.PageTypePropertyAttribute.DefaultValue = TestValueUtility.CreateRandomString();
+            propertyDefinition.PageTypePropertyAttribute.DefaultValue = "true";// TestValueUtility.CreateRandomString();
+
+            // As we have had to modifiy how default value and value types are handled in definition update
+            // we now have to specify a default value to satisfy this test
+            propertyDefinition.PageTypePropertyAttribute.DefaultValueType = DefaultValueType.Value;
 
             pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
@@ -179,6 +183,10 @@ namespace PageTypeBuilder.Tests.Synchronization.pageDefinitionUpdaterTests
             PageDefinition pageDefinitionToUpdate = new PageDefinition();
             PageTypePropertyDefinition propertyDefinition = CreatePageTypePropertyDefinition();
             propertyDefinition.PageTypePropertyAttribute.DefaultValueType = defaultValueType;
+
+            // As we have had to modifiy how default value and value types are handled in definition update
+            // we now have to specify a default value to satisfy this test
+            propertyDefinition.PageTypePropertyAttribute.DefaultValue = "true";
 
             pageDefinitionUpdater.UpdateExistingPageDefinition(pageDefinitionToUpdate, propertyDefinition);
 
