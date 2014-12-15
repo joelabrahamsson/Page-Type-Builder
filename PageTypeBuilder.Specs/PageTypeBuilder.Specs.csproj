@@ -65,6 +65,11 @@
       <HintPath>c:\Program Files (x86)\EPiServer\Framework\6.0.318.113\bin\EPiServer.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPiServer.Events, Version=6.1.79.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>c:\Program Files (x86)\EPiServer\Framework\6.0.318.113\bin\EPiServer.Events.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EPiServer.Implementation, Version=6.0.530.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>c:\Program Files (x86)\EPiServer\CMS\6.0.530.0\bin\EPiServer.Implementation.dll</HintPath>
