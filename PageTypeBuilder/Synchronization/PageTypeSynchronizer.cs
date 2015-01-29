@@ -42,11 +42,11 @@ namespace PageTypeBuilder.Synchronization
             this.hooksHandler = hooksHandler;
         }
 
-        internal void SynchronizePageTypes()
+        internal void SynchronizePageTypes(bool forceDisablePageTypeUpdates = false)
         {
             hooksHandler.InvokePreSynchronizationHooks();
 
-            if (!_configuration.DisablePageTypeUpdation)
+            if (!forceDisablePageTypeUpdates && !_configuration.DisablePageTypeUpdation)
             {
                 UpdateTabDefinitions();
                 globalPropertySettingsSynchronizer.Synchronize();
@@ -56,10 +56,10 @@ namespace PageTypeBuilder.Synchronization
 
             ValidatePageTypeDefinitions(pageTypeDefinitions);
 
-            if (!_configuration.DisablePageTypeUpdation)
+            if (!forceDisablePageTypeUpdates && !_configuration.DisablePageTypeUpdation)
                 CreateNonExistingPageTypes(pageTypeDefinitions);
 
-            if (_configuration.DisablePageTypeUpdation)
+            if (!forceDisablePageTypeUpdates && _configuration.DisablePageTypeUpdation)
             {
                 IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
                 pageTypeDefinitions = pageTypeDefinitions.Except(nonExistingPageTypes).ToList();

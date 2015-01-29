@@ -70,10 +70,10 @@ namespace PageTypeBuilder
         void CacheManager_ItemRemoved(object sender, EventNotificationEventArgs e)
         {
             var key = e.Param as string;
-            if (key == "EP:PageType" && container != null)
+            if (key == "EP:PageType" && e.RaiserId != CacheManager.LocalCacheManagerRaiserId && container != null)
             {
                 var synchronizer = container.Resolve<PageTypeSynchronizer>();
-                synchronizer.SynchronizePageTypes();
+                synchronizer.SynchronizePageTypes(true);
             }
         }
 
