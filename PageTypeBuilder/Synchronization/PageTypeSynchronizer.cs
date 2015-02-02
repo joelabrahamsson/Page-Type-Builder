@@ -59,7 +59,7 @@ namespace PageTypeBuilder.Synchronization
             if (!forceDisablePageTypeUpdates && !_configuration.DisablePageTypeUpdation)
                 CreateNonExistingPageTypes(pageTypeDefinitions);
 
-            if (!forceDisablePageTypeUpdates && _configuration.DisablePageTypeUpdation)
+            if (forceDisablePageTypeUpdates || _configuration.DisablePageTypeUpdation)
             {
                 IEnumerable<PageTypeDefinition> nonExistingPageTypes = GetNonExistingPageTypes(pageTypeDefinitions);
                 pageTypeDefinitions = pageTypeDefinitions.Except(nonExistingPageTypes).ToList();
