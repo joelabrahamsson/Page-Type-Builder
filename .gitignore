@@ -9,3 +9,4 @@ _ReSharper*
 *.cache
 http%3a%2f%2fmirrors.dotsrc.org%2fcygwin%2f
 nugetpackages/**.nupkg
+build/
